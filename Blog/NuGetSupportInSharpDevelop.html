@@ -1,0 +1,139 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>NuGet Support in SharpDevelop</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p><a href="http://build.sharpdevelop.net/buildartefacts/"
+    >SharpDevelop 4.1</a> now includes support for 
+    <a href="http://nuget.codeplex.com/">NuGet</a>. You can now add 
+    references to <a href="http://nuget.org">NuGet packages</a> to your 
+    projects from SharpDevelop.</p>
+
+    <h2>Adding NuGet Packages</h2>
+
+    <p>To add a NuGet package reference select your project in the 
+    <b>Projects</b> window, right click and select <b>Add Package 
+    Reference</b>.</p>
+
+    <p><img alt="Add Package Reference menu item"
+     src="Images/ProjectsWindowAddPackageReferenceMenuItem.png"/></p>
+
+    <p>The <b>Add Package Reference dialog</b> will then be 
+    displayed.</p>
+
+    <p><img alt="Add Package Reference dialog"
+     src="Images/AvailablePackagesTabSelectedInAddPackageReferenceWindow.png"/></p>
+
+    <p>The dialog has four tabs at the top. The <b>Installed</b> tab 
+    shows all packages that have been installed for the current 
+    project. The <b>Available</b> tab shows all the packages available 
+    from the NuGet package repository. The <b>Updates</b> tab shows the 
+    packages that have newer versions available. The <b>Recent</b> tab 
+    shows packages that were recently installed.</p>
+
+    <p>Select the <b>Available</b> tab to show the packages that can be 
+    installed. Information on a package will be displayed on the right 
+    hand side when the package is selected.</p>
+
+    <p>To find a package you can either page through the packages by 
+    clicking the arrows and page numbers underneath or you can search 
+    for a package by name. To search for a package enter the name in 
+    the search text box at the top right and press return or click the 
+    search icon. The matching packages will then be displayed. To clear 
+    the search results remove the search text and run the search 
+    again.</p>
+
+    <p><img alt="Searching for package references"
+     src="Images/SharpDevelopPackagesFoundInAvailableTabInAddPackageReferenceWindow.png"/></p>
+
+    <p>To install a package, select it and click the <b>Add</b> button. 
+    If the package requires you to accept a license agreement a dialog 
+    will be displayed allowing you to accept or decline the 
+    agreement.</p>
+
+    <p><img alt="Package license agreement window"
+     src="Images/PackageLicenseAgreementAcceptanceWindow.png"/></p>
+
+    <p>After that the package and any dependencies will be installed. 
+    Your project will be updated to include new assembly references and 
+    source code files from the package. The installed package will now 
+    have green tick icon next to it showing that is has been 
+    installed.</p>
+
+    <p><img alt="NuGet package installed"
+     src="Images/AvalonEditPackageInstalled.png"/></p>
+
+    <p>Click the <b>Close</b> button to close the Add Package Reference 
+    dialog.</p>
+
+    <h2>Removing NuGet Packages</h2>
+
+    <p>To remove a NuGet package open the <b>Add Package Reference</b> 
+    dialog and select the <b>Installed</b> tab.</p>
+
+    <p><img alt="Installed packages in the Add Package Reference dialog"
+     src="Images/InstalledAutofacPackagesInAddPackageReferenceWindow.png"/></p>
+
+    <p>Select the package you want to remove and click the 
+    <b>Remove</b> button. The package will then be removed and your 
+    project will be updated.</p>
+
+    <h2>Updating NuGet Packages</h2>
+
+    <p>To update a NuGet package open the <b>Add Package Reference</b> 
+    dialog and select the <b>Updates</b> tab.</p>
+
+    <p><img alt="Package updates in the Add Package Reference dialog"
+     src="Images/AutofacPackageUpdatesInAddPackageReferenceWindow.png"/></p>
+
+    <p>Select the package you want to update and click the <b>Add</b> 
+    button. The package and its dependencies will then be updated.</p>
+
+    <h2>Configuring NuGet</h2>
+
+    <p>By default the official NuGet repository will be used when 
+    searching for available packages. If you want to set up a different 
+    NuGet repository, such as one on your local file system, then 
+    select <b>Options</b> from the <b>Tools</b> menu. In the 
+    <b>Options</b> dialog select <b>Package Management</b> and then 
+    <b>Package Sources</b>.</p>
+
+    <p><img alt="Packagement repository configuration"
+     src="Images/ConfiguredPackageRepositoriesInPackageManagementOptions.png"/></p>
+
+    <p>Here you can add and remove NuGet repositories as required.</p>
+
+    <p>Under the <b>General</b> options you can clear the recent 
+    packages and the local package repository cache.</p>
+
+    <p><img alt="General Package Management options"
+     src="Images/GeneralPackageManagementOptions.png"/></p>
+
+    <h2>PowerShell Console</h2>
+
+    <p>
+    <a href="http://community.sharpdevelop.net/blogs/mattward/archive/2011/06/05/NuGetPowerShellConsole.aspx">SharpDevelop 
+    has a PowerShell console</a> that can be used to install NuGet 
+    packages with PowerShell scripts. </p>
+
+    <p><img alt="PowerShell console window"
+     src="Images/PackageManagementConsoleWindow.png"/></p>
+
+    <p>Further information on the PowerShell console can be found in 
+    the 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/archive/2011/06/05/NuGetPowerShellConsole.aspx">
+    NuGet PowerShell Console post</a>.</p>
+
+  </body>
+
+</html>
+

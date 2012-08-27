@@ -1,0 +1,100 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Unit Testing with IronRuby</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p><a href="http://build.sharpdevelop.net/buildartefacts/"
+    >SharpDevelop 4</a> has been updated to support unit testing with 
+    IronRuby. </p>
+
+    <p>It uses the Ruby testing framework Test::Unit so you will need 
+    to have the Ruby standard library on your machine. IronRuby 1.0 
+    targets Ruby 1.8.6 and includes it in its download so one way to 
+    get the Ruby standard library is to download 
+    <a href="http://ironruby.codeplex.com">IronRuby from codeplex</a> 
+    and install it.</p>
+
+    <p>SharpDevelop then needs to know where the Ruby standard library 
+    exists. This can be done by setting the path to the Ruby library in 
+    the <b>Options</b> dialog (Tools | Options | Tools | Ruby | Path), 
+    as shown below.</p>
+
+    <p>
+    <img alt="Setting the Ruby standard library path in Tools Options"
+     src="Images/RubyOptionsRubyStandardLibraryPath.png"/></p>
+
+    <p>Now we need to create some tests. Create two IronRuby projects 
+    one to hold the unit tests and the other to hold the code that will 
+    be tested.</p>
+
+    <p>In the test project we add the following simple test class that 
+    has two tests, one that will pass and one that will fail.</p>
+
+    <pre>require &apos;test/unit&apos; 
+require &apos;MyClass&apos; 
+ 
+class MyClassTests &lt; Test::Unit::TestCase 
+ def test_pass 
+  myclass = MyClass.new 
+  assert_equal(1, myclass.return_one(), &apos;Test should work&apos;) 
+ end 
+  
+ def test_fail 
+  myclass = MyClass.new 
+  assert_equal(2, myclass.return_one(), &apos;Test should fail&apos;) 
+ end 
+end </pre>
+    <p>Once this class is created you should see the unit tests 
+    displayed in the <b>Unit Tests</b> window (View | Tools | Unit 
+    Tests).</p>
+
+    <p><img alt="IronRuby unit tests in Unit Tests window"
+     src="Images/RubyUnitTestsInUnitTestsWindow.png"/></p>
+
+    <p>In the other project we create a new class with the following 
+    code.</p>
+
+    <pre>class MyClass 
+ def return_one 
+  return 1 
+ end 
+end</pre>
+    <p>Now in the project containing the unit tests we need to add a 
+    project reference to the project containing MyClass. This is so 
+    that SharpDevelop can set up the load paths correctly allowing 
+    MyClass to be found when the unit tests are run.</p>
+
+    <p>Once the project reference is added the unit tests can be run in 
+    the normal way by right clicking in the <b>Unit Tests</b> window 
+    and selecting <b>Run tests</b>. You can run all the tests in a 
+    project, all tests in a class or a single test method.</p>
+
+    <p><img alt="IronRuby test results in Unit Tests window"
+     src="Images/RubyUnitTestResultsInUnitTestsWindow.png"/></p>
+
+    <p>The output generated when running the unit tests is shown in the 
+    <b>Output</b> window.</p>
+
+    <p><img alt="IronRuby tests results in Output window"
+     src="Images/RubyUnitTestResultsInOutputWindow.png"/></p>
+
+    <p>Test failures are displayed in the <b>Errors</b> window. 
+    Clicking an error will open the corresponding code in the 
+    editor.</p>
+
+    <p><img alt="IronRuby test results in Errors window"
+     src="Images/RubyUnitTestResultsInErrorsWindow.png"/></p>
+
+  </body>
+
+</html>
+

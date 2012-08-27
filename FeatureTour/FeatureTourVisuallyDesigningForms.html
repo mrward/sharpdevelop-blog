@@ -1,0 +1,168 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Visually Designing Forms</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop has a forms designer that allows you to visually 
+    design forms and user controls written in C#, VB.NET or Boo.</p>
+
+    <h2>Opening the Forms Designer</h2>
+
+    <p>To open the forms designer click the <b>Design</b> tab at the 
+    bottom of the form&apos;s source code window.</p>
+
+    <p><img alt="Click the Design tab to open the forms designer"
+     src="Images/FeatureTourOpeningTheFormsDesigner.png"/></p>
+
+    <p><img alt="Forms designer opened"
+     src="Images/FeatureTourFormsDesigner.png"/></p>
+
+    <h2>Adding Controls</h2>
+
+    <p>Controls can be added to the form from the <b>Toolbox</b> 
+    window. From the <b>View</b> menu select <b>Tools</b>.</p>
+
+    <p><img alt="View tools menu item"
+     src="../Help/Images/ViewToolsMenuItem.png"/></p>
+
+    <p>This opens up the <b>Toolbox</b> window. The controls you can 
+    add to the form exist in tabs inside the toolbox:</p>
+
+    <p><img alt="Toolbox" src="Images/FeatureTourToolbox.png"/></p>
+
+    <table class="article" title="Toolbox Forms Designer Tabs">
+
+      <thead>
+
+        <tr>
+
+          <th>Tab</th>
+
+          <th>Contents</th>
+
+        </tr>
+
+      </thead>
+
+      <tr>
+
+        <td>Component</td>
+
+        <td>Displays a list of non-visual components that can be added 
+        to your form (e.g. FileSystemWatcher, NotifyIcon and Timer). 
+        These are added to the non-visual design area at the bottom of 
+        the forms designer.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>Custom Components</td>
+
+        <td>Displays a list of Windows Forms Controls that are in the 
+        current project, any referenced project or any referenced 
+        assembly.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>Data</td>
+
+        <td>Displays a list of data objects that you can add to your 
+        form (e.g. DataGridView, DataSet and OleDbConnection).</td>
+
+      </tr>
+
+      <tr>
+
+        <td>Windows Forms</td>
+
+        <td>Displays a list of the standard Windows Forms Controls 
+        (e.g. Button, ListView, TreeView and Label).</td>
+
+      </tr>
+
+      <tr />
+
+    </table>
+
+    <p>Click a tab to expand it and see what controls it contains. To 
+    add a control to the form you can either drag it or draw it onto 
+    the form. To drag, click the control with the left mouse button and 
+    whilst holding down the left mouse button move the mouse to your 
+    form, release the mouse button to drop the control onto your form. 
+    To draw it onto your form, select the control in the toolbox window 
+    by left clicking it with the mouse, no need to hold the button down 
+    at this point, then click where you want the top left corner of the 
+    control to be located on the form, then whilst holding down the 
+    left mouse button drag to where the bottom right corner of the 
+    control should be located. Once the control is placed on the form 
+    you can visually resize it, change its location and modify its 
+    properties. In the screenshot below a <b>Button</b>, <b>TextBox</b> 
+    and <b>Timer</b> have been added to the form, with the <b>Timer</b> 
+    shown in the non-visual component area of the forms designer.</p>
+
+    <p><img alt="Designed form"
+     src="Images/FeatureTourDesignedForm.png"/></p>
+
+    <h2>Setting Properties</h2>
+
+    <p>A control has properties that can be set at design time, 
+    changing how the control looks and reacts (e.g. text displayed on a 
+    button, font used to display the text, and the background image on 
+    a button). These properties are displayed in the <b>Properties</b> 
+    window. From the <b>View</b> menu select <b>Properties</b> to open 
+    the <b>Properties</b> window.</p>
+
+    <p><img alt="View properties menu item"
+     src="../Help/Images/ViewPropertiesMenuItem.png"/></p>
+
+    <p><img alt="Properties Window"
+     src="Images/FeatureTourPropertiesWindow.png"/></p>
+
+    <p>The properties are then displayed for the currently selected 
+    control. You can view the properties of another control on the form 
+    by selecting it in the designer or by selecting its name in the 
+    drop down list at the top of the <b>Properties</b> window.</p>
+
+    <h2>Events</h2>
+
+    <p>Each Windows Form control has events that you can catch and 
+    respond to. To see the events a control exposes, select the control 
+    in the designer and select the <b>Events</b> tab 
+    <img alt="Form Events tab"
+     src="Images/FeatureTourFormEventsTab.png"/> in the 
+    <b>Properties</b> window.</p>
+
+    <p><img alt="Form events"
+     src="Images/FeatureTourFormEvents.png"/></p>
+
+    <p>To generate an event handler, select the event in the 
+    <b>Properties</b> window, enter a name, or leave it blank to accept 
+    the default name, and then double click the property or press the 
+    enter key. The forms designer will then create an empty event 
+    handler method and switch to the form&apos;s source code ready for 
+    you to type in your code. The screenshot below shows the code 
+    generated for the button&apos;s Click event.</p>
+
+    <p><img alt="Generated event handler method"
+     src="Images/FeatureTourGeneratedEventHandler.png"/></p>
+
+    <p>&lt; <a href="FeatureTourCreatingAWindowsApplication.html">
+    previous</a> | <a href="FeatureTour.html">home</a> | 
+    <a href="FeatureTourCodeCompletion.html">next</a> &gt;</p>
+
+  </body>
+
+</html>
+

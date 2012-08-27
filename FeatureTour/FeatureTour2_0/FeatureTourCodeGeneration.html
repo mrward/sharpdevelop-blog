@@ -1,0 +1,132 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Code Generation</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>Given an interface that you want to implement, it can be a bit 
+    tedious to write all the class methods just to get your code to 
+    compile, especially if the interface has a large number of methods. 
+    SharpDevelop can save you time by generating code for you.</p>
+
+    <p>SharpDevelop can generate code for the following:</p>
+
+    <ul>
+
+      <li>Abstract base class methods</li>
+
+      <li>Constructors</li>
+
+      <li>Equals and GetHashCode methods</li>
+
+      <li>Property getters and setters</li>
+
+      <li>Interfaces</li>
+
+      <li>Overridable methods</li>
+
+      <li>Overridable properties</li>
+
+      <li>ToString method</li>
+
+    </ul>
+
+    <p>Whilst editing the code in the Text Editor select the <b>Auto 
+    code generation</b> from the <b>Tools</b> menu, or use the keyboard 
+    shortcut <b>Alt</b>+<b>Insert</b>.</p>
+
+    <p><img alt="Auto code generation menu option"
+     src="../Help/Images/ToolsAutoCodeGenerationMenuItem.png"/></p>
+
+    <p>This opens the <b>Code Generation</b> dialog box.</p>
+
+    <p><img alt="Code generation dialog"
+     src="Images/FeatureTourCodeGenerationDialog.png"/></p>
+
+    <p>Use the cursor keys to select <b>Interface implementations</b>, 
+    press the <b>Tab</b> key to move to the list of interfaces, press 
+    the <b>Space Bar</b> to select the <b>ICollection</b> interface, 
+    then press the <b>Enter</b> key to generate the code.</p>
+
+    <p><img alt="Generated interface implementation"
+     src="Images/FeatureTourInterfaceCodeGenerated.png"/></p>
+
+    <h2>Code Templates</h2>
+
+    <p>SharpDevelop also has code templates that can be inserted into 
+    your code. To view the code templates, from the <b>Tools</b> menu 
+    select <b>Options...</b>, in the options dialog box expand the 
+    <b>Coding</b> category and select <b>Code Templates</b>.</p>
+
+    <p><img alt="Code templates"
+     src="../Help/Images/CodeTemplatesOptionsDialog.png"/></p>
+
+    <p>SharpDevelop ships with several templates. These templates can 
+    be customised or you can create new custom ones.</p>
+
+    <p>To use a template in your source code, move the cursor to where 
+    you want the code to be inserted, then type in the template name, 
+    for example <b>tryf</b>, then press the space bar to insert the 
+    code.</p>
+
+    <p><img alt="Try finally typed"
+     src="Images/FeatureTourCodeTemplateTryFinallyTyped.png"/></p>
+
+    <p><img alt="Try finally code template inserted"
+     src="Images/FeatureTourCodeTemplateTryFinallyTemplateInserted.png"/></p>
+
+    <p>Alternatively you can insert a code template using the code 
+    template dialog. Move the cursor to where you want the code to be 
+    inserted, then press <b>Ctrl+J</b> to open the <b>Code Template</b> 
+    dialog box.</p>
+
+    <p><img alt="Code template dialog"
+     src="Images/FeatureTourCodeTemplateDialog.png"/></p>
+
+    <p>The code template can be selected directly and inserted or, just 
+    as with code completion, you can type in the first few characters 
+    of the template name and press the <b>Tab</b> key or <b>Enter</b> 
+    key to insert the template.</p>
+
+    <p><img alt="Code template dialog"
+     src="Images/FeatureTourCodeTemplateDialog.png"/></p>
+
+    <h2>Surround With</h2>
+
+    <p>The <b>Code Template</b> dialog box can also be used to surround 
+    selected code with a template. For example, if you wanted to put a 
+    <b>try catch</b> around some code, first select the code in the 
+    text editor.</p>
+
+    <p><img alt="Selected code to be surrounded with code template"
+     src="Images/FeatureTourCodeTemplateSelectedCode.png"/></p>
+
+    <p>Then press <b>Ctrl+J</b> to open the <b>Code Template</b> dialog 
+    box and then use the mouse or cursor keys to select the 
+    template.</p>
+
+    <p><img alt="Try catch template selected"
+     src="Images/FeatureTourCodeTemplateTryCatchSelected.png"/></p>
+
+    <p>Pressing the <b>Enter</b> or <b>Tab</b> key will insert the 
+    selected template.</p>
+
+    <p><img alt="Try catch template inserted"
+     src="Images/FeatureTourCodeTemplateTryCatchInserted.png"/></p>
+
+    <p>&lt; <a href="FeatureTourCodeCompletion.html">previous</a> | 
+    <a href="FeatureTour.html">home</a> | 
+    <a href="FeatureTourRefactoring.html">next</a> &gt;</p>
+
+  </body>
+
+</html>
+

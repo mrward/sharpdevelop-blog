@@ -1,0 +1,59 @@
+BODY
+{
+	font-size: 10pt;
+	font-family: Tahoma;
+	background-color: #DCDDDE;
+}
+
+H1
+{
+	font-weight: bold;
+	font-size: 20pt;
+	font-family: Tahoma;
+	background-color: #CED4A2;
+	color: White;
+	padding: 4mm 4mm 4mm 4mm;
+}
+
+H2
+{
+	font-weight: bold;
+	font-size: 18pt;
+	font-family: Tahoma;
+	background-color: #CED4A2;
+	color: White;
+	padding: 4mm 4mm 4mm 4mm;
+}
+
+H3
+{
+	font-weight: bold;
+	font-size: 16pt;
+	font-family: Tahoma;
+}
+
+H4
+{
+	font-weight: bold;
+	font-size: 14pt;
+	font-family: Tahoma;
+}
+
+H5
+{
+	font-weight: bold;
+	font-size: 12pt;
+	font-family: Tahoma;
+}
+
+H6
+{
+	font-weight: bold;
+	font-size: 10pt;
+	font-family: Tahoma;
+}
+
+DIV.Tip
+{
+	background-color: #ffffc3;
+}

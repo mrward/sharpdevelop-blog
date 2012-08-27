@@ -1,0 +1,195 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Compiling Python Packages</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>Here is a walkthrough on how to compile Python packages and 
+    modules, such as those provided by the 
+    <a href="http://docs.python.org/library/">Python Standard 
+    Library</a>, so you can distribute your IronPython application as a 
+    set of standalone assemblies. If you just want to use the Python 
+    Standard Library without compiling parts of it into your 
+    application then you can add the path to the standard library as 
+    described in a previous post on 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/archive/2009/03/01/UsingPythonStandardLibrary.aspx"
+    >using the Python Standard Library</a>.</p>
+
+    <h2>Prerequisites</h2>
+
+    <p>You will need to have SharpDevelop 3.2 and Python 2.6 installed 
+    on your machine. These can be downloaded from the following 
+    locations.</p>
+
+    <ul>
+
+      <li>
+      <a href="http://www.sharpdevelop.net/OpenSource/SD/Download/#SharpDevelop30"
+      >SharpDevelop 3.2</a></li>
+
+      <li><a href="http://www.python.org/download/releases/2.6.4/"
+      >Python 2.6</a></li>
+
+    </ul>
+
+    <h2>Python Modules Included with IronPython</h2>
+
+    <p>Before you start compiling a Python module or package into your 
+    application you should check whether it is already included with 
+    IronPython or whether you can use the .NET framework instead. A lot 
+    of the <a href="http://docs.python.org/library/">Python Standard 
+    Library</a> modules are already included with IronPython. You can 
+    see which ones by using 
+    <a href="http://www.red-gate.com/products/reflector/">Reflector</a> 
+    to look at IronPython.dll and IronPython.Modules.dll. Open these 
+    assemblies in Reflector, right click and select Disassemble. In the 
+    screenshot below the modules that are included with IronPython are 
+    defined by the PythonModule attribute.</p>
+
+    <p><img src="Images/IronPythonModulesInReflector.png"/></p>
+
+    <p>Alternatively you can use the 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/Python/IronPythonModulesReader.zip"
+    >IronPython Modules Reader application</a> to list all the 
+    available modules in IronPython.</p>
+
+    <p>If you need to use one of the modules provided by IronPython 
+    then add a reference to IronPython and IronPython.Modules in your 
+    project and then import the module in the normal way:</p>
+
+    <pre>import cmath</pre>
+    <h2>Compiling a Python Module</h2>
+
+    <p>Now we will look at writing a simple IronPython application that 
+    reads in a zip file using the zipfile module from the Python 
+    standard library. Our application will read the names of all the 
+    files in the zip file and display them in the console window. The 
+    code is shown below.</p>
+
+    <pre>import zipfile 
+ 
+file = zipfile.ZipFile(&quot;test.zip&quot;, &quot;r&quot;) 
+ 
+for name in file.namelist(): 
+    print name
+</pre>
+    <p>Now if you create a python console project with SharpDevelop, 
+    copy the code above into the Program.py file, compile and run the 
+    program you will get an error saying &quot;No module called 
+    zipfile&quot;. To fix this problem you can add the zipfile.py file 
+    from the Python standard library directly into your project. Simply 
+    right click your project, select Add Existing Item and browse to 
+    the zipfile in the python libs folder (e.g. C:\Python26\lib). If 
+    you compile your program again and run it you will get an error 
+    about a different module. The zipfile module depends on 13 other 
+    modules from the standard library. With a bit of trial and error 
+    you can work out which modules are needed. After adding these 
+    dependent modules to your project you will have a set of assemblies 
+    that do not require the Python Standard library to be installed.</p>
+
+    <p>The full code for the zip file reader application can be 
+    downloaded from the 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/Python/ZipFileReader.zip"
+    >Zip File Reader</a> link at the end of this post.</p>
+
+    <h2>Compiling a Python Package</h2>
+
+    <p>A Python module consists of a single file (e.g. zipfile.py). A 
+    Python package is a set of files inside a subdirectory. Compiling a 
+    package into your application cannot be done simply by including 
+    the files directly in your project. Instead you must compile the 
+    package files into a separate class library assembly. As an example 
+    we will look at using the json package. We will create a simple 
+    application that creates a json string from a dictionary. The code 
+    is shown below.</p>
+
+    <pre>import json 
+ 
+address = {} 
+address[&quot;street&quot;] = &quot;24 22nd Street&quot; 
+address[&quot;city&quot;] = &quot;New York&quot; 
+address[&quot;state&quot;] = &quot;NY&quot; 
+address[&quot;postCode&quot;] = &quot;10021&quot; 
+ 
+person = {} 
+person[&quot;firstName&quot;] = &quot;John&quot; 
+person[&quot;lastName&quot;] = &quot;Smith&quot; 
+person[&quot;age&quot;] = 20 
+person[&quot;address&quot;] = address 
+ 
+print json.dumps(person)</pre>
+    <p>Now to use the json package from our application we need to 
+    create a python class library project. Then we need to add all the 
+    files from the json package into this project and compile it. 
+    Finally in our Json Writer project we need to add a reference to 
+    this class library. The screenshot below shows the contents of the 
+    two projects.</p>
+
+    <p><img alt="Json package in class library"
+     src="Images/JsonPackageInPythonClassLibraryProject.png"/></p>
+
+    <p>Now this is not quite enough since the json package depends on 
+    several modules in the standard library. So now we add these to the 
+    json class library project. After adding these modules the json 
+    class library project should then contain the files as shown in the 
+    screenshot below.</p>
+
+    <p><img alt="Json class library with dependencies"
+     src="Images/JsonPackageWithDependenciesInPythonClassLibraryProject.png"/></p>
+
+    <p>You should now be able to compile and run your Json Writer 
+    application. The Json Writer application can now be distributed as 
+    a set of assemblies without needing the Python Standard Library to 
+    be installed.</p>
+
+    <p>The full code for the Json Writer application can be downloaded 
+    from the 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/Python/JsonWriter.zip"
+    >Json Writer</a> link at the end of this post.</p>
+
+    <p>Finally here is a link to the 
+    <a href="http://wiki.python.org/moin/PythonSoftwareFoundationLicenseFaq"
+    >license FAQ for Python and Python Standard Library</a> that should 
+    be checked before you include the standard library in your 
+    application.</p>
+
+    <h2>Downloads</h2>
+
+    <ul>
+
+      <li>
+      <a href="http://www.sharpdevelop.net/OpenSource/SD/Download/#SharpDevelop30"
+      >SharpDevelop 3.2</a></li>
+
+      <li><a href="http://www.python.org/download/releases/2.6.4/"
+      >Python 2.6</a></li>
+
+      <li><a href="http://www.red-gate.com/products/reflector/"
+      >Reflector</a></li>
+
+      <li>
+      <a href="http://community.sharpdevelop.net/blogs/mattward/Python/IronPythonModulesReader.zip"
+      >IronPython Modules Reader</a></li>
+
+      <li>
+      <a href="http://community.sharpdevelop.net/blogs/mattward/Python/ZipFileReader.zip"
+      >Zip File Reader</a></li>
+
+      <li>
+      <a href="http://community.sharpdevelop.net/blogs/mattward/Python/JsonWriter.zip"
+      >Json Writer</a></li>
+
+    </ul>
+
+  </body>
+
+</html>
+

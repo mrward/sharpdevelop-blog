@@ -1,0 +1,155 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Debugging</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>With SharpDevelop you can debug your code without leaving the 
+    development environment.</p>
+
+    <h2>Setting Breakpoints</h2>
+
+    <p>Position the cursor on the line where you want your breakpoint 
+    to be located, then click in the left hand margin of the text 
+    editor to create the breakpoint. This puts a breakpoint icon 
+    <img alt="Breakpoint icon" src="../Help/Images/BreakpointIcon.png"/>
+     in the margin and highlights the line in red.</p>
+
+    <p><img alt="Breakpoint added to text editor"
+     src="Images/FeatureTourBreakpoint.png"/></p>
+
+    <p>Alternatively you can select <b>Toggle Breakpoint</b> from the 
+    <b>Debug</b> menu or use the keyboard shortcut <b>F7</b>.</p>
+
+    <p><img alt="Toggle breakpoint menu item"
+     src="../Help/Images/DebugToggleBreakpointMenuItem.png"/></p>
+
+    <p>To remove the breakpoint simply click the breakpoint icon or 
+    select <b>Toggle Breakpoint</b> from the <b>Debug</b> menu.</p>
+
+    <h2>Running the Debugger</h2>
+
+    <p>To run your program under the debugger select <b>Run</b> from 
+    the <b>Debug</b> menu.</p>
+
+    <p><img alt="Debug run menu option"
+     src="../Help/Images/DebugRunMenuOption.png"/></p>
+
+    <p>Your program will then be started and SharpDevelop will change 
+    the window layout of the development environment as it switches to 
+    the <b>Debug Layout</b>.</p>
+
+    <p>To stop the debugger either let your program exit or select 
+    <b>Stop process</b> from the <b>Debug</b> menu.</p>
+
+    <p><img alt="Stop process menu option"
+     src="../Help/Images/DebugStopProcessMenuItem.png"/></p>
+
+    <h2>Debugging</h2>
+
+    <p>When a breakpoint is hit your program will be paused and the 
+    next line to be executed is highlighted in yellow.</p>
+
+    <p><img alt="Breakpoint hit"
+     src="Images/FeatureTourBreakpointHit.png"/></p>
+
+    <p>Whilst the program is paused you can execute the code line by 
+    line using the <b>Debug</b> menu items.</p>
+
+    <p><img alt="Debug menu after breakpoint hit"
+     src="../Help/Images/DebugMenuAfterBreakpointHit.png"/></p>
+
+    <p><b>Step into</b> will call the method on the current line and 
+    stop at the first line of code inside the method.</p>
+
+    <p><b>Step over</b> will execute the entire method on the current 
+    line but it will not step into it.</p>
+
+    <p><b>Step out</b> will finish executing the current method and 
+    returns to its parent method.</p>
+
+    <p><b>Continue debugging</b> will continue the program execution so 
+    it is running just as it was before it was paused.</p>
+
+    <p>You may also want to skip over lines of code whilst you are 
+    debugging or even to re-execute the same lines of code again. In 
+    the text editor select the line of code you want to execute next, 
+    right click and select <b>Set current statement</b>.</p>
+
+    <p><img alt="Setting the current execution statement"
+     src="../Help/Images/SetCurrentStatementMenuItem.png"/></p>
+
+    <p>The selected line will then be highlighted in yellow and will be 
+    the next line of code executed.</p>
+
+    <p>Whilst the program is paused you can view the current state of 
+    variables and objects in order to diagnose problems. This is 
+    covered in the following sections.</p>
+
+    <h2>Data Tips</h2>
+
+    <p>If you move the mouse over a variable SharpDevelop will display 
+    a special tooltip called a data tip.</p>
+
+    <p><img alt="Data tip window"
+     src="Images/FeatureTourDebuggerDataTip.png"/></p>
+
+    <p>Data tips show more information than ordinary tooltips, allowing 
+    you to explore an object&apos;s members. To see its members expand 
+    the data tip by clicking the plus icon 
+    <img alt="Plus icon to expand a data tip"
+     src="../Help/Images/PlusIcon.png"/>.</p>
+
+    <p><img alt="Data tip window expanded"
+     src="Images/FeatureTourDebuggerDataTipExpanded.png"/></p>
+
+    <h2>Local Variables</h2>
+
+    <p>The <b>Local Variables</b> window allows you to browse variables 
+    defined in the function currently being executed, arguments passed 
+    into the current function, fields and properties of the class where 
+    the function is defined.</p>
+
+    <p>From the <b>View</b> menu select <b>Debug</b> and then <b>Local 
+    variables</b>.</p>
+
+    <p><img alt="View local variables menu option"
+     src="../Help/Images/ViewLocalVariablesMenuItem.png"/></p>
+
+    <p>The <b>Local Variables</b> window is then displayed.</p>
+
+    <p><img alt="Local variables window"
+     src="Images/FeatureTourLocalVariablesWindow.png"/></p>
+
+    <h2>Callstack</h2>
+
+    <p>The <b>Callstack</b> window shows you the method calls currently 
+    on the stack.</p>
+
+    <p>From the <b>View</b> menu select <b>Debug</b> and then 
+    <b>Callstack</b>.</p>
+
+    <p><img alt="View call stack menu item"
+     src="../Help/Images/ViewCallstackMenuItem.png"/></p>
+
+    <p>The <b>Callstack</b> window will then be displayed.</p>
+
+    <p><img alt="Call stack window"
+     src="Images/FeatureTourCallStack.png"/></p>
+
+    <p>&lt; <a href="FeatureTourCodeNavigation.html">previous</a> | 
+    <a href="FeatureTour.html">home</a> | 
+    <a href="FeatureTourCodeConversion.html">next</a> &gt;</p>
+
+  </body>
+
+</html>
+

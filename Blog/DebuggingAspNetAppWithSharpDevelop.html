@@ -1,0 +1,153 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Debugging an ASP.NET Application with SharpDevelop</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>This tutorial shows you how to debug an ASP.NET application with 
+    SharpDevelop.</p>
+
+    <p>Before we begin it should be noted that SharpDevelop does not 
+    have great ASP.NET support. There is no web forms designer, no 
+    intellisense for ASP.NET pages (.aspx) and no support for the new 
+    style ASP.NET Web Site projects introduced in Visual Studio 2005. 
+    You can however create an ASP.NET Web Application project or an 
+    ASP.NET Web Service in SharpDevelop. If you are looking for a 
+    better ASP.NET experience then you should use 
+    <a href="http://www.microsoft.com/express/Web/">Microsoft Visual 
+    Web Developer</a>. However if still want to use SharpDevelop then 
+    here is how to debug your ASP.NET application.</p>
+
+    <h2>Creating an ASP.NET Application</h2>
+
+    <p>First let us create an ASP.NET Web Application. From the 
+    <b>File</b> menu select <b>New</b>, then <b>Solution</b>, to open 
+    up the <b>New Project</b> dialog.</p>
+
+    <p><img alt="ASP.NET project in New Project dialog"
+     src="Images/NewAspNetWebPageProjectTemplate.png"/></p>
+
+    <p>On the left hand side of this dialog select <b>ASP.NET</b> 
+    category underneath the <b>C#</b> category. On the right hand side 
+    select the <b>ASP.NET web page project</b> icon. Give project a 
+    name and choose where you want the project created and click the 
+    <b>Create</b> button. SharpDevelop will then create a basic ASP.NET 
+    Web Application project.</p>
+
+    <h2>Download Cassini</h2>
+
+    <p>In order to be able to debug the ASP.NET application we will be 
+    using Cassini. Cassini is a lightweight open source web server. It 
+    was originally released as a 
+    <a href="http://www.asp.net/Downloads/archived/cassini/">sample by 
+    Microsoft</a>. Dmitry Robsman then 
+    <a href="http://blogs.msdn.com/dmitryr/archive/2008/10/03/cassini-for-framework-3-5.aspx"
+    >updated the sample to run under .NET 3.5</a>. After that different 
+    versions based on Dmitry&apos;s original work were released on 
+    codeplex. Any of these versions of Cassini, in the list below, will 
+    work with SharpDevelop. The version of Cassini provided by Dmitry 
+    requires you to compile the source code. The other versions do not. 
+    The Cassini Developer&apos;s edition has slightly different command 
+    line options compared to the rest so it will not be covered in the 
+    following discussion. We will use Cassini++ for the rest of this 
+    tutorial. </p>
+
+    <ol>
+
+      <li><a href="http://cassinipp.codeplex.com/">Cassini++</a></li>
+
+      <li>Dmitry Robsman - 
+      <a href="http://blogs.msdn.com/dmitryr/archive/2008/10/03/cassini-for-framework-3-5.aspx"
+      >Cassini v3.5</a> or 
+      <a href="http://blogs.msdn.com/dmitryr/archive/2009/04/23/cassini-support-for-friendly-urls-routing.aspx"
+      >Cassini v3.5.0.2</a> with friendly url/routing support.</li>
+
+      <li><a href="http://cassinidev.codeplex.com/">Cassini 3.5 
+      Developers Edition</a></li>
+
+    </ol>
+
+    <p>Download Cassini++ from the link provided and extract the files 
+    to a directory on the same machine that you are running 
+    SharpDevelop on.</p>
+
+    <h2>Debugging an ASP.NET Application</h2>
+
+    <p>First let us set a breakpoint in our application. Find the 
+    <b>Default.aspx.cs</b> file in your project and open it in the text 
+    editor. Locate the Page_Load method and set a breakpoint inside 
+    this method on the Response.Write line.</p>
+
+    <p><img alt="Breakpoint set in SharpDevelop"
+     src="Images/AspNetPageLoadBreakpoint.png"/></p>
+
+    <p>Now you need to configure the project to run Cassini when you 
+    debug your application. From the <b>Project</b> menu select 
+    <b>Project Options</b>. In the options dialog select the 
+    <b>Debug</b> tab. Set the <b>Start Action</b> to <b>Start external 
+    program</b> and enter the path to the Cassini executable. In the 
+    <b>Start Options</b> enter the command line that will be passed to 
+    Cassini. The Cassini command line is of the form:</p>
+
+    <pre>&lt;physical-path&gt; &lt;port&gt; &lt;virtual-path&gt;</pre>
+    <p>In the screenshot below you can see an example command line 
+    passed to Cassini. In this case Cassini will listen for requests on 
+    port 8080, the virtual path will be set to &quot;/&quot; and the 
+    physical path to your project is specified by a using SharpDevelop 
+    property <b>${ProjectDir}</b> which will be replaced when you start 
+    debugging. You can put the full path to your project directory here 
+    instead of using the ProjectDir property.</p>
+
+    <p><img alt="Project options dialog"
+     src="Images/AspNetProjectOptionsToRunCassini.png"/></p>
+
+    <p>Save the changes you made to the project options. Then select 
+    <b>Run</b> from the <b>Debug</b> menu. Cassini should then start. 
+    </p>
+
+    <p><img alt="Cassini Running"
+     src="Images/CassiniPlusPlusWindow.png"/></p>
+
+    <p>Click the <a href="http://localhost:8080/">
+    http://localhost:8080/</a> hyperlink at the bottom of the Cassini 
+    window to visit your application&apos;s web page in the default 
+    browser. When the page is loaded in the browser the breakpoint in 
+    Page_Load should then be hit and you can start debugging.</p>
+
+    <p><img alt="Page_Load breakpoint hit"
+     src="Images/StoppedAtAspNetPageLoadBreakpoint.png"/></p>
+
+    <h2>Attach to Process</h2>
+
+    <p>As an alternative to configuring SharpDevelop to start Cassini 
+    every time you debug your ASP.NET application you can leave Cassini 
+    running and attach to its process when you need to. </p>
+
+    <p>First on your desktop create a shortcut to Cassini and specify 
+    the appropriate Cassini command line as explained earlier. Note 
+    that the ${ProjectDir} property cannot be used here so instead you 
+    will need to put the full path to your project. Start Cassini by 
+    double clicking the shortcut and use a browser to display your web 
+    page. Now in SharpDevelop select <b>Attach to Process</b> from the 
+    <b>Debug</b> menu. Select the Cassini process and click the 
+    <b>Attach</b> button. </p>
+
+    <p><img alt="Attaching to the Cassini process"
+     src="Images/AttachToCassiniProcess.png"/></p>
+
+    <p>Now when you press <b>Ctrl+F5</b> in the browser showing your 
+    web page to refresh the page the breakpoint in the Page_Load method 
+    should be hit and you can start debugging.</p>
+
+  </body>
+
+</html>
+

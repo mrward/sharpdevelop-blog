@@ -1,0 +1,89 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>WiX 3.0 Integration</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop 3.0 now supports 
+    <a href="http://wix.sourceforge.net">WiX</a> 3.0.</p>
+
+    <p>There are some changes to how things work compared to the 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/archive/2006/09/17/WixIntegration.aspx">
+    WiX integration in SharpDevelop 2</a>. The differences will be 
+    covered in the following sections.</p>
+
+    <h2>WiX Project Templates</h2>
+
+    <p>There are some new WiX project templates available. A basic 
+    empty project template and a template for each of the standard 
+    <a href="http://wix.sourceforge.net/manual-wix2/WixUI_dialog_library.htm">
+    WiX UI library</a> dialog sequences.</p>
+
+    <p><img src="Images/WixUIProjectTemplates.png"/></p>
+
+    <h2>Adding WiX Extensions</h2>
+
+    <p>WiX extensions are now displayed in the project browser instead 
+    of in the project options. They can be added by right clicking the 
+    <b>WiX Extensions</b> folder and selecting <b>Add WiX 
+    Extension</b>.</p>
+
+    <p><img src="Images/AddWixExtensionsContextMenu.png"/>.</p>
+
+    <h2>Project Options</h2>
+
+    <p>The Library and Linking tabs have been removed from the project 
+    options since the WiX extensions can now be added from the project 
+    browser.</p>
+
+    <p>The <b>Compiling</b> tab has some new options as shown below.</p>
+
+    <p><img src="Images/WixCompilingProjectOptions.png"/></p>
+
+    <p>The <b>WiX Variables</b> field can be used to override the 
+    standard WiX UI library settings. In the screenshot above the 
+    standard licence agreement and dialog background bitmap are being 
+    replaced with new ones.</p>
+
+    <p>The <b>Suppress ICEs</b> field is used to stop WiX from showing 
+    errors or warnings for particular 
+    <a href="http://msdn2.microsoft.com/en-us/library/aa369554(VS.85).aspx">
+    Internal Consistency Evaluators (ICEs)</a>. After building your 
+    installer WiX now validates it against a standard set of rules 
+    which saves you from having to use another validation tool such as 
+    <a href="http://msdn2.microsoft.com/en-us/library/aa370557.aspx">
+    Orca</a>.  </p>
+
+    <p>Localized string files are no longer specified in the 
+    Application&apos;s tab. Instead add the file to the project and 
+    change its Build action to Embedded Resource.</p>
+
+    <h2>Other Editors</h2>
+
+    <p>If you want integration with Visual Studio 2005 or 2008 then 
+    please check out <a href="http://blogs.msdn.com/jrock">Justin 
+    Rockwood</a>&apos;s 
+    <a href="http://wix.sourceforge.net/votive.html">Votive</a>.</p>
+
+    <p><a href="http://robmensching.com/blog/">Rob Mensching</a> has a 
+    <a href="http://robmensching.com/blog/archive/2007/11/20/WiX-editors.aspx">
+    list of WiX editors</a>, including commerical ones, on his blog.</p>
+
+    <p>It also looks like a 
+    <a href="http://robmensching.com/blog/archive/2007/11/26/Visual-Studio-ships-the-WiX-toolset.aspx">
+    future version of Visual Studio will ship with WiX</a>.</p>
+
+    <p />
+
+  </body>
+
+</html>
+

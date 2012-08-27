@@ -1,0 +1,2181 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Porting an AddIn from SharpDevelop 2.2 to SharpDevelop 
+    3</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet"
+     style="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>There have been some fairly large code changes on moving from 
+    SharpDevelop 2.2 to 3.0 and addins written for 2.2 are unlikely to 
+    work without some modification. We will look at the changes in the 
+    core parts of SharpDevelop and then look at one way to do the 
+    porting.</p>
+
+    <p>Not all the differences are covered in the next section just 
+    those types and methods that are likely to have been used by an 
+    addin.</p>
+
+    <h2>ICSharpCode.Core</h2>
+
+    <table class="article">
+
+      <thead>
+
+        <tr>
+
+          <th>Type</th>
+
+          <th>Description</th>
+
+        </tr>
+
+      </thead>
+
+      <tr>
+
+        <td><b>ICSharpCode.Core.AddInReference</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">bool RequirePreload</td>
+
+        <td>
+
+          New property that specifies that when a type from an addin is 
+          created any addins that are needed by this addin will be 
+          preloaded if this flag is set to true. This corresponds to 
+          the new requirePreload attribute in an .addin file.
+          <p>&lt;Dependency addin=&quot;ICSharpCode.XmlEditor&quot; 
+          requirePreload=&quot;true&quot;/&gt;</p>
+
+        </td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.Core.AddInTreeNode.TopologicalSort</b></td>
+
+        <td>Type is no longer public.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.Core.FileUtility</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">bool IsValidPath(string path)</td>
+
+        <td>New method that determines whether a full or relative path 
+        is valid. This replaces the IsValidFileName method.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool IsValidFileName(string 
+        fileName)</td>
+
+        <td>Renamed to IsValidPath.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">static string NormalizePath(string 
+        fileName)</td>
+
+        <td>New method that gets the normalized version of the 
+        filename. Slashes are replaced with backslashes, backreferences 
+        &quot;.&quot; and &quot;..&quot; are &apos;evaluated&apos;.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.Core.Properties</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">void ReadProperties(XmlReader reader, 
+        string endElement)</td>
+
+        <td>Method is no longer public but internal.</td>
+
+      </tr>
+
+    </table>
+
+    <h2>NRefactory</h2>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Type</th>
+
+          <th>Description</th>
+
+        </tr>
+
+      </thead>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.NRefactory.Ast.ArrayInitializerExpression</b></td>
+
+        <td>Replaced by the CollectionInitializerExpression type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.NRefactory.Ast.BlockStatement</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">BlockStatement Null</td>
+
+        <td>The Null property now returns a BlockStatement instead of a 
+        NullStatement type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.NRefactory.Ast.FieldReferenceExpression</b></td>
+
+        <td>Replaced by the MemberReferenceExpression type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill">
+        <b>ICSharpCode.NRefactory.Ast.MemberReferenceExpression</b></td>
+
+        <td>Replaces the FieldReferenceExpression type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.NRefactory.Ast.InvocationExpression</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">List&lt;TypeReference&gt; 
+        TypeArguments</td>
+
+        <td>This property has been removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.NRefactory.Ast.NullArrayInitializerExpression</b></td>
+
+        <td>This type has been removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.NRefactory.Ast.NullBlockStatement</b></td>
+
+        <td>No longer a public type instead it is now internal.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill"><b id="red-fill">
+        ICSharpCode.NRefactory.Ast.NullConstructorInitializer</b></td>
+
+        <td>No longer a public type instead it is now internal.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill"><b id="red-fill">
+        ICSharpCode.NRefactory.Ast.NullEventAddRegion</b></td>
+
+        <td>No longer a public type instead it is now internal.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill"><b id="red-fill">
+        ICSharpCode.NRefactory.Ast.NullEventRaiseStatement</b></td>
+
+        <td>No longer a public type instead it is now internal.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill"><b id="red-fill">
+        ICSharpCode.NRefactory.Ast.NullEventRemoveStatement</b></td>
+
+        <td>No longer a public type instead it is now internal.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill"><b id="red-fill">
+        ICSharpCode.NRefactory.Ast.NullExpression</b></td>
+
+        <td>No longer a public type instead it is now internal.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill"><b id="red-fill">
+        ICSharpCode.NRefactory.Ast.NullPropertyGetRegion</b></td>
+
+        <td>No longer a public type instead it is now internal.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill"><b id="red-fill">
+        ICSharpCode.NRefactory.Ast.NullPropertySetRegion</b></td>
+
+        <td>No longer a public type instead it is now internal.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill"><b id="red-fill">
+        ICSharpCode.NRefactory.Ast.NullStatement</b></td>
+
+        <td>No longer a public type instead it is now internal.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.NRefactory.IAstVisitor</b></td>
+
+        <td>Various new methods on this interface to support new 
+        types.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">object 
+        VisitArrayInitializerExpression(...)</td>
+
+        <td>Method removed along with the ArrayInitializerExpression 
+        type. Replaced by the VisitCollectionInitializerExpression 
+        method.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">object 
+        VisitFieldReferenceExpression(...)</td>
+
+        <td>Method removed along with the ArrayInitializerExpression 
+        type. Replaced by the VisitMemberReferenceExpression 
+        method.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.NRefactory.Visitors.NodeTrackingAstVisitor</b></td>
+
+        <td>All TrackedVisit methods have been renamed and now include 
+        the name of the type being tracked (e.g. 
+        TrackedVisitAddHandlerStatement).</td>
+
+      </tr>
+
+    </table>
+
+    <h2>ICSharpCode.SharpDevelop.Dom</h2>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Type</th>
+
+          <th>Description</th>
+
+        </tr>
+
+      </thead>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.AbstractAmbience</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool IncludeBodies</td>
+
+        <td>Replaced by the new IncludeBody property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">bool IncludeBody</td>
+
+        <td>Replaces the IncludeBodies property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool IncludeHTMLMarkup</td>
+
+        <td>Replaced by the new IncludeHtmlMarkup property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">bool IncludeHtmlMarkup</td>
+
+        <td>Replaces the old IncludeHTMLMarkup property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool UseFullyQualifiedMemberNames</td>
+
+        <td>Replaced by the new UseFullyQualifiedMemberTypeNames 
+        property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">bool 
+        UseFullyQualifiedMemberTypeNames</td>
+
+        <td>Replaces the old UseFullyQualifiedMemberNames property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">String Convert(ModifierEnum)</td>
+
+        <td>Method removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.AbstractReturnType</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">int TypeArgumentCount</td>
+
+        <td>Replaces the old TypeParameterCount property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">int TypeParameterCount</td>
+
+        <td>Replaced by the new TypeArgumentCount property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill"><b id="red-fill">
+        ICSharpCode.SharpDevelop.Dom.AttributeArgument</b></td>
+
+        <td>Type has been removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.ClassFinder</b></td>
+
+        <td>The constructors now take a ParseInformation type instead 
+        of a filename.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.ConversionFlags</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IncludeBodies</td>
+
+        <td>Replaced by IncludeBody.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">IncludeBody</td>
+
+        <td>Replaces IncludeBodies.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IncludeHTMLMarkup</td>
+
+        <td>Replaced by IncludeHtmlMarkup.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">IncludeHtmlMarkup</td>
+
+        <td>Replaces IncludeHTMLMarkup.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">QualifiedNamesOnlyForReturnTypes</td>
+
+        <td>Enum value removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">UseFullyQualifiedNames</td>
+
+        <td>Replaced by two new enums UseFullyQualifiedMemberNames and 
+        UseFullyQualifedTypeNames.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">UseFullyQualifiedMemberNames</td>
+
+        <td>Replaces the UseFullyQualifiedNames enum value.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">UseFullyQualifiedTypeNames</td>
+
+        <td>Replaces the UseFullyQualifiedNames enum value.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.SharpDevelop.Dom.CSharpExpressionFinder</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">int LastExpressionStartPosition</td>
+
+        <td>Property has been removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">string FindExpressionInternal(string 
+        inText, int offset)</td>
+
+        <td>Method has been removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">ctor(string fileName)</td>
+
+        <td>Constructor now takes a ParseInformation type instead of 
+        the filename.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.SharpDevelop.Dom.CtrlSpaceResolveHelper</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">ResolveResult 
+        GetResultFromDeclarationLine(IClass callingClass, 
+        IMethodOrProperty callingMember, int caretLine, int 
+        caretColumn, string expression)</td>
+
+        <td>Obsolete method removed. Should use the 
+        GetResultFromDeclarationLine method that takes an 
+        ExpressionResult instead of a string.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.DefaultAttribute</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">int CompareTo(IAttribute 
+        attribute)</td>
+
+        <td>Method removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">string Name</td>
+
+        <td>Property has been removed. The attribute name can now be 
+        obtained from the Name property of the AttributeReturnType.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.SharpDevelop.Dom.DefaultCompilationUnit</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">List&lt;IClass&gt; GetOuterClasses(int 
+        caretLine, int caretColumn)</td>
+
+        <td>Method removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.DomRegion</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">int CompareTo(DomRegion region)</td>
+
+        <td>Method removed and replaced by the Equals method.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">ctor(Location start, Location end)</td>
+
+        <td>Replaced by the static FromLocation method.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.ExpressionContext</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool IsAttributeContext</td>
+
+        <td>Property has been removed. Instead compare the 
+        ExpressionContext against the ExpressionContext.Attribute.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">ExpressionContext 
+        GetAttribute(IProjectContent projectContent)</td>
+
+        <td>Method removed. To indicate that an expression is an 
+        attribute use the ExpressionContext.Attribute type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">ExpressionContext 
+        TypeDerivingFrom(IClass baseClass, bool isObjectCreation)</td>
+
+        <td>Method now requires an IReturnType instead of an IClass 
+        type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.ExpressionResult</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">ctor(string expression, 
+        ExpressionContext context, object tag)</td>
+
+        <td>Replaced by the new constructor that also takes a 
+        DomRegion.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">ctor(string expression, object 
+        tag)</td>
+
+        <td>Replaced by the new constructor that also takes a DomRegion 
+        and ExpressionContext.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.SharpDevelop.GacAssemblyName</b></td>
+
+        <td>Type removed. Code should use the DomAssemblyName 
+        instead.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.GacInterop</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">GacAssemblyName 
+        FindBestMatchingAssemblyName(GacAssemblyName name)</td>
+
+        <td>Method now uses DomAssemblyName types.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">GacAssemblyName 
+        FindBestMatchingAssemblyName(string name)</td>
+
+        <td>Method now returns a DomAssemblyName type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.SharpDevelop.GacInterop.AssemblyListEntry</b></td>
+
+        <td>Type has been removed. Code should now use a 
+        DomAssemblyName type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.IAmbience</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">String Convert(ModifierEnum)</td>
+
+        <td>Method removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.IAttribute</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">string Name</td>
+
+        <td>Property has been removed. The attribute name can now be 
+        obtained from the Name property of the AttributeReturnType.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.ICompilationUnit</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">List&lt;IClass&gt; GetOuterClasses(int 
+        caretLine, int caretColumn)</td>
+
+        <td>
+
+          Method removed. Code should now use the IClass&apos;s 
+          DeclaringType property. For example:
+          <pre>    IClass type = callingClass.DeclaringType; 
+    while (type != null) { 
+      ... 
+      type = type.DeclaringType; 
+    } </pre>
+        </td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.IProjectContent</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IClass GetClass(string typeName)</td>
+
+        <td>Method removed. Code should now use GetClass(string 
+        typeName, int typeParameterCount) and pass 0 for the 
+        typeParameterCount.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.IResolver</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">ArrayList CtrlSpace(int caretLine, int 
+        caretColumn, string fileName, string fileContent, 
+        ExpressionContext context)</td>
+
+        <td>Method changed to use a ParseInformation type instead of a 
+        filename.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">ResolveResult Resolve(ExpressionResult 
+        expressionResult, int line, int col, string fileName, string 
+        fileContent)</td>
+
+        <td>Method changed to take a ParseInformation type instead of a 
+        filename and the line and column parameters have been 
+        removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.IReturnType</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">int TypeArgumentCount</td>
+
+        <td>Replaces the old TypeParameterCount property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">int TypeParameterCount</td>
+
+        <td>Replaced by the new TypeArgumentCount property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.MemberLookupHelper</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IMethod 
+        FindOverload(IList&lt;IMethod&gt; methods, IReturnType[] 
+        typeParameters, IReturnType[] arguments)</td>
+
+        <td>Method now has an extra out parameter called 
+        resultIsAcceptable. This parameter is true if the resulting 
+        method is an acceptable match, false if the resulting method is 
+        just a guess and will lead to a compile error.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Dom.NRefactoryResolver</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool Initialize(string fileName, int 
+        line, int column)</td>
+
+        <td>Method now takes a ParseInformation type instead of a 
+        filename.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IClass SearchClass(string name)</td>
+
+        <td>Method now takes an extra Location parameter which is used 
+        to search for a class at a particular location in the file. 
+        Code that does not need to specify a location should use 
+        Location.Empty.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IReturnType DynamicLookup(string 
+        identifier)</td>
+
+        <td>Method now takes an extra Location parameter. Use 
+        Location.Empty if no location can be specified.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IReturnType SearchMember(IReturnType 
+        type, string memberName)</td>
+
+        <td>Method removed. Instead of using this method call GetMember 
+        and then use the IMember&apos;s ReturnType.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IReturnType SearchType(string 
+        name)</td>
+
+        <td>Method now takes an extra Location parameter. Use 
+        Location.Empty if no location can be specified.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">ResolveResult Resolve(ExpressionResult 
+        expressionResult, int line, int column, string fileName, string 
+        fileContent)</td>
+
+        <td>Method now takes a ParseInformation type instead of the 
+        filename. The line and column parameters are no longer 
+        required.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">ArrayList CtrlSpace(int caretLine, int 
+        caretColumn, string fileName, string fileContent, 
+        ExpressionContext context)</td>
+
+        <td>Method changed to use a ParseInformation type instead of a 
+        filename.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.SharpDevelop.Dom.ProjectContentRegistry</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IProjectContent 
+        GetExistingProjectContent(AssemblyName assembly)</td>
+
+        <td>Obsolete method has been removed. Use the overloaded method 
+        that takes a DomAssemblyName type instead.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IProjectContent 
+        GetExistingProjectContent(string itemInclude, string 
+        itemFileName)</td>
+
+        <td>Method removed. Use the overloaded method that takes a 
+        single string parameter.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.SharpDevelop.Dom.ReflectionProjectContent</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">AssemblyName[] 
+        ReferencedAssemblies</td>
+
+        <td>Property removed and replaced by the 
+        ReferencedAssemblyNames property which returns a list of 
+        DomAssemblyNames.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">IList&lt;DomAssemblyName&gt; 
+        ReferencedAssemblyNames</td>
+
+        <td>Replaces the old ReferencedAssemblies property.</td>
+
+      </tr>
+
+    </table>
+
+    <h2>ICSharpCode.SharpDevelop.Widgets</h2>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Type</th>
+
+          <th>Description</th>
+
+        </tr>
+
+      </thead>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Widgets.SideBar.SideTab</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool IsClipboardRing</td>
+
+        <td>Property removed.</td>
+
+      </tr>
+
+    </table>
+
+    <h2>ICSharpCode.SharpDevelop</h2>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Type</th>
+
+          <th>Description</th>
+
+        </tr>
+
+      </thead>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.ClassBrowserIconService</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">int CombineIndex</td>
+
+        <td>Field removed and replaced with SolutionIndex.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.SharpDevelop.DefaultEditor.Gui.Editor.CtrlSpaceCompletionDataProvider</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool ForceNewExpression</td>
+
+        <td>Property removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.SharpDevelop.DefaultEditor.Gui.Editor.SharpDevelopTextEditorProperties</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool CreateBackupCopy</td>
+
+        <td>Property removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool UseAntiAliasedFont</td>
+
+        <td>Property removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.FileService</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IWorkbenchWindow GetOpenFile(string 
+        fileName)</td>
+
+        <td>Method now returns an IViewContent type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IWorkbenchWindow NewFile(string 
+        defaultName, string language, string content)</td>
+
+        <td>Method now returns an IViewContent type and the language 
+        parameter has been removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IWorkbenchWindow OpenFile(string 
+        fileName)</td>
+
+        <td>Method now returns an IViewContent type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.SharpDevelop.Gui.AbstractBaseViewContent</b></td>
+
+        <td>Class has been removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.SharpDevelop.Gui.AbstractSecondaryViewContent</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">void NotifyAfterSave(bool 
+        successful)</td>
+
+        <td>Method removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">void NotifyBeforeSave()</td>
+
+        <td>Method removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">void NotifyFileNameChanged()</td>
+
+        <td>Method removed. Code should either use the TitleNameChanged 
+        event or the FileNameChanged event on the PrimaryFile.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Gui.AbstractViewContent</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">event DirtyChanged</td>
+
+        <td>Event renamed to IsDirtyChanged.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">string FileName</td>
+
+        <td>Property renamed to PrimaryFileName.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool IsUntitled</td>
+
+        <td>Property removed. The property has been moved to the 
+        OpenedFile type which can be accessed via the view 
+        content&apos;s PrimaryFile property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">void Load(string fileName)</td>
+
+        <td>Method replaced by the Load method that takes an OpenedFile 
+        and a Stream.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">void Load(OpenedFile file, Stream 
+        stream)</td>
+
+        <td>New method that is used to open a file in a view. The 
+        OpenedFile type contains information about the file, whilst the 
+        stream is the actual file data.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">event Saved</td>
+
+        <td>Event removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">event Saving</td>
+
+        <td>Event removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">string UntitledName</td>
+
+        <td>Property removed. The untitled name is now stored as the 
+        filename.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.SharpDevelop.Gui.DefaultWorkbench</b></td>
+
+        <td>Class is now private and no longer publicly accessible.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.SharpDevelop.Gui.DriveObject</b></td>
+
+        <td>Class is now private and no longer publicly accessible.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Gui.ExtTreeView</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">void ApplyViewStateString(string 
+        state, TreeView tree)</td>
+
+        <td>Method moved to the TreeViewHelper class.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">string GetViewStateString(TreeView 
+        tree)</td>
+
+        <td>Method moved to the TreeViewHelper class.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.SharpDevelop.Gui.FileList</b></td>
+
+        <td>Class is now private and no longer publicly accessible.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.SharpDevelop.Gui.IBaseViewContent</b></td>
+
+        <td>
+
+          Interface has been removed. Most of the interface has been 
+          moved to the IViewContent interface apart from the following 
+          methods which no longer exist.
+          <pre>void Deselected()
+void Deselecting()
+void Selected()
+void SwitchedTo()</pre>
+        </td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Gui.ICanBeDirty</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">event DirtyChanged</td>
+
+        <td>Event renamed to IsDirtyChanged.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">bool IsDirty</td>
+
+        <td>Property setter is no longer defined in the interface. Only 
+        the getter is defined.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.SharpDevelop.Gui.IParseableContent</b></td>
+
+        <td>Interface removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.SharpDevelop.Gui.ISecondaryViewContent</b></td>
+
+        <td>Interface removed. All secondary view contents now 
+        implement the IViewContent interface.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Gui.IViewContent</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">bool IsDisposed</td>
+
+        <td>New property that indicates whether the view has been 
+        disposed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool IsUntitled</td>
+
+        <td>Property removed. Code should check the PrimaryFile&apos;s 
+        Untitled property instead.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">event Saved</td>
+
+        <td>Event removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">bool 
+        SupportsSwitchFromThisWithoutSaveLoad(OpenedFile file, 
+        IViewContent newView)</td>
+
+        <td>New method. Determines whether switching without a 
+        Save/Load is supported when switching from this view to another 
+        view.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">bool 
+        SupportsSwitchToThisWithoutSaveLoad(OpenedFile file, 
+        IViewContent oldView)</td>
+
+        <td>New method. Determines whether switching without a 
+        Save/Load is supported when switching to this view from another 
+        view.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">IWorkbenchWindow WorkbenchWindow</td>
+
+        <td>Property moved from the now obsolete IBaseViewContent 
+        interface. Gives access to the workbench window associated with 
+        this view.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">List&lt;ISecondaryViewContent&gt; 
+        SecondaryViewContents</td>
+
+        <td>Property now returns an ICollection instead of a list.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">event FileNameChanged</td>
+
+        <td>Event moved to the OpenedFile class which is accessible via 
+        the PrimaryFile property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">event Saving</td>
+
+        <td>Event removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">OpenedFile PrimaryFile</td>
+
+        <td>New property that gives access to information about the 
+        primary file associated with this view.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">IList&lt;OpenedFile&gt; Files</td>
+
+        <td>New property that returns a list of files that are 
+        associated with this view.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">event Disposed</td>
+
+        <td>New event raised when the view is disposed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">event TabPageTextChanged</td>
+
+        <td>New event raised when the tab page text at the bottom of 
+        the window is changed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">string FileName</td>
+
+        <td>The filename associated with a view is now accessible from 
+        the PrimaryFileName property.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">string TabPageText</td>
+
+        <td>Gets or sets the tab page text at the bottom of the window. 
+        This property was originally on the now obsolete 
+        IBaseViewContent interface.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">string UntitledName</td>
+
+        <td>Property removed. The UntitledName is now the same as the 
+        PrimaryFileName.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">Control Control</td>
+
+        <td>Gets or sets the control associated with this view. 
+        Originally part of the IBaseViewContent interface.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">void Load(string fileName)</td>
+
+        <td>Replaced by the Load method that takes an OpenedFile and a 
+        Stream.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">void Load(OpenedFile file, Stream 
+        stream)</td>
+
+        <td>New method that is used to open a file in a view. The 
+        OpenedFile type contains information about the file, whilst the 
+        stream is the actual file data..</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">void Save()</td>
+
+        <td>Replaced by the Save method that takes an OpenedFile and a 
+        Stream.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">void Save(string fileName)</td>
+
+        <td>Replaced by the Save method that takes an OpenedFile and a 
+        Stream.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="green-fill-indent">void Save(OpenedFile file, Stream 
+        stream)</td>
+
+        <td>New method that is used to save a file in a view.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.SharpDevelop.Gui.IViewContentMemento</b></td>
+
+        <td>Class removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.SharpDevelop.Gui.IViewContentMementoCreator</b></td>
+
+        <td>Class removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.Gui.IWorkbenchWindow</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IBaseViewContent ActiveViewContent</td>
+
+        <td>The ActiveViewContent property is now an IViewContent.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">IViewContent ViewContent</td>
+
+        <td>Property removed. Use the ActiveViewContent property 
+        instead.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.SharpDevelop.IDisplayBinding</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool CanCreateContentForFile(string 
+        fileName)</td>
+
+        <td>Method now takes an OpenedFile type instead of a 
+        string.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool 
+        CanCreateContentForLanguage(string language)</td>
+
+        <td>Method removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.SharpDevelop.ISecondaryDisplayBinding</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">ISecondaryViewContent[] 
+        CreateSecondaryViewContent(IViewContent view)</td>
+
+        <td>Method now returns an IViewContent array since the 
+        ISecondaryViewContent interface is obsolete.</td>
+
+      </tr>
+
+    </table>
+
+    <h2>ICSharpCode.TextEditor</h2>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Type</th>
+
+          <th>Description</th>
+
+        </tr>
+
+      </thead>
+
+      <tr>
+
+        <td><b>ICSharpCode.TextEditor.Caret</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">Point Position</td>
+
+        <td>The Position property now uses the 
+        ICSharpCode.TextEditor.TextLocation type instead of the 
+        System.Drawing.Point type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">Point ValidatePosition(Position 
+        pos)</td>
+
+        <td>The method now returns and uses the 
+        ICSharpCode.TextEditor.TextLocation type instead of the 
+        System.Drawing.Point type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.TextEditor.Document.Bookmark</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">event LineNumberChanged</td>
+
+        <td>Event removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.TextEditor.Document.BookmarkManager</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">event Changed</td>
+
+        <td>Event removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.TextEditor.Document.DefaultFormattingStrategy</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">int FormatLine(TextArea textArea, int 
+        line, int caretOffset, char charTyped)</td>
+
+        <td>Method now no longer returns anything.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.TextEditor.Document.DefaultTextEditorProperties</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool UseAntiAliasedFont</td>
+
+        <td>Property removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.TextEditor.Document.IDocument</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="indent">LineSegment GetLineSegment(int line)</td>
+
+        <td>The default implementation in the DefaultLineSegment class 
+        no longer allows the line number to be equal to the number of 
+        items in the IDocument&apos;s LineSegment collection.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">Point OffsetToPosition(int offset)</td>
+
+        <td>Method now returns a TextLocation type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">int PositionToOffset(Point point)</td>
+
+        <td>Method now takes a TextLocation type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.TextEditor.Document.IFormattingStrategy</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">int FormatLine(TextArea textArea, int 
+        line, int caretOffset, char charTyped)</td>
+
+        <td>Method now no longer returns anything.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.TextEditor.Document.ILineManager</b></td>
+
+        <td>Interface has been removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.TextEditor.Document.ISelection</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool ContainsPosition(Point point)</td>
+
+        <td>Method now uses a TextLocation type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">Point EndPosition</td>
+
+        <td>Property now uses a TextLocation type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">Point StartPosition</td>
+
+        <td>Property now uses a TextLocation type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.TextEditor.Document.ITextEditorProperties</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool CreateBackupCopy</td>
+
+        <td>Property removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool UseAntiAliasedFont</td>
+
+        <td>Property removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill">
+        <b>ICSharpCode.TextEditor.Document.LineLengthEventArgs</b></td>
+
+        <td>Replaced by the LineLengthChangedEventArgs type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <b>ICSharpCode.TextEditor.Gui.InsightWindow.IInsightDataProvider</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">char CharTyped</td>
+
+        <td>Property removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.TextEditor.TextEditorControlBase</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">event Changed</td>
+
+        <td>Event renamed to TextChanged.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool CreateBackupCopy</td>
+
+        <td>Property removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool IsUpdating</td>
+
+        <td>Property removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">bool UseAntiAliasedFont</td>
+
+        <td>Property removed.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.TextEditor.ToolTipRequestEventArgs</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">Point LogicalPosition</td>
+
+        <td>Property now uses a TextLocation type.</td>
+
+      </tr>
+
+      <tr>
+
+        <td><b>ICSharpCode.TextEditor.Undo.UndoStack</b></td>
+
+        <td/>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">void CombineLast(int actionCount)</td>
+
+        <td>Method removed. Similar functionality can be obtained by 
+        using the StartUndoGroup and EndUndoGroup method.</td>
+
+      </tr>
+
+      <tr>
+
+        <td id="red-fill-indent">void UndoLast(int actionCount)</td>
+
+        <td>Method removed. Similar functionality can be obtained by 
+        using the StartUndoGroup and EndUndoGroup method.</td>
+
+      </tr>
+
+    </table>
+
+    <h2>How to Port</h2>
+
+    <p>This section looks at one way to port an addin. This is the way 
+    that the IronPython addin was ported from SharpDevelop 2.2 to 
+    SharpDevelop 3.</p>
+
+    <p>Download the source code for SharpDevelop 3.0 and 2.2.</p>
+
+    <p>Copy the source code of your addin to a folder inside 
+    SharpDevelop 3.0.</p>
+
+    <p>Run three copies of SharpDevelop, one to view SharpDevelop 
+    2.2&apos;s source, one to view SharpDevelop 3.0&apos;s source, one 
+    with your addin. In the other copies of SharpDevelop you should 
+    open SharpDevelop.sln for 2.2 and 3.0. This will allow you to 
+    quickly search for SharpDevelop classes when you find your addin 
+    code will not compile.</p>
+
+    <p>Compile your code and fix the code or comment it out as you try 
+    to work out what is wrong.</p>
+
+    <p>You do not have to convert the project to use .NET 3.5. 
+    SharpDevelop itself uses it, but some of the addins do not. With 
+    the IronPython addin I needed to change it to use .NET 3.5 since 
+    there were some assembly conflicts between what SharpDevelop was 
+    using and what the addin was using. Obviously changing to use .NET 
+    3.5 will allow you to use any new features of this framework.</p>
+
+    <h2>.NET Framework Differences</h2>
+
+    <p>One change in .NET 3.5 caused me a few problems when porting the 
+    IronPython addin. This was a change in MSBuild.</p>
+
+    <p>After finally getting the IronPython addin to compile with the 
+    modified SharpDevelop 3 assemblies there was an assembly conflict 
+    for MSBuild. The ICSharpCode.SharpDevelop assembly now uses MSBuild 
+    3.5 assemblies whilst the IronPython build task project and test 
+    project were using MSBuild 2.0. This was fixed by converting these 
+    two projects so they use the .NET Framework 3.5. This can be done 
+    by opening the project&apos;s properties, selecting the Compiling 
+    tab, then clicking the Convert Project to C# 3.0 button. In the 
+    dialog that opens we select the &quot;Change target framework to 
+    .NET 3.5&quot; and click the OK button. After making this change 
+    the addin compiled and worked however all the unit tests for the 
+    IronPython build tasks were failing with the error:</p>
+
+    <p>System.ArrayTypeMismatchException : Attempted to access an 
+    element as a type incompatible with the array.</p>
+
+    <p>The test code that was failing:</p>
+
+    <pre id="xml">PythonCompilerTask compiler = new PythonCompilerTask(); 
+TaskItem sourceTaskItem = new TaskItem(&quot;test.py&quot;); 
+compiler.Sources = new ITaskItem[] {sourceTaskItem}; </pre>
+    <p>The last line was failing when the unit test was run. The 
+    TaskItem type implements the ITaskItem interface so the code should 
+    have worked. The reason for this error is that both the build task 
+    and build task tests project were referencing the MSBuild libraries 
+    just using the reference name.</p>
+
+    <pre id="xml">    &lt;Reference Include=&quot;Microsoft.Build.Framework&quot; /&gt; 
+    &lt;Reference Include=&quot;Microsoft.Build.Tasks&quot; /&gt; 
+    &lt;Reference Include=&quot;Microsoft.Build.Utilities&quot; /&gt; </pre>
+    <p>Running MSBuild from the command line the actual assemblies 
+    being used were a mix of 3.5 and 2.0 versions.</p>
+
+    <pre id="xml">&quot;Python.Build.Tasks.csproj&quot;: 
+/reference:&quot;C:\Program Files\Reference Assemblies\Microsoft\Framework\v3.5\Microsoft.Build.Framework.dll&quot;  
+/reference:C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\Microsoft.Build.Tasks.dll  
+/reference:C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\Microsoft.Build.Utilities.dll  </pre>
+    <p>Printing out the code base of the TaskItem and ITaskItem types 
+    whilst running the unit tests showed that the TaskItem was being 
+    taken from Microsoft.Build.Utilities assembly version 2.0 and the 
+    ITaskItem was being taken the Microsoft.Build.Framework 3.5 
+    assembly. The TaskItem we actually needed was in the new 
+    Microsoft.Build.Utilities assembly version 3.5. Changing the 
+    project references so they used this new 3.5 assembly fixed the 
+    problem.</p>
+
+  </body>
+
+</html>
+

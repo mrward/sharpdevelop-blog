@@ -1,0 +1,149 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Testing with .NET 1.1 in SharpDevelop 2.1</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop 2.1, as of revision 2135, now allows you to run 
+    your unit tests against .NET 1.1 or .NET 2.0.</p>
+
+    <p>Which framework your tests are run under is determined by the 
+    target framework your test project. So if you choose .NET 1.1 as 
+    your target framework, your tests are run in the .NET 1.1 
+    framework. The project&apos;s target framework can be set by 
+    selecting <b>Project Options</b> from the <b>Project</b> menu, then 
+    opening the <b>Compiling</b> tab.</p>
+
+    <p><img alt="Target framework options"
+     src="../FeatureTour/Images/FeatureTourTargetingDifferentFrameworks.png"/></p>
+
+    <p>Only .NET 1.1 and .NET 2.0 are supported, so if you choose 
+    another framework, such as one of the Compact Frameworks or Mono 
+    SharpDevelop will run your unit tests under .NET 2.0.</p>
+
+    <p>There&apos;s currently no support for Mono because our modified 
+    nunit-console has a threading problem which happens very frequently 
+    under Mono, but never seems to occur under Microsoft&apos;s .NET 
+    Framework.</p>
+
+    <h2>Running under another .NET Framework</h2>
+
+    <p>Since SharpDevelop recently moved to using nunit-console to run 
+    unit tests it was a fairly simple task to make it possible to test 
+    against .NET 1.1 or .NET 2.0. It is straight forward because 
+    nunit-console can be compiled against .NET 1.1. Since SharpDevelop 
+    is launching nunit-console as a separate process we could have used 
+    one of the following to target one particular framework.</p>
+
+    <ul>
+
+      <li>app.config</li>
+
+      <li>COMPLUS_Version environment variable</li>
+
+    </ul>
+
+    <h2>App.Config</h2>
+
+    <p>Using an app.config file is the most obvious and well documented 
+    way to target a particular framework and is actually how 
+    SharpDevelop gets nunit-console to target the different 
+    frameworks.</p>
+
+    <p>To run unit tests with .NET 1.1 we have nunit-console.exe built 
+    against .NET 1.1 and an app.config file, called 
+    nunit-console.exe.config which, contains the following:</p>
+
+    <div id="xml">
+
+      <pre>&lt;configuration&gt;
+    &lt;!--  
+        The startup section may be used to specify the runtime versions supported 
+        in the order that they will be used if more than one is present.
+    --&gt; 
+    &lt;startup&gt; 
+        &lt;supportedRuntime version=&quot;v1.1.4322&quot; /&gt; 
+    &lt;/startup&gt; 
+&lt;/configuration&gt;</pre>
+    </div>
+
+    <p>Note that the actual nunit-console&apos;s actual app.config has 
+    some extra things which I have removed in the above example so it 
+    just shows what is needed to target a particular framework. The &lt;
+    <a href="http://msdn.microsoft.com/library/en-us/cpgenref/html/gnconSupportedRuntimeElement.asp"
+    >supportedRuntime</a>&gt; element is used to determine which 
+    framework the application is run against.</p>
+
+    <p>To run against .NET 2.0 we use the same copy of nunit-console, 
+    built against .NET 1.1, but with an app.config which has .NET 2.0 
+    as the supported runtime. When you run the unit tests SharpDevelop 
+    looks at the project&apos;s target framework and runs the 
+    corresponding nunit-console.</p>
+
+    <p><b>COMPlus_Version</b></p>
+
+    <p>With Microsoft&apos;s .NET framework you can set the 
+    COMPlus_Version environment variable before running your .NET 
+    application to run it under a particular framework. So at the 
+    command line you could execute</p>
+
+    <p><b>SET COMPLUS_Version=v1.1.4322</b></p>
+
+    <p>Then your application would run against .NET 1.1. Specifying a 
+    framework in your app.config will override the COMPLUS_Version 
+    setting however.</p>
+
+    <p>SharpDevelop does not use this method since using an app.config 
+    makes it easy to support running unit tests with 
+    <a href="http://ncover.org">NCover</a> and the debugger. Using 
+    COMPLUS_Version we could not run NCover since it is compiled 
+    against .NET 2.0. The debugger would also need to be modified so it 
+    could set environment variables before debugging an application.</p>
+
+    <h2>Mono</h2>
+
+    <p>How do we target another framework with Mono? You can use one of 
+    the following:</p>
+
+    <ul>
+
+      <li>app.config</li>
+
+      <li>mono.exe --runtime command line parameter</li>
+
+    </ul>
+
+    <p>Again we can use the app.config file as discussed previously. We 
+    can also use the new <b>--runtime</b> command line parameter that 
+    was added in Mono 1.2.2. This works in a similar way to the 
+    COMPLUS_Version environment variable allowing you to set the 
+    framework version globally. Using the command line</p>
+
+    <p><b>mono --runtime=v1.1.4322 nunit-console.exe</b></p>
+
+    <p>would run nunit-console under Mono&apos;s .NET 1.1 framework.</p>
+
+    <p>There is one difference though, specifying the target framework 
+    in the app.config does not override this command line setting.</p>
+
+    <h2>Code Coverage with .NET 1.1</h2>
+
+    <p>If you want to look at code coverage when running your unit 
+    tests under .NET 1.1 you will need to use 
+    <a href="http://ncover.org/SITE/files/4/ncover_setup/entry202.aspx">
+    NCover version 1.5.4</a> since the latest release 1.5.5 does not 
+    work produce any coverage results when profiling a .NET 1.1 
+    assembly.</p>
+
+  </body>
+
+</html>
+

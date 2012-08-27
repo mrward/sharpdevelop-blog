@@ -1,0 +1,128 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>XPath Queries</title>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop 2.1 now has an XPath Query window where you can run 
+    an XPath query on the active XML document and the matched nodes 
+    will be highlighted.</p>
+
+    <h2>Features</h2>
+
+    <ul>
+
+      <li>Shows a list of XML nodes matched by the XPath query.</li>
+
+      <li>Highlights the matched XML nodes in the XML Editor.</li>
+
+      <li>Namespaces supported.</li>
+
+    </ul>
+
+    <h2>Running an XPath Query</h2>
+
+    <p>Open an XML document in SharpDevelop. For this walkthrough I am 
+    going to use the following WiX document.</p>
+
+    <p>
+
+      <pre>&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;Wix xmlns=&quot;http://schemas.microsoft.com/wix/2003/01/wi&quot;&gt;
+    &lt;Product Id=&quot;21BF5D59-D3AD-46FC-97B2-A3DD23A5BE20&quot;
+        Name=&quot;Your Application&quot;
+        Language=&quot;1033&quot;
+        Version=&quot;1.0.0.0&quot;
+        Manufacturer=&quot;Your Company&quot;&gt;
+ 
+        &lt;Package Id=&quot;8874187C-94B0-4DB4-9B73-E4D635680BA3&quot;
+            Description=&quot;#Description&quot;
+            Comments=&quot;Comments&quot;
+            InstallerVersion=&quot;200&quot;
+            Compressed=&quot;yes&quot;/&gt;
+  
+            &lt;Property Id=&quot;AcceptLicense&quot;&gt;No&lt;/Property&gt;
+            &lt;Property Id=&quot;Button_Back&quot;&gt;&amp;lt; &amp;amp;Back&lt;/Property&gt;
+            &lt;Property Id=&quot;Button_Next&quot;&gt;&amp;amp;Next &amp;gt;&lt;/Property&gt;
+            &lt;Property Id=&quot;Button_Finish&quot;&gt;&amp;amp;Finish&lt;/Property&gt;
+            &lt;Property Id=&quot;Button_OK&quot;&gt;OK&lt;/Property&gt;
+            &lt;Property Id=&quot;Button_Cancel&quot;&gt;Cancel&lt;/Property&gt; 
+            &lt;Property Id=&quot;Button_Exit&quot;&gt;&amp;amp;Exit&lt;/Property&gt;
+     &lt;/Product&gt;
+&lt;/Wix&gt;</pre>
+    </p>
+
+    <p>From the <b>View</b> menu, select <b>Tools</b> and then select 
+    <b>XPath Query</b>.</p>
+
+    <p><img alt="XPath Query menu item"
+     src="../Help/Images/ViewXPathQueryMenuItem.png"/></p>
+
+    <p>This opens the <b>XPath Query</b> window.</p>
+
+    <p><img alt="XPath Query Window"
+     src="../Help/Images/XPathQueryWindow.png"/></p>
+
+    <p>If your XML document has any namespaces that you need to refer 
+    to in the XPath query you can add them to the <b>Namespaces</b> 
+    tab. In the image below the WiX namespace has been entered along 
+    with a prefix.</p>
+
+    <p><img alt="WiX namespace added to XPath Query namespaces"
+     src="Images/WixNamespaceAddedToXPathQueryNamespaces.png"/></p>
+
+    <p>The prefix cannot be an empty string even for an XML document 
+    that does not use explicitly use a namespace prefix (e.g. like the 
+    WiX document we are currently using).</p>
+
+    <p>Type in your query into the <b>XPath</b> text box and then 
+    either click the <b>Query</b> button or press the <b>return</b> key 
+    to execute the query and show the results. The results are 
+    displayed as a list in the <b>XPath Query window</b> and the 
+    corresponding nodes in the XML document are highlighted.</p>
+
+    <p><img alt="XPath query results"
+     src="Images/WixPropertyElementXPathQueryResult.png"/></p>
+
+    <p>Double clicking a row in the <b>Results</b> list will jump to 
+    the corresponding XML line and sets focus back to the XML Editor. 
+    Single clicking a row will cause the XML Editor to scroll to the 
+    matched node.</p>
+
+    <p>If the XPath you typed in has an error this information is 
+    displayed in the <b>Results</b> list when you try to execute the 
+    query.</p>
+
+    <p><img alt="XPath query error"
+     src="Images/InvalidXPathQuery.png"/></p>
+
+    <p>Any errors in the XML document are also displayed in the 
+    <b>Results</b> list when you attempt to execute the query.</p>
+
+    <p><img alt="Xml document errors"
+     src="Images/XmlDocumentErrorsShownInXPathQueryWindow.png"/></p>
+
+    <p>To remove the highlighting in the XML document, right click the 
+    document and select <b>Hide XPath Results</b>.</p>
+
+    <p><img alt="Hide XPath results menu item"
+     src="../Help/Images/XmlEditorContextMenuHideXPathResultsMenuItem.png"/></p>
+
+    <h2>Visual Studio</h2>
+
+    <p>If you want to do same thing in Visual Studio 2005 then take a 
+    look at 
+    <a href="http://donxml.com/allthingstechie/archive/2006/07/07/2792.aspx">
+    XPathmania</a> created by 
+    <a href="http://www.donxml.com/aboutme.aspx">Don Demsak</a>.</p>
+
+  </body>
+
+</html>
+

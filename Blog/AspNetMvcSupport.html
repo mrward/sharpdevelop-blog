@@ -1,0 +1,255 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>ASP.NET MVC Support</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>One of the new features in 
+    <a href="http://build.sharpdevelop.net/BuildArtefacts/">
+    SharpDevelop 4.2</a> is better support for ASP.NET MVC 3 
+    applications. Previous versions contained project templates for 
+    ASP.NET MVC but not much more. With SharpDevelop 4.2 the following 
+    features have been added:</p>
+
+    <ul>
+
+      <li>Razor project and file templates for C# and Visual Basic</li>
+
+      <li>Razor syntax highlighting</li>
+
+      <li>Add Controller dialog using T4 templates</li>
+
+      <li>Add View dialog using T4 templates</li>
+
+      <li>HTML folding</li>
+
+    </ul>
+
+    <p>Now let us take at these new features.</p>
+
+    <h2>Prerequisites</h2>
+
+    <p>Before using SharpDevelop you should install ASP.NET MVC 3 and 
+    IIS, either IIS Express or full IIS. You can get MVC 3 and IIS 
+    Express from <a href="http://www.microsoft.com/web/platform/">
+    Microsoft&apos;s Web Platform installer</a> or download them 
+    directly from the following pages:</p>
+
+    <ul>
+
+      <li>
+      <a href="http://go.microsoft.com/fwlink/?LinkID=208140">ASP.NET 
+      MVC 3</a></li>
+
+      <li>
+      <a href="http://www.microsoft.com/download/en/details.aspx?id=1038">IIS 
+      Express</a></li>
+
+    </ul>
+
+    <p>After installing IIS Express make sure that you run 
+    IISExpress.exe once so it can generate its configuration files for 
+    your user profile. If you do not then SharpDevelop will fail to 
+    configure IIS Express.</p>
+
+    <h2>Creating an ASP.NET MVC Application</h2>
+
+    <p>Now we shall create a new C# ASP.NET MVC application that uses 
+    the Razor view engine. First run SharpDevelop and then from the 
+    <b>File</b> menu select <b>New Solution</b> to open the New Project 
+    dialog.</p>
+
+    <p><img alt="New ASP.NET MVC project dialog"
+     src="Images/NewMvcProjectDialog.png"/></p>
+
+    <p>On the left in <b>Categories</b> select <b>ASP.NET MVC</b> under 
+    <b>C#</b>. On the right you will see three project templates.</p>
+
+    <ul>
+
+      <li>Empty MVC Application - creates an MVC application with a 
+      minimal set of files.</li>
+
+      <li>MVC Application - creates an MVC application that uses the 
+      Web Forms view engine (.aspx).</li>
+
+      <li>Razor MVC Application - creates an MVC application that uses 
+      the Razor view engine.</li>
+
+    </ul>
+
+    <p>Select the Razor MVC Application project template. Enter a name 
+    for the project and select a location where the project will be 
+    created. Click <b>Create</b> to create the MVC project. </p>
+
+    <p><img alt="ASP.NET MVC project in Projects window"
+     src="Images/RazorMvcProjectInProjectsWindow.png"/></p>
+
+    <p>If you open the <b>Projects</b> window by selecting 
+    <b>Projects</b> from the <b>View</b> menu you will see that the 
+    project template created a <b>Home Controller</b>, two Razor view 
+    pages - <b>Index</b> and <b>Contact</b>, as well as installing the 
+    jQuery and Modernizer NuGet packages.</p>
+
+    <h2>Syntax Highlighting and Folding</h2>
+
+    <p>If you open the a Razor file (.cshtml) you will see that there 
+    is html folding and Razor syntax highlighting.</p>
+
+    <p><img alt="Razor syntax highlighting"
+     src="Images/RazorSyntaxHighlightingLayoutPage.png"/></p>
+
+    <p>The Razor syntax highlighting is still under development and 
+    does not work in all cases since it is not using Microsoft&apos;s 
+    Razor parser and uses a basic syntax definition file. In the 
+    screenshot above, for example, the Razor @ symbol is not correctly 
+    highlighted in the script and link tags.</p>
+
+    <h2>Running an ASP.NET MVC Application</h2>
+
+    <p>In order to be able to run your application first you will need 
+    to configure the project to use IIS Express or IIS. From the 
+    <b>Project</b> menu select <b>Project Options</b>. Select the 
+    <b>Debug</b> tab. At the bottom of this tab you will see options 
+    for IIS Express and IIS.</p>
+
+    <p><img alt="IIS project options"
+     src="Images/IISProjectOptions.png"/></p>
+
+    <p>For this walkthrough we will use IIS Express. Select IIS Express 
+    and enter a port number. Then click the <b>Create 
+    Applicaton/Virtual Directory</b> button. A message will then be 
+    displayed telling you that the application/virtual directory was 
+    created successfully. Now we can run the application.</p>
+
+    <p>To run the application select <b>Run</b> from the <b>Debug</b> 
+    menu. IIS Express will then be launched and your application will 
+    be loaded into your default web browser.</p>
+
+    <p><img alt="ASP.NET MVC application running in browser"
+     src="Images/AspMvcApplicationRunningInBrowser.png"/></p>
+
+    <p>You can set breakpoints in your application and debug your code 
+    in the standard way. For example, set a breakpoint in the 
+    HomeController&apos;s Contact method and then click Contacts in 
+    your browser and you will see SharpDevelop stop at the 
+    breakpoint.</p>
+
+    <p><img alt="Breakpoint hit in HomeController Contact method"
+     src="Images/BreakpointHitInHomeController.png"/></p>
+
+    <p>To stop debugging select <b>Stop process</b> from the 
+    <b>Debug</b> menu. You will then see a prompt asking you to detach 
+    or terminate the process being debugged, in this case IIS Express. 
+    Detaching will leave IIS Express running.</p>
+
+    <h2>File Templates</h2>
+
+    <p>SharpDevelop includes a set of file templates for ASP.NET MVC 
+    applications. You can create a new file using these templates by 
+    selecting the project or a folder in the <b>Projects</b> window, 
+    right clicking and select <b>Add New Item</b>.</p>
+
+    <p><img alt="ASP.NET MVC file templates in New File Dialog"
+     src="Images/AspNetMvcFileTemplatesInNewFileDialog.png"/></p>
+
+    <p>Select the appropriate template, give the file a name and click 
+    <b>Create</b> to add a new file to your project.</p>
+
+    <h2>Add Controller Dialog</h2>
+
+    <p>You can add a new controller to your project using a file 
+    template as described in the previous section or you can use the 
+    <b>Add Controller dialog</b>.</p>
+
+    <p>Select the <b>Controllers</b> folder in the <b>Projects</b> 
+    window, right click and select <b>Add Controller</b> to show the 
+    <b>Add Controller dialog</b>.</p>
+
+    <p><img alt="Add controller dialog"
+     src="Images/AddControllerDialog.png"/></p>
+
+    <p>In the dialog you specify the controller&apos;s name and select 
+    one of the templates that will be used to generate the controller 
+    class. These templates are defined by a single T4 template that you 
+    can edit if you want to customise it. The T4 template exists in the 
+    following subfolder where SharpDevelop was installed:</p>
+
+    <p>AddIns\BackendBindings\AspNet.Mvc\ItemTemplates</p>
+
+    <p>Click the <b>Add</b> button to create a new controller from the 
+    T4 template.</p>
+
+    <h2>Add View Dialog</h2>
+
+    <p>A new view can be created by using a file template or by using 
+    the <b>Add View dialog</b>. Select one of the <b>Views</b> folders, 
+    right click and select <b>Add New View</b> to show the <b>Add View 
+    dialog</b>.</p>
+
+    <p><img alt="Add view dialog" src="Images/AddViewDialog.png"/></p>
+
+    <p>In the dialog you can specify the following items:</p>
+
+    <ul>
+
+      <li><b>View Name</b> - specifies the name of the view</li>
+
+      <li><b>View Engine</b> - selects either web forms (ASPX) or Razor 
+      view engine. The options displayed in the dialog will change 
+      based on this selection.</li>
+
+      <li><b>Strongly Typed</b> - allows you to generate a view based 
+      on a type in your project.</li>
+
+      <li><b>Model</b> - a list of types in your project. You may have 
+      to compile your project for a class to be displayed in this drop 
+      down.</li>
+
+      <li><b>Template</b> - specifies which of the T4 templates will be 
+      used when generating the view. Templates available are - Empty, 
+      Create, Delete, Details, Edit, List.</li>
+
+      <li><b>Use Layout</b> (Razor) - specifies whether the view will 
+      use a layout.</li>
+
+      <li><b>Layout</b> (Razor) - specifies the path to the layout 
+      page. The browse button allows you to select a layout page from 
+      those in your project.</li>
+
+      <li><b>User Master Page</b> (ASPX) - specifies whether the view 
+      will use a master page.</li>
+
+      <li><b>Master Page</b> (ASPX) - specifies the path to the master 
+      page. The browse button allows you to select a master page from 
+      those in your project.</li>
+
+      <li><b>Main Content ID</b> (ASPX) - specifies the main content 
+      ID.</li>
+
+      <li><b>Partial View</b> - used to generate a partial view.</li>
+
+    </ul>
+
+    <p>Views generated from this dialog use T4 templates which exist in 
+    the following folder if you need to customise them:</p>
+
+    <p>AddIns\BackendBindings\AspNet.Mvc\ItemTemplates</p>
+
+    <p>That concludes the walkthrough of the new ASP.NET MVC 3 support 
+    in SharpDevelop. Further information on ASP.NET MVC 3 can be found 
+    at the <a href="http://www.asp.net/mvc">Getting Started with 
+    ASP.NET MVC</a> page. </p>
+
+  </body>
+
+</html>
+

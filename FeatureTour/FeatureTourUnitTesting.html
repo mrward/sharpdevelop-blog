@@ -1,0 +1,109 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Unit Testing</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop integrates with <a href="http://nunit.org">
+    NUnit</a> allowing you to run and debug your unit tests inside the 
+    development environment.</p>
+
+    <p>First you will need a project to hold your tests. From the 
+    <b>File</b> menu, select <b>New</b> and then select 
+    <b>Solution...</b> to open up the <b>New Project</b> dialog box.</p>
+
+    <p><img alt="File new Solution menu item"
+     src="../Help/Images/FileNewSolutionMenuItem.png"/></p>
+
+    <p>Expand the <b>C#</b> category and select <b>Class Library</b> 
+    from the list of available templates. Choose the project&apos;s 
+    name and location and then click the <b>Create</b> button.</p>
+
+    <p>Now create a simple test class. Select the name of the project 
+    in the <b>Project Explorer</b>, right click, select <b>Add</b> and 
+    then select <b>New Item...</b>. Select the <b>Unit Test</b> 
+    template from the <b>C#</b> category, give it a name and then 
+    select the <b>Create</b> button. Adding this template to the 
+    project will automatically add the required reference to 
+    NUnit.Framework. The code shown below is an example of a very basic 
+    test class which you can copy into the file just created.</p>
+
+    <pre>using NUnit.Framework;  
+using System;   
+ 
+namespace Simple.Tests 
+{ 
+ [TestFixture]   
+ public class MyTest   
+ {    
+  [Test]    
+  public void FailingTest()    
+  {     
+   Assert.Fail(&quot;This test fails.&quot;);    
+  }   
+ }  
+}</pre>
+    <p>From the <b>View</b> menu select <b>Tools</b> and then <b>Unit 
+    Tests</b>.</p>
+
+    <p><img alt="View Unit Tests menu item"
+     src="../Help/Images/ViewUnitTestsMenuItem.png"/></p>
+
+    <p>This opens up the <b>Unit Tests</b> window.</p>
+
+    <p><img alt="Unit test window"
+     src="Images/FeatureTourUnitTestWindow.png"/></p>
+
+    <p>To run the test from the <b>Unit Tests</b> window click the 
+    <b>Run tests</b> toolbar button <img alt="Run tests button"
+     src="Images/FeatureTourRunTestsButton.png"/>, or right click a 
+    test, and select <b>Run tests</b>.</p>
+
+    <p><img alt="Run tests menu item"
+     src="Images/FeatureTourRunTestsMenuItem.png"/></p>
+
+    <p>After a test run, unit tests that pass are shown in green, those 
+    that fail in red and those that have not been run in yellow.</p>
+
+    <p><img alt="Tests results"
+     src="Images/FeatureTourTestsResults.png"/></p>
+
+    <p><img alt="Unit test results - more complicated"
+     src="Images/FeatureTourUnitTestResultsRedGreenYellow.png"/></p>
+
+    <p>As the tests are run messages are displayed in the <b>Output</b> 
+    window and after the tests have completed failing tests are added 
+    to the <b>Errors</b> window.</p>
+
+    <p><img alt="Errors window with test failures"
+     src="Images/FeatureTourTestsFailuresInErrorsWindow.png"/></p>
+
+    <p>Tests can be run from the source code editor by right clicking 
+    the test method or test class and selecting one of the Unit Testing 
+    menu options.</p>
+
+    <p><img alt="Running tests from the text editor"
+     src="Images/FeatureTourRunTestsFromTextEditor.png"/></p>
+
+    <p>The menu options allow you to run the test and show the result 
+    in the <b>Unit Tests</b> window, or run the test with the debugger 
+    so you can step through the code, or run the test and check for 
+    code coverage. The last two menu items are also available when 
+    running tests from the <b>Unit Tests</b> window.</p>
+
+    <p>&lt; <a href="FeatureTourCodeConversion.html">previous</a> | 
+    <a href="FeatureTour.html">home</a> | 
+    <a href="FeatureTourCodeCoverage.html">next</a> &gt;</p>
+
+  </body>
+
+</html>
+

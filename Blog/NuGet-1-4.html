@@ -1,0 +1,95 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>NuGet 1.4</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>The <a href="http://docs.nuget.org/docs/release-notes/nuget-1.4">
+    NuGet 1.4 release</a> included some great new features for managing 
+    NuGet packages across a solution. SharpDevelop has now been updated 
+    to NuGet 1.4 so let us take a look at the changes in the 
+    <a href="http://build.sharpdevelop.net/BuildArtefacts/#SD41">latest 
+    version of SharpDevelop</a>.</p>
+
+    <h2>Manage Packages Dialog</h2>
+
+    <p>The first thing that you will notice is that the menu name has 
+    changed. When you right click on a project or a solution you now 
+    select <b>Manage Packages</b> to open the <b>Manage Packages 
+    dialog</b>.</p>
+
+    <p><img alt="Manage packages right click context menu"
+     src="Images/ProjectsWindowManagePackagesContextMenu.png"/></p>
+
+    <p>The dialog name has changed and now shows the name of the 
+    project or the solution in the its caption. Opening the dialog by 
+    right clicking on a project and selecting <b>Manage Packages</b> 
+    allows you to add or remove NuGet packages from the selected 
+    project. In the screenshot below the MyApplication.Tests project 
+    was selected when the Manage Packages dialog was opened.</p>
+
+    <p>
+    <img alt="Manage Packages dialog - MyApplication.Tests project selected"
+     src="Images/ManagePackagesDialogMyApplicationTestsProjectSelected.png"/></p>
+
+    <p>Right clicking on the solution and selecting <b>Manage 
+    Packages</b> allows you to add or remove NuGet packages from 
+    multiple projects in one step. In the screenshot below the 
+    MyApplication solution was selected when the <b>Manage Packages 
+    dialog</b> was opened.</p>
+
+    <p>
+    <img alt="Manage Packages dialog - MyApplication solution selected"
+     src="Images/ManagePackagesDialogMyApplicationSolutionSelected.png"/></p>
+
+    <p>NuGet packages can now be added to multiple projects in one 
+    step. Find the NuGet package you want to add and click the 
+    <b>Manage</b> button. You will then be prompted to select which 
+    project you want the package to be installed into.</p>
+
+    <p><img alt="Manage Packages - Select Projects dialog"
+     src="Images/ManagePackagesSelectProjectsDialog.png"/></p>
+
+    <p>Click the OK button to install the package into the selected 
+    projects.</p>
+
+    <p>To remove a NuGet package from multiple projects switch to the 
+    <b>Installed</b> packages tab, select the package and click the 
+    <b>Manage</b> button. You will then be shown a list of projects. To 
+    remove a package uncheck one or more projects and click the OK 
+    button.</p>
+
+    <h2>Update-Package PowerShell Command</h2>
+
+    <p>The Update-Package PowerShell command has been changed to 
+    support updating a NuGet package across multiple projects. The 
+    following commands can be used in the <b>Package Management 
+    Console</b> window to update packages across projects.</p>
+
+    <h3>Update all Packages in the Solution</h3>
+
+    <pre>update-package</pre>
+    <h3>Update all Packages in a Project</h3>
+
+    <pre>update-package -ProjectName MyProject</pre>
+    <h3>Update a Package across the Solution</h3>
+
+    <pre>update-package jQuery</pre>
+    <p>That covers the changes in the current version of SharpDevelop. 
+    Note that not all of the features that were added in NuGet 1.4 are 
+    currently available in SharpDevelop. For example, the Package 
+    Visualiser and the safe updating of NuGet packages using 
+    Update-Package -Safe, have not been implemented.</p>
+
+  </body>
+
+</html>
+

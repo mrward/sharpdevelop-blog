@@ -1,0 +1,80 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Add Service Reference</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop 4.2 now includes support for adding references to 
+    WCF services.</p>
+
+    <h2>Prerequisites</h2>
+
+    <p>
+    <a href="http://www.microsoft.com/download/en/details.aspx?id=8279">Microsoft 
+    Windows SDK</a> should be installed.</p>
+
+    <p>In order to generate the service reference SharpDevelop uses 
+    Microsoft&apos;s ServiceModel Metadata Utility Tool 
+    <a href="http://msdn.microsoft.com/en-us/library/aa347733.aspx">
+    SvcUtil</a> which is included as part of the 
+    <a href="http://www.microsoft.com/download/en/details.aspx?id=8279">
+    Microsoft Windows SDK</a>.</p>
+
+    <h2>Configuring SvcUtil Location</h2>
+
+    <p>SharpDevelop should automatically detect where SvcUtil is 
+    installed however the path to SvcUtil can be overridden if required 
+    from the Tools - Options dialog. </p>
+
+    <p><img alt="SvcUtil path configuration in Tools Options"
+     src="Images/ToolsOptionsSvcUtilPathConfig.png"/></p>
+
+    <h2>Adding a Service Reference</h2>
+
+    <p>To add a service reference, open the Projects window, right 
+    click on the project or the references and select Add Service 
+    Reference.</p>
+
+    <p><img alt="Add service reference context menu"
+     src="Images/AddServiceReferenceContextMenu.png"/></p>
+
+    <p>In the Add Service Reference dialog enter the url to the WCF 
+    service and click Go. The WCF service that is discovered should 
+    then be displayed.</p>
+
+    <p><img alt="Add service reference dialog"
+     src="Images/AddServiceReferenceDialog.png"/></p>
+
+    <p>Clicking the Advanced button will allow you to configure further 
+    generation options.</p>
+
+    <p><img alt="Advanced service reference options"
+     src="Images/AdvancedServiceReferenceOptionsDialog.png"/></p>
+
+    <p>In the main Add Service Reference dialog enter a namespace for 
+    the service and then click the OK button to generate the service 
+    reference.</p>
+
+    <p><img alt="Generated service reference in projects window."
+     src="Images/GeneratedServiceReferenceInProjectsWindow.png"/></p>
+
+    <p>A service reference proxy will be added to the project and the 
+    project&apos;s app.config file will be updated with the WCF binding 
+    information.</p>
+
+    <p>Now you can use the WCF service in your application.</p>
+
+    <p> </p>
+
+  </body>
+
+</html>
+

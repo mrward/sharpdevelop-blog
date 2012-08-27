@@ -1,0 +1,279 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Machine.Specifications (MSpec)</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>Here is a preview of a new feature that is planned for 
+    SharpDevelop - integrated support for Machine.Specifications.</p>
+
+    <p><a href="https://github.com/machine/machine.specifications"
+    >Machine.Specifications</a>, or MSpec for short, is a 
+    <a href="http://en.wikipedia.org/wiki/Behavior_Driven_Development">
+    Behaviour Driven Development</a> framework for .NET created by 
+    <a href="http://codebetter.com/aaronjensen/2008/05/08/introducing-machine-specifications-or-mspec-for-short/"
+    >Aaron Jensen</a> which takes its inspiration from 
+    <a href="http://code.google.com/p/specunit-net/">SpecUnit.NET</a> 
+    and <a href="http://rspec.info/">RSpec</a>.</p>
+
+    <p>Support for MSpec has been added thanks to 
+    <a href="http://blog.trecio.cba.pl">Tomasz Tretkowski</a>.</p>
+
+    <p>So let us take a look at how the MSpec integration works in 
+    SharpDevelop.</p>
+
+    <h2>MSpec Integration</h2>
+
+    <p>The first thing you will need to do is add a reference to MSpec 
+    in the project that will contain your specifications. The easiest 
+    way to do this is to use NuGet. Select your project, right click 
+    and select <b>Manage Packages</b>.</p>
+
+    <p><img alt="Manage Packages context menu"
+     src="Images/MSpecManagePackagesContextMenu.png"/></p>
+
+    <p>Search for the <b>Machine.Specifications</b> package and then 
+    click the <b>Add</b> button to add the NuGet package to your 
+    project.</p>
+
+    <p><img alt="MSpec NuGet package selected in Manage Packages dialog"
+     src="Images/MSpecPackageInManagePackagesDialog.png"/></p>
+
+    <p>This will add a Machine.Specifications assembly reference to 
+    your project.</p>
+
+    <p>Now let us create our first specification. We are going to 
+    create a specification which is based on an 
+    <a href="https://github.com/machine/machine.specifications/tree/master/Source/Machine.Specifications.Example"
+    >example</a> provided with the MSpec source code. The specification 
+    is for transferring an amount of money between two bank accounts 
+    and is shown below.</p>
+
+    <pre>using System; 
+using Machine.Specifications; 
+ 
+namespace Banking.Tests 
+{ 
+    [Subject(typeof(Account), &quot;Funds transfer&quot;)] 
+    public class when_transferring_between_two_accounts 
+    { 
+        static Account fromAccount; 
+        static Account toAccount; 
+         
+        Establish context = () =&gt; { 
+            fromAccount = new Account { Balance = 1m }; 
+            toAccount = new Account { Balance = 1m }; 
+        }; 
+         
+        Because of = () =&gt; 
+            fromAccount.Transfer(1m, toAccount); 
+         
+        It should_debit_the_from_account_by_the_amount_transferred = () =&gt; 
+            fromAccount.Balance.ShouldEqual(0m); 
+         
+        It should_credit_the_to_account_by_the_amount_transferred = () =&gt; 
+            toAccount.Balance.ShouldEqual(2m); 
+    } 
+}</pre>
+    <p>MSpec uses <b>Establish</b>/<b>Because</b>/<b>It</b> which is 
+    equivalent to <b>Given</b>/<b>When</b>/<b>Then</b> that is used 
+    with SpecFlow. <b>Establish</b> is used to setup the initial state. 
+    <b>Because</b> is used to define the event/action that you are 
+    testing. <b>It</b> is used to test the final state and see if it 
+    matches what is expected.</p>
+
+    <p>The Account class that is used by this specification is shown 
+    below.</p>
+
+    <pre>using System; 
+ 
+namespace Banking 
+{ 
+    public class Account 
+    { 
+        public decimal Balance { get; set; } 
+        
+        public void Transfer(decimal amount, Account toAccount) 
+        {             
+        }
+    } 
+}</pre>
+    <p>Specifications are displayed in the <b>Unit Tests</b> window. 
+    This window can be opened by selecting <b>Unit Tests</b> from the 
+    <b>View</b> | <b>Tools</b> menu. The specification we have defined 
+    will be displayed in the Unit Test window as shown below.</p>
+
+    <p><img alt="MSpec tests in Unit Tests window"
+     src="Images/MSpecTestsInUnitTestsWindow.png"/></p>
+
+    <p>The Unit Tests window will update as the specification is 
+    written in the same way it does when you are writing NUnit 
+    tests.</p>
+
+    <p>To run MSpec you can right click a specification and select 
+    <b>Run tests</b> or you can click the toolbar buttons at the top of 
+    the Unit Tests window.</p>
+
+    <p><img alt="Run tests context menu in Unit Tests window"
+     src="Images/RunMSpecTestsInUnitTestsWindow.png"/></p>
+
+    <p>Failures will be highlighted in Red in the Unit Tests window.</p>
+
+    <p><img alt="MSpec failures in Unit Tests window"
+     src="Images/MSpecFailuresInUnitTestsWindow.png"/></p>
+
+    <p>The output from MSpec is displayed in the <b>Output</b> 
+    window.</p>
+
+    <p><img alt="MSpec runner output in Output window"
+     src="Images/MSpecOutputInOutputWindow.png"/></p>
+
+    <p>Failures are also added to the <b>Errors</b> window. Clicking on 
+    an error will take you directly to the source code for the failing 
+    test.</p>
+
+    <p><img alt="MSpec failures in Errors window"
+     src="Images/MSpecFailuresInOutputWindow.png"/></p>
+
+    <p>Now we have to fix the failures by implementing the 
+    Account&apos;s Transfer method. The updated Transfer method is 
+    shown below:</p>
+
+    <pre>public void Transfer(decimal amount, Account toAccount) 
+{ 
+    Balance -= amount; 
+    toAccount.Balance += amount; 
+}</pre>
+    <p>After making this change and running MSpec again everything 
+    passes, as shown below.</p>
+
+    <p><img alt="MSpec passes shown in green in Unit Tests window"
+     src="Images/MSpecPassesInUnitTestsWindow.png"/></p>
+
+    <p><img alt="MSpec success output in Output Window"
+     src="Images/MSpecPassedTestsOutputInOutputWindow.png"/></p>
+
+    <p>That completes the quick introduction to using MSpec with 
+    SharpDevelop. Now let us take a look at MSpec Behaviours.</p>
+
+    <h2>MSpec Behaviours</h2>
+
+    <p>MSpec Behaviours are a way to group together a set of tests that 
+    you want to re-use with different contexts. To do this you create a 
+    separate class, add a Behaviors attribute to it, and move your 
+    tests into that class. This behaviour class is then referenced by 
+    using the  <b>Behaves_like</b> syntax. An example taken from the 
+    <a href="https://github.com/machine/machine.specifications/tree/master/Source/Machine.Specifications.Example.WithBehavior"
+    >MSpec examples</a> is shown below.</p>
+
+    <pre>using System; 
+using Machine.Specifications; 
+ 
+namespace Banking.Tests 
+{ 
+    [Subject(&quot;Date time parsing&quot;)] 
+    public class when_a_date_is_parsed_with_the_regular_expression_parser 
+     : DateTimeParsingSpecs 
+    { 
+        Establish context = () =&gt;  
+         Parser = new RegexParser(); 
+ 
+        Because of = () =&gt;  
+         ParsedDate = Parser.Parse(&quot;2009/01/21&quot;); 
+ 
+        Behaves_like&lt;DateTimeParsingBehavior&gt; a_date_time_parser; 
+    } 
+ 
+    [Subject(&quot;Date time parsing&quot;)] 
+    public class when_a_date_is_parsed_by_the_infrastructure 
+     : DateTimeParsingSpecs 
+    { 
+        Establish context = () =&gt;  
+         Parser = new InfrastructureParser(); 
+ 
+        Because of = () =&gt;  
+         ParsedDate = Parser.Parse(&quot;2009/01/21&quot;); 
+ 
+        Behaves_like&lt;DateTimeParsingBehavior&gt; a_date_time_parser; 
+    } 
+ 
+    public abstract class DateTimeParsingSpecs 
+    { 
+        protected static DateTime ParsedDate; 
+        protected static IParser Parser; 
+    } 
+ 
+    [Behaviors] 
+    public class DateTimeParsingBehavior 
+    { 
+        protected static DateTime ParsedDate; 
+ 
+        It should_parse_the_expected_date = () =&gt;  
+            ParsedDate.ShouldEqual(new DateTime(2009, 1, 21)); 
+    } 
+}</pre>
+    <p>Here the behaviour of the parser returning a particular date has 
+    been extracted and re-used across two different contexts.</p>
+
+    <p>SharpDevelop is aware of MSpec behaviours and will display the 
+    underlying tests. The date time parser specifications above will be 
+    displayed in the Unit Tests window as shown below.</p>
+
+    <p><img alt="MSpec behaviours in Unit Tests window"
+     src="Images/MSpecBehavioursInUnitTestsWindow.png"/></p>
+
+    <p>For further details on MSpec behaviours take a look at the 
+    <a href="http://lostechies.com/jamesgregory/2010/01/18/behaviours-in-mspec/"
+    >Behaviours in MSpec</a> post by James Gregory.</p>
+
+    <h2>Further MSpec Information</h2>
+
+    <p>Here is a selection of links to further information on MSpec 
+    that you may find useful.</p>
+
+    <p><a href="https://github.com/machine/machine.specifications"
+    >MSpec on Github</a></p>
+
+    <p>
+    <a href="http://codebetter.com/aaronjensen/2008/05/08/introducing-machine-specifications-or-mspec-for-short/"
+    >Introducing MSpec</a> - Aaron Jensen&apos;s post that first 
+    introduced MSpec.</p>
+
+    <p>
+    <a href="http://elegantcode.com/2010/02/19/getting-started-with-machine-specifications-mspec/"
+    >Getting Started with MSpec</a></p>
+
+    <p><a href="http://wekeroad.com/mvc-storefront/kona-3/">Learning 
+    BDD</a> - If you prefer to learn by watching a video check out Rob 
+    Conery&apos;s BDD screencast where he discusses BDD and also covers 
+    MSpec.</p>
+
+    <p><a href="http://wekeroad.com/blog/make-bdd-your-bff-2/">Make BDD 
+    your BFF</a> - Rob Conery walks through BDD with MSpec.</p>
+
+    <p>
+    <a href="http://www.awkwardcoder.com/index.php/2010/10/11/teaching-a-string-calculator-how-to-behave/"
+    >Teaching a String Calculator How to Behave</a></p>
+
+    <p>
+    <a href="http://lostechies.com/jamesgregory/2010/01/18/behaviours-in-mspec/"
+    >Behaviours in MSpec</a></p>
+
+    <p />
+
+    <p />
+
+    <p />
+
+  </body>
+
+</html>
+

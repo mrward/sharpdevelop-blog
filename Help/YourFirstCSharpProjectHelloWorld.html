@@ -1,0 +1,171 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Your First C# Project: Hello, World</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>To introduce you to some of SharpDevelop&apos;s features, we 
+    will create a simple &quot;Hello, World &quot;Windows application. 
+    This example will be written using the C# language.</p>
+
+    <h2>Creating a New C# Application</h2>
+
+    <ol>
+
+      <li>
+
+        From the 
+        <b>File</b>
+         menu, select 
+        <b>New</b>
+         and then 
+        <b>Solution...</b>
+         or use the shortcut Ctrl+Shift+N or click 
+        <b>New solution</b>
+         on the Start Page.
+        <p><img alt="File New Solution Menu Item"
+         src="Images/FileNewSolutionMenuItem.png"/></p>
+
+        <p>This opens the New Project dialog. This dialog shows all the 
+        various projects that SharpDevelop can create.</p>
+
+        <p><img alt="New Project dialog"
+         src="Images/HelloWorldNewProjectDialog.png"/></p>
+
+      </li>
+
+      <li>From the New Project dialog, expand the C# category and 
+      select the Windows Application category.</li>
+
+      <li>From the list of available templates, select <b>Windows 
+      Application</b>.</li>
+
+      <li>Type in a name for the new project (e.g. HelloWorld).</li>
+
+      <li>Enter the folder location for the new project. Type in the 
+      full path or click the browse button 
+      <img src="Images/BrowseButton.png"/> to use the <b>Browse for 
+      Folder</b> dialog to choose a folder. The default location should 
+      be fine, but you are free to choose another location for the 
+      project. In the screenshot above, the project has been given the 
+      name HelloWorld and the location has been set to 
+      &quot;C:\Projects&quot;. At the bottom of the dialog you can see 
+      that the new project will be created in the folder 
+      &quot;C:\Projects\HelloWorld&quot;.</li>
+
+      <li>
+
+        Click the 
+        <b>Create</b>
+         button. SharpDevelop will create the project and open it. On 
+        the left hand side you can see the project in the Project 
+        Explorer. Expand HelloWorld to see all the files that project 
+        contains. In the middle the project&apos;s main form 
+        MainForm.cs is opened.
+        <p><img alt="HelloWorld project opened inside SharpDevelop"
+         src="Images/HelloWorldWinFormsProjectCreated.png"/></p>
+
+      </li>
+
+    </ol>
+
+    <h1>Editing the Code</h1>
+
+    <ol>
+
+      <li>
+
+        Now you will modify the MainForm class so the title of the 
+        window of your HelloWorld application is set to &quot;Hello, 
+        World!&quot;. In order to do this, scroll the text of the 
+        MainForm class down until you see the MainForm&apos;s 
+        constructor, as shown below.
+        <p><img alt="MainForm.cs"
+         src="Images/HelloWorldMainFormConstructorCode.png"/></p>
+
+      </li>
+
+      <li>
+
+        Delete the three 
+        <code>TODO</code>
+         comment lines and type in the following single line of code:
+        <p><code>this.Text = &quot;Hello, World!&quot;;</code></p>
+
+        <p>Your MainForm should now look like this.</p>
+
+        <p>
+        <img alt="MainForm.cs modified to set the window title to &quot;Hello, World!&quot;"
+         src="Images/HelloWorldMainFormCodeAdded.png"/></p>
+
+      </li>
+
+    </ol>
+
+    <h1>Building the Application</h1>
+
+    <ol>
+
+      <li>
+
+        From the 
+        <b>Build</b>
+         menu, select 
+        <b>Build HelloWorld</b>
+         .
+        <p><img height="Menu option to build the HelloWorld application"
+         src="Images/BuildHelloWorldMenuOption.png"/></p>
+
+      </li>
+
+      <li>
+
+        As the project builds messages will appear in the Output 
+        window. If the build was successful you should see the messages 
+        as shown below.
+        <p><img alt="Build messages displayed in the output window"
+         src="Images/HelloWorldBuildOutput.png"/></p>
+
+      </li>
+
+    </ol>
+
+    <h1>Running the Application</h1>
+
+    <ol>
+
+      <li>
+
+        From the 
+        <b>Debug</b>
+         menu, select 
+        <b>Run</b>
+         or use the F5 keyboard shortcut.
+        <p><img alt="Menu option to run the application"
+         src="Images/DebugRunMenuOption.png"/></p>
+
+        <p>This will run your application and its main form will be 
+        displayed.</p>
+
+        <p><img alt="C# Hello World application running."
+         src="Images/HelloWorldApplicationRunning.png"/></p>
+
+        <p>Congratulations, you have written your first C# 
+        application.</p>
+
+      </li>
+
+    </ol>
+
+  </body>
+
+</html>
+

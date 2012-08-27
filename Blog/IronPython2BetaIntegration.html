@@ -1,0 +1,60 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>IronPython 2 Beta Integration</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>Support for 
+    <a href="http://www.codeplex.com/IronPython/Release/ProjectReleases.aspx?ReleaseId=14353"
+    >IronPython 2.0 Beta 4</a> is now available with SharpDevelop 3.</p>
+
+    <h2>Missing Features</h2>
+
+    <p>Some of the features have been disabled compared to the 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/archive/2007/10/21/IronPythonIntegrationInSharpDevelop22.aspx"
+    >IronPython integration in SharpDevelop 2</a>.</p>
+
+    <ul>
+
+      <li>Forms designer</li>
+
+      <li>C# and VB.NET code conversion to Python</li>
+
+    </ul>
+
+    <p>Both of the above features involve converting code to and from a 
+    Code DOM. Support for the Code DOM is reduced in IronPython 2 so 
+    the above features have been temporarily disabled.</p>
+
+    <h2>Compiling</h2>
+
+    <p>IronPython 2.0 beta 4 re-introduced support for compiling python 
+    code to a .NET executable or dll and so SharpDevelop supports this. 
+    There is however one limitation. The working folder needs to be set 
+    to the folder containing the compiled dll or executable otherwise 
+    it will not be able to locate any local assembly references that 
+    are not in the GAC, for example IronPython.dll.</p>
+
+    <h2>IronPython Console</h2>
+
+    <p>There&apos;s now an IronPython console which can be used to type 
+    in IronPython expressions and have them evaluated interactively. It 
+    is currently missing code completion which will be implemented 
+    shortly. From the <b>View</b> menu select <b>Tools</b> and then 
+    <b>Python Console</b>.</p>
+
+    <p><img alt="IronPython Console Window"
+     src="Images/IronPython2BetaConsole.png"/></p>
+
+  </body>
+
+</html>
+

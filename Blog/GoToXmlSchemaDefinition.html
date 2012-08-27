@@ -1,0 +1,131 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Go To XML Schema Definition</title>
+
+  </head>
+
+  <body>
+
+    <p>The XML Editor in SharpDevelop 2.1 now has Go To XML Schema 
+    Definition support. Open an XML document that uses a schema into 
+    SharpDevelop, move the cursor to the element or attribute, then 
+    either right click and select the menu option <b>Goto 
+    Definition</b> or press <b>Ctrl+Enter</b>. The schema will then be 
+    opened and the cursor will be positioned on the matching element or 
+    attribute definition.</p>
+
+    <h2>Features</h2>
+
+    <ul>
+
+      <li>Go to element definition.</li>
+
+      <li>Go to attribute definition.</li>
+
+      <li>Go to attribute, element, attribute group and group 
+      references.</li>
+
+      <li>Go to referenced simple type, complex type.</li>
+
+    </ul>
+
+    <h2>Go To Element Definition</h2>
+
+    <p>Move the cursor so it is on the element name inside its starting 
+    tag. Right click and select <b>Goto Definition</b> or press 
+    <b>Ctrl+Enter</b>.</p>
+
+    <p><img alt="Go to definition menu item"
+     src="../Help/Images/XmlEditorContextMenuGoToDefinitionMenuItem.png"/></p>
+
+    <p>The schema will then be opened and the cursor moved to the 
+    element definition.</p>
+
+    <p><img alt="Wix Schema showing product element"
+     src="Images/WixSchemaProductElementDisplayed.png"/></p>
+
+    <h2>Go To Attribute Definition</h2>
+
+    <p>Move the cursor so it is inside or next to an attribute.</p>
+
+    <p><img alt="Cursor next to Wix document Product/@Id attribute"
+     src="Images/WixDocumentCursorOnProductIdAttribute.png"/></p>
+
+    <p>Go to definition takes you to the attribute definition.</p>
+
+    <p><img alt="Wix schema product/@Id displayed"
+     src="Images/WixSchemaProductIdAttributeDisplayed.png"/></p>
+
+    <h2>Go To Element Reference</h2>
+
+    <p>Inside the schema itself, move the cursor inside the ref 
+    attribute&apos;s value.</p>
+
+    <p><img alt="Cursor on WiX schema element ref"
+     src="Images/WixSchemaCursorOnElementRef.png"/></p>
+
+    <p>Go to definition takes you to the referenced element.</p>
+
+    <p><img alt="WiX Schema showing AppId element"
+     src="Images/WixSchemaAppIdElementDisplayed.png"/></p>
+
+    <p>Similarly you can click inside the ref attribute value for the 
+    elements <b>xs:group</b>, <b>xs:attributeGroup</b>, and 
+    <b>xs:attribute</b>, and go to their corresponding definitions.</p>
+
+    <h2>Go To Element Type</h2>
+
+    <p>Inside the schema, move the cursor inside the type 
+    attribute&apos;s value.</p>
+
+    <p><img alt="Cursor inside element type attribute."
+     src="Images/WixSchemaCursorOnElementType.png"/></p>
+
+    <p>Go to definition takes you to the corresponding complex type.</p>
+
+    <p><img alt="WiX schema with complex type displayed"
+     src="Images/WixSchemaActionSequenceTypeDisplayed.png"/></p>
+
+    <h2>Go To Attribute Type</h2>
+
+    <p>Inside the schema again, move the cursor inside the type 
+    attribute&apos;s value.</p>
+
+    <p><img alt="Cursor inside type attribute&apos;s value."
+     src="Images/WixSchemaCursorOnAttributeType.png"/></p>
+
+    <p>Go to definition takes you to the type definition.</p>
+
+    <p><img alt="Wix schema simple type displayed"
+     src="Images/WixSchemaAutoGenIdSimpleTypeDisplayed.png"/></p>
+
+    <h2>Navigating Back and Forward</h2>
+
+    <p>Used in conjunction with the new <b>Navigate Back</b> 
+    <img alt="Navigate Back toolbar button"
+     src="../Help/Images/NavigateBackButton.png"/> and <b>Navigate 
+    Forward</b> <img alt="Navigate forward toolbar button"
+     src="../Help/Images/NavigateBackButton.png"/> toolbar buttons, 
+    added by <a href="http://www.spinthemoose.com">David Alpert</a>, 
+    you can quickly jump back and forth around the schema.</p>
+
+    <h2>Limitations</h2>
+
+    <p>It only works with schemas that SharpDevelop is aware of. These 
+    can configured by selecting <b>Options</b> from the <b>Tools</b> 
+    menu, then selecting the <b>Text Editor</b> category and then 
+    <b>XML Schemas</b>.</p>
+
+    <p>SharpDevelop does not currently pick up any changes made to a 
+    schema without being restarted.</p>
+
+    <p />
+
+  </body>
+
+</html>
+

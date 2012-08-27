@@ -1,0 +1,239 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>IronRuby Integration in SharpDevelop 3.1</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>Support for 
+    <a href="http://ironruby.codeplex.com/Release/ProjectReleases.aspx?ReleaseId=30916"
+    >IronRuby 0.9.1</a> is now available for 
+    <a href="http://sourceforge.net/projects/sharpdevelop/files/SharpDevelop%203.x/3.1/SharpDevelop_3.1.0.4977_Setup.msi/download"
+    >SharpDevelop 3.1</a>. The IronRuby addin is an early alpha preview 
+    release/proof of concept and is not an official part of 
+    SharpDevelop 3.1 so it is available as a separate download at the 
+    end of this post.</p>
+
+    <h2>Features</h2>
+
+    <ul>
+
+      <li>Code folding</li>
+
+      <li>Syntax highlighting</li>
+
+      <li>File and project templates for Console and Windows Forms 
+      applications</li>
+
+      <li>IronRuby Console window</li>
+
+      <li>Windows Forms designer (limited)</li>
+
+      <li>C# and VB.NET code conversion to Ruby (limited)</li>
+
+    </ul>
+
+    <p>Please note that the forms designer and code conversion need a 
+    lot more work.</p>
+
+    <h2>Creating a Windows Application</h2>
+
+    <p>Open up the new project dialog by selecting <b>New</b> then 
+    <b>Solution</b> from the <b>File</b> menu. Selecting the Ruby 
+    category will show two project templates. One will create a Windows 
+    console application and the other will create a Windows Forms 
+    application.</p>
+
+    <p><img alt="New IronRuby Project Dialog"
+     src="../Blog/Images/NewRubyProjectDialog.png"/></p>
+
+    <p>To run your application ensure the Program.rb file is in the 
+    active text editor window then select <b>Run</b> from the 
+    <b>Ruby</b> menu. This will run your code with the IronRuby console 
+    (ir.exe). Alternatively you can run the application by selecting 
+    <b>Run</b> from the <b>Debug</b> menu but you will first need to 
+    configure the project options. Select <b>Project Options</b> from 
+    the <b>Project</b> menu to open up the Debug project options.</p>
+
+    <p><img alt="Debug project options dialog"
+     src="Images/RubyDebugProjectOptions.png"/></p>
+
+    <p>You will need to add <b>${ProjectDir}</b> to the command line 
+    arguments and working directory as shown above. The <b>-19</b> 
+    command line argument is used to enable Ruby 1.9 support otherwise 
+    the IronRuby console will not be able to load any UTF-8 source code 
+    files.</p>
+
+    <p>Currently you cannot debug your code even if the -D command line 
+    argument is specified.</p>
+
+    <p>If you are running a windows app and nothing seems to happen 
+    then open a command line window and run it from there. This way you 
+    should see any errors reported from the IronRuby console.</p>
+
+    <h2>Designing Windows Forms</h2>
+
+    <p>The Windows Forms designer is still in its early stages so 
+    please be warned that it may break the form&apos;s code or worse. 
+    The designer code generation is a lot more complete than the 
+    designer loader so the designer will most likely fail to load all 
+    controls into the designer.</p>
+
+    <p>The designer can be opened in the usual way by opening the form 
+    in the text editor and selecting the Design tab at the bottom of 
+    the text editor. Once open in the designer you can add controls to 
+    the form in the usual way from the Tools window. In the screenshot 
+    below a label, text box and a button have been added.</p>
+
+    <p><img alt="Main form designed in designer"
+     src="../Blog/Images/RubyMainFormInDesigner.png"/></p>
+
+    <p>Click the Source tab to view the generated code in the 
+    InitializeComponents method. Make sure you do this before trying to 
+    save the code.</p>
+
+    <p><img alt="Generated form code"
+     src="../Blog/Images/RubyMainFormGeneratedCode.png"/></p>
+
+    <h2>IronRuby Console</h2>
+
+    <p>To open the IronRuby Console window select <b>Tools</b>, <b>Ruby 
+    Console</b> from the <b>View</b> menu.</p>
+
+    <p><img alt="View IronRuby Console menu item"
+     src="Images/ViewIronRubyConsoleMenuItem.png"/></p>
+
+    <p>When you type Ruby code into the IronRuby Console you will get 
+    code completion when you press the &apos;.&apos; character.</p>
+
+    <p><img alt="IronRuby Console code completion"
+     src="Images/IronRubyConsoleCodeCompletion.png"/></p>
+
+    <h2>Code Folding</h2>
+
+    <p>Code folding allows you to collapse regions of a class.</p>
+
+    <p><img alt="Folded ruby code"
+     src="../Blog/Images/RubyClassFolded.png"/></p>
+
+    <h2>Code Conversion</h2>
+
+    <p>To convert VB.NET or C# to Ruby open the file you want to 
+    convert and then select <b>Convert code to Ruby</b> from the 
+    <b>Tools</b> menu.</p>
+
+    <p><img alt="Convert code to Ruby menu item"
+     src="../Blog/Images/ConvertCodeToRubyMenuItem.png"/></p>
+
+    <p>The code conversion is limited to classes so it will not convert 
+    an arbitary piece of code that is not inside a class. A C# class 
+    being converted to Ruby is shown below.</p>
+
+    <p><img alt="C# code before converting to Ruby"
+     src="../Blog/Images/CSharpCodeBeforeConversionToRuby.png"/></p>
+
+    <p><img alt="Converted Ruby code"
+     src="../Blog/Images/ConvertedCSharpClassAsRuby.png"/></p>
+
+    <p>The code conversion is still at an early stage of development so 
+    it will fail on complicated classes.</p>
+
+    <h2>Class View</h2>
+
+    <p>Classes in the open solution will be displayed in the Class 
+    browser (Select <b>Classes</b> from the <b>View</b> menu).</p>
+
+    <p><img alt="Ruby class in Classes window"
+     src="../Blog/Images/RubyClassInClassWindow.png"/></p>
+
+    <p>From there you can double click a class or method and the text 
+    editor will display the corresponding code.</p>
+
+    <h2>Installing the IronRuby AddIn</h2>
+
+    <ol>
+
+      <li>Rename the 
+      <a href="http://community.sharpdevelop.net/blogs/mattward/Ruby/IronRubyAddIn-0.1.zip"
+      >IronRubyAddIn-0.1.zip</a> file to 
+      <b>IronRubyAddIn-0.1.sdaddin</b>.</li>
+
+      <li>
+
+        From the 
+        <b>Tools</b>
+         menu select 
+        <b>AddIn Manager</b>
+         .
+        <p><img alt="Tools AddIn Manager menu item"
+         src="../Help/Images/ToolsAddInManagerMenuItem.png"/></p>
+
+      </li>
+
+      <li>
+
+        Click the 
+        <b>Install AddIn</b>
+         button.
+        <p><img alt="AddIn Manager dialog"
+         src="../Help/Images/AddInManagerDialog.png"/></p>
+
+      </li>
+
+      <li>
+
+        In the Open File Dialog browse to the 
+        <b>IronRubyAddIn-0.1.sdaddin</b>
+         file and click the 
+        <b>Open</b>
+         button.
+        <p><img alt="AddIn installed confirmation dialog."
+         src="../Blog/Images/IronRubyAddInInstalledDialog.png"/></p>
+
+      </li>
+
+      <li>Click the <b>Close</b> button.</li>
+
+      <li>Restart SharpDevelop.</li>
+
+    </ol>
+
+    <h2>Ruby Links</h2>
+
+    <p>Some of the Ruby tutorials and links used whilst creating the 
+    IronRuby addin.</p>
+
+    <ol>
+
+      <li><a href="http://www.ruby-lang.org/en/documentation/">Ruby 
+      documentation</a>.</li>
+
+      <li><a href="http://www.sapphiresteel.com/The-Book-Of-Ruby">Book 
+      of Ruby</a> by Huw Collingbourne.</li>
+
+      <li><a href="http://www.codeplex.com/IronRuby">IronRuby 
+      homepage</a>.</li>
+
+    </ol>
+
+    <h2>Downloads</h2>
+
+    <p>
+    <a href="http://community.sharpdevelop.net/blogs/mattward/Ruby/IronRubyAddIn-0.1.zip"
+    >IronRubyAddIn0.1.zip</a></p>
+
+    <p>
+    <a href="http://community.sharpdevelop.net/blogs/mattward/Ruby/IronRubyAddIn-0.1-src.zip"
+    >IronRubyAddIn0.1-src.zip</a></p>
+
+  </body>
+
+</html>
+

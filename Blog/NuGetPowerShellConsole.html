@@ -1,0 +1,202 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>NuGet PowerShell Console</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>Since the 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/archive/2011/01/23/NuGetSupportInSharpDevelop.aspx">
+    NuGet support in SharpDevelop</a> was previewed back in January 
+    development has continued and some new features have been added. 
+    One of the new features that we will take a look at now is a new 
+    PowerShell console that allows 
+    <a href="http://build.sharpdevelop.net/buildartefacts/#SD41">
+    SharpDevelop 4.1</a> to support installing, updating and 
+    uninstalling <a href="http://nuget.org">NuGet</a> packages that 
+    contain PowerShell scripts.</p>
+
+    <h2>Package Management Console</h2>
+
+    <p>The Package Management Console is SharpDevelop&apos;s new 
+    PowerShell console. It provides several cmdlets that can be used to 
+    install, uninstall or update NuGet packages. NuGet packages can 
+    contain PowerShell scripts that will automate SharpDevelop and 
+    extend the functionality provided by NuGet.</p>
+
+    <p>To open the Package Management Console from the <b>View</b> menu 
+    select <b>Tools</b> and then select <b>Package Management 
+    Console</b>.</p>
+
+    <p><img alt="Package Management Console window"
+     src="Images/PackageManagementConsoleWindow.png"/></p>
+
+    <p>The <b>Package Source</b> drop down list is used to select the 
+    NuGet package repository that will be used by default when running 
+    commands. The <b>Default Project</b> drop down list has a list of 
+    projects in the currently open solution and is used to select the 
+    project that the console will use by default. There is also a clear 
+    button which clears the text in the console window.</p>
+
+    <p>Help on the commands can be displayed by typing <b>get-help 
+    NuGet</b>. To see detailed help on a specific command type 
+    <b>get-help</b> followed by the name of the command. Help on the 
+    commands can also be found in the official 
+    <a href="http://docs.nuget.org/docs/reference/package-manager-console-powershell-reference">
+    NuGet Package Manager Console PowerShell Reference</a>. Please note 
+    that at the time of writing some of the commands are not available 
+    but will be added at some point in the future. The unsupported 
+    commands are specified in the Issues section at the end of this 
+    blog post.</p>
+
+    <h2>Finding NuGet Packages</h2>
+
+    <p>To find available NuGet packages from a NuGet package source 
+    first select that source in the console&apos;s drop down list and 
+    use the Get-Package command. </p>
+
+    <p>To look for the NUnit.Sample package:</p>
+
+    <p>
+    <img alt="Looking for all NUnit NuGet packages in PowerShell Console"
+     src="Images/GetPackageNUnitSampleInPackageManagementConsole.png"/></p>
+
+    <p>To display the packages installed in the project selected in the 
+    drop down list run the Get-Package command without any 
+    parameters.</p>
+
+    <p>
+    <img alt="Getting all installed NuGet packages in the PowerShell console"
+     src="Images/GetInstalledPackagesInPackageManagementConsole.png"/></p>
+
+    <h2>Adding NuGet Packages</h2>
+
+    <p>To install a package first select the required NuGet package 
+    source, then select the project where the package should be 
+    installed and then use the Install-Package command.</p>
+
+    <p><img alt="Installing a NuGet package with the PowerShell console"
+     src="Images/InstallingNUnitSamplePackageInPackageManagementConsole.png"/></p>
+
+    <h2>Removing NuGet Packages</h2>
+
+    <p>To remove a NuGet package use the Uninstall-Package command.</p>
+
+    <p>
+    <img alt="Uninstalling a NuGet package with the PowerShell console"
+     src="Images/UninstallingNUnitSamplePackageInPackageManagementConsole.png"/></p>
+
+    <h2>Updating NuGet Packages</h2>
+
+    <p>To see packages that have updates available you can run the 
+    <b>Get-Package -Updates</b> command. To update a package use the 
+    Update-Package command.</p>
+
+    <p><img alt="Updating a NuGet package in the PowerShell console"
+     src="Images/UpdatingJQueryPackageInPackageManagementConsole.png"/></p>
+
+    <h2>Add Package Reference Dialog</h2>
+
+    <p>The Add Package Reference dialog supports installing, updating 
+    or uninstalling a package with PowerShell scripts. If it detects 
+    that a PowerShell script needs to be run then the package install, 
+    update or uninstall actions will be run in the Package Management 
+    Console. If PowerShell is not installed then the package will still 
+    be installed but the PowerShell scripts will not be run.</p>
+
+    <h2>Package PowerShell Scripts</h2>
+
+    <p>There are three PowerShell scripts that if included in a NuGet 
+    package will be run.</p>
+
+    <ul>
+
+      <li><b>init.ps1</b> - Runs when a package is first installed in a 
+      solution and then every time the solution containing this package 
+      is opened.</li>
+
+      <li><b>install.ps1</b> - Runs every time a package is 
+      installed.</li>
+
+      <li><b>uninstall.ps1</b> - Runs every time a package is 
+      uninstalled.</li>
+
+    </ul>
+
+    <p>More details on these scripts can be found in the NuGet 
+    documentation on 
+    <a href="http://docs.nuget.org/docs/creating-packages/creating-and-publishing-a-package">
+    Creating and Publishing a Package</a>.</p>
+
+    <p>When these PowerShell scripts are run they are passed the 
+    package, information about the package such where it will be 
+    installed and a project object. The scripts also have access to a 
+    global $dte variable which is made available by the PowerShell 
+    console. If you are using NuGet within Visual Studio then both the 
+    project object passed to a PowerShell script and the 
+    <a href="http://msdn.microsoft.com/en-us/library/s7yz5x3c.aspx">DTE 
+    object</a>, made available via the $dte variable, are part of the 
+    Visual Studio object model and can be used to automate Visual 
+    Studio. When using SharpDevelop&apos;s PowerShell console these 
+    objects are also available and can be used to automate 
+    SharpDevelop. To do this SharpDevelop provides its own partial 
+    implementation of the Visual Studio object model. SharpDevelop 
+    implements a set of classes that provide methods and properties 
+    that to PowerShell scripts look like Visual Studio&apos;s object 
+    model but are not dependent on Visual Studio being installed.</p>
+
+    <p>Since SharpDevelop&apos;s implementation of Visual Studio&apos;s 
+    object model is not a full implementation there are going to be 
+    some gaps which will mean a PowerShell script may produce some 
+    errors when it is run. If a script tries to use a feature provided 
+    only by Visual Studio then that will fail too. Another problem is 
+    that if a NuGet package directly references and uses the Visual 
+    Studio object model then the package will also not work. So this 
+    means whilst a package such as <a href="http://haacked.com/">Phil 
+    Haack&apos;s</a> 
+    <a href="http://channel9.msdn.com/Events/MIX/MIX11/FRM09#time=55m25s">
+    MoodSwings</a>, which changes the text editor fonts and colours, 
+    does work a package such as 
+    <a href="http://blog.stevensanderson.com/2011/01/13/scaffold-your-aspnet-mvc-3-project-with-the-mvcscaffolding-package/">
+    Steve Sanderson&apos;s MvcScaffolding</a> that directly accesses 
+    Visual Studio directly does not work.</p>
+
+    <h2>Issues</h2>
+
+    <p>The Package Management Console does not currently support tab 
+    completion.</p>
+
+    <p>The entire Visual Studio object model (DTE) is not implemented 
+    so PowerShell scripts that use unimplemented features will fail.</p>
+
+    <p>Multline PowerShell commands are not currently supported in the 
+    console window.</p>
+
+    <p>Information messages, such as successfully installing a package, 
+    are not displayed in the console window and only errors are 
+    displayed. These messages are only available in the Output 
+    window.</p>
+
+    <p>The NuGet PowerShell profile is not currently supported.</p>
+
+    <p>The New-Package, Open-PackagePage, Add-BindingRedirect cmdlets 
+    are not currently implemented.</p>
+
+    <h2>Feedback</h2>
+
+    <p>Please report any issues on the 
+    <a href="http://community.sharpdevelop.net/forums/">SharpDevelop 
+    forum</a> or feel free to send me an 
+    <a href="http://wiki.sharpdevelop.net/MattWard.ashx">email</a>.</p>
+
+  </body>
+
+</html>
+

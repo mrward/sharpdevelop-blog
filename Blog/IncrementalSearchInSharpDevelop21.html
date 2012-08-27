@@ -1,0 +1,188 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Incremental Search</title>
+
+    <link href="../help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop 2.1 now supports incremental searching. For those 
+    of you who have used Visual Studio, the incremental search works in 
+    a <a href="http://msdn2.microsoft.com/en-us/library/f27e8wzh.aspx">
+    similar way</a>. First you enter incremental search mode, then type 
+    in the search text. As you type in each character the document is 
+    searched from the current cursor position and the first match it 
+    finds is highlighted.</p>
+
+    <h2>Features</h2>
+
+    <ul>
+
+      <li><b>Ctrl+E</b> enables incremental searching. The search will 
+      start from the current cursor position and move down the 
+      document.</li>
+
+      <li><b>Ctrl+Shift+E</b> enables reverse incremental searching. 
+      The search will start from the current position and move up the 
+      document</li>
+
+      <li>As each character is typed in the corresponding matching text 
+      is highlighted in the document.</li>
+
+      <li>Any text selected before the incremental search is start will 
+      become the first part of the searched for text.</li>
+
+      <li>If the string is not found an error message is displayed in 
+      the status bar.</li>
+
+      <li>Pressing the <b>Backspace</b> key removes the last character 
+      from the search string.</li>
+
+      <li>Pressing the <b>Escape</b> or <b>Enter</b> key stops the 
+      incremental search.</li>
+
+      <li>If the search text contains only lower case characters the 
+      search will be case insensitive. </li>
+
+      <li>If the search text contains an upper case character then the 
+      search is case sensitive.</li>
+
+    </ul>
+
+    <h2>Searching Incrementally</h2>
+
+    <p>Position the cursor at the location where you want the search to 
+    start from.</p>
+
+    <p>Enable the incremental search either by selecting the 
+    <b>Incremental Search</b> from the <b>Search</b> menu or by using 
+    the keyboard shortcut <b>Ctrl+E</b>.</p>
+
+    <p><img alt="Incremental search menu item"
+     src="../Help/Images/SearchIncrementalSearchMenuItem.png"/></p>
+
+    <p>The mouse cursor over the text editor will then be changed to 
+    the Incremental Search icon <img alt="Incremental search cursor"
+     src="../Help/Images/IncrementalSearchCursor.png"/> to indicate 
+    that you have enabled the search.</p>
+
+    <p>The status bar text will change to &quot;Incremental 
+    Search&quot;.</p>
+
+    <p><img alt="Incremental search enabled in text editor"
+     src="Images/IncrementalSearchEnabledInTextEditor.png"/></p>
+
+    <p>Type in a character and the first match below the current cursor 
+    position will be highlighted. The search text is also displayed in 
+    the status bar.</p>
+
+    <p><img alt="Incremental search matching first character"
+     src="Images/IncrementalSearchFirstCharMatched.png"/></p>
+
+    <p>As you type in characters the search text is changed and 
+    matching text is highlighted. If the search text cannot be found 
+    the status bar text will show an error message.</p>
+
+    <p><img alt="Search text not found"
+     src="Images/IncrementalSearchTextNotFound.png"/></p>
+
+    <p>The search is case insensitive if all the characters of the 
+    search text are lower case. If any character is upper case then the 
+    search will be case sensitive.</p>
+
+    <p>If the first character typed in does not match anything below 
+    the cursor but can be found above the cursor position, at the start 
+    of the document, then the match will be highlighted and the status 
+    bar will show a warning message informing you that the end of the 
+    document has been passed. In the screenshot below the cursor was 
+    put at the end of the document and then the incremental search was 
+    started.</p>
+
+    <p><img alt="Passed end of document warning message"
+     src="Images/IncrementalSearchPassedEndOfDocument.png"/></p>
+
+    <p>To stop the incremental search press the <b>Escape</b> or 
+    <b>Enter</b> key.</p>
+
+    <h2>Reverse Incremental Search</h2>
+
+    <p>The reverse incremental search will search from the current 
+    cursor position to the start of the document.</p>
+
+    <p>Enable the reverse incremental search either by selecting the 
+    <b>Reverse Incremental Search</b> from the <b>Search</b> menu or by 
+    using the keyboard shortcut <b>Ctrl+Shift+E</b>.</p>
+
+    <p><img alt="Reverse incremental search menu item"
+     src="../Help/Images/SearchReverseIncrementalSearchMenuItem.png"/></p>
+
+    <p>The mouse cursor will then be changed to the Reverse Incremental 
+    Search icon <img alt="Reverse incremental search cursor"
+     src="../Help/Images/ReverseIncrementalSearchCursor.png"/> to 
+    indicate that you have enabled the search. The status bar text will 
+    also be changed to &quot;Reverse Incremental Search&quot;.</p>
+
+    <p>As you type a character the matching text will be highlighted 
+    and the search text will be shown in the status bar.</p>
+
+    <p>To stop searching press the <b>Escape</b> or <b>Enter</b> 
+    key.</p>
+
+    <h2>Visual Studio Comparison</h2>
+
+    <p>The differences between the SharpDevelop&apos;s and Visual 
+    Studio&apos;s incremental search.</p>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Feature</th>
+
+          <th>SharpDevelop</th>
+
+          <th>Visual Studio</th>
+
+        </tr>
+
+      </thead>
+
+      <tr>
+
+        <td>Shortcuts</td>
+
+        <td>Ctrl+E, Ctrl+Shift+E</td>
+
+        <td>Ctrl+I, Ctrl+Shift+I</td>
+
+      </tr>
+
+      <tr>
+
+        <td>Case sensitive search</td>
+
+        <td>An upper case character in the search string makes the 
+        search case sensitive.</td>
+
+        <td>Select the Match case option in the Find dialog.</td>
+
+      </tr>
+
+    </table>
+
+    <ul />
+
+    <p />
+
+  </body>
+
+</html>
+

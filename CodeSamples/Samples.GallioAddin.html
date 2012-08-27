@@ -1,0 +1,200 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Gallio Addin</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <h2>Overview</h2>
+
+    <p>A unit test addin that adds support for MbUnit to SharpDevelop 
+    4.0. The addin has been tested with Gallio v3.1 Update 2 build 
+    397.</p>
+
+    <h2>Features</h2>
+
+    <p>Create a new project and add a reference to <b>MbUnit.dll</b> 
+    and <b>Gallio.dll</b>. Create a new test class.</p>
+
+    <pre>using System; 
+using MbUnit.Framework; 
+ 
+namespace MyGallioTests 
+{ 
+ [TestFixture] 
+ public class MyClass 
+ { 
+  [Test] 
+  public void SuccessTest() 
+  { 
+   int expected = 0; 
+   int actual = 0; 
+   Assert.AreEqual(expected, actual); 
+  } 
+   
+  [Test] 
+  public void FailureTest() 
+  { 
+   int expected = 0; 
+   int actual = 1; 
+   Assert.AreEqual(expected, actual); 
+  } 
+ } 
+}</pre>
+    <p>In the <b>Unit Tests</b> window the MbUnit tests will be 
+    displayed.</p>
+
+    <p><img src="Images/GallioAddin.UnitTestsWindow.png"/></p>
+
+    <p>The unit tests can be run by right clicking and selecting <b>Run 
+    tests</b>.</p>
+
+    <p>The <b>Unit Tests</b> window will update to show the tests that 
+    passed and failed.</p>
+
+    <p>
+    <img src="Images/GallioAddin.UnitTestsWindowAfterTestRun.png"/></p>
+
+    <p>The output from the Gallio test runner (Gallio.Echo.exe) will be 
+    displayed in the <b>Output</b> window.</p>
+
+    <p><img src="Images/GallioAddin.OutputWindow.png"/></p>
+
+    <p>Any test failures are displayed in the <b>Errors</b> window.</p>
+
+    <p><img src="Images/GallioAddin.ErrorsWindow.png"/></p>
+
+    <p>Note that running tests with the debugger or with code coverage 
+    does not work.</p>
+
+    <h2>How it Works</h2>
+
+    <p>The addin uses the 
+    <b>/SharpDevelop/UnitTesting/TestFrameworks</b> extension point in 
+    the addin xml to add its own test runners.</p>
+
+    <pre>&lt;Path name=&quot;/SharpDevelop/UnitTesting/TestFrameworks&quot;&gt; 
+  &lt;TestFramework 
+    id=&quot;gallio&quot; 
+    class=&quot;Gallio.SharpDevelop.GallioTestFramework&quot; 
+    supportedProjects=&quot;.csproj;.vbproj&quot; 
+    insertbefore=&quot;nunit&quot; /&gt; 
+ &lt;/Path&gt;</pre>
+    <p>The extension point specifies that C# and VB.NET projects are 
+    supported. The <b>insertbefore</b> attribute is used to override 
+    the built-in NUnit test runner. </p>
+
+    <p>The GallioTestFramework class implements the 
+    <b>ITestFramework</b> interface as shown below.</p>
+
+    <pre> public interface ITestFramework 
+ { 
+  bool IsTestMethod(IMember member); 
+  bool IsTestClass(IClass c); 
+  bool IsTestProject(IProject project); 
+   
+  ITestRunner CreateTestRunner(); 
+  ITestRunner CreateTestDebugger(); 
+   
+  bool IsBuildNeededBeforeTestRun { get; } 
+ }</pre>
+    <p>The <b>IsTestMethod</b>, <b>IsTestClass</b> and 
+    <b>IsTestProject</b> methods are called by SharpDevelop to 
+    determine whether a method, class or project contains a unit test 
+    and should be added to the Unit Tests tree.</p>
+
+    <p>The <b>CreateTestRunner</b> and <b>CreateTestDebugger</b> 
+    methods are called when the unit tests are run.</p>
+
+    <p>The <b>IsBuildNeededBeforeTestRun</b> should return true unless 
+    you are supporting a project that does not require any compilation 
+    before the tests are run.</p>
+
+    <p>A test runner needs to implement the <b>ITestRunner</b> 
+    interface as shown below.</p>
+
+    <pre> public interface ITestRunner : IDisposable 
+ { 
+  event TestFinishedEventHandler TestFinished; 
+  event EventHandler AllTestsFinished; 
+  event MessageReceivedEventHandler MessageReceived; 
+  void Start(SelectedTests selectedTests); 
+  void Stop(); 
+ }</pre>
+    <p>The <b>TestFinished</b> event should be raised when a single 
+    test has finished.</p>
+
+    <p>The <b>AllTestsFinished</b> event should be raised when the test 
+    run is complete.</p>
+
+    <p>The <b>MessageReceived</b> event can be used to show messages in 
+    SharpDevelop&apos;s Output window.</p>
+
+    <p>The GallioTestRunner uses the Gallio.Echo.exe test runner to 
+    execute the unit tests. The full path to this is defined in the 
+    Gallio.SharpDevelop.addin file which will need to be changed to 
+    point to Gallio.Echo.exe on your machine.</p>
+
+    <pre>&lt;Path name=&quot;/SharpDevelop/UnitTesting/GallioEchoApplication&quot;&gt; 
+  &lt;String 
+    id=&quot;GallioEchoApplication&quot;
+    text=&quot;D:\SharpDevelop\samples\Gallio\Gallio\bin\Gallio.Echo.exe&quot;/&gt;
+&lt;/Path&gt;</pre>
+    <p>There is a Gallio test runner extension in the Gallio.Extension 
+    project which extends Gallio and allows Gallio to communicate the 
+    test results back to SharpDevelop.</p>
+
+    <h2>Building</h2>
+
+    <ol>
+
+      <li>Download the 
+      <a href="http://build.sharpdevelop.net/buildartefacts/">source 
+      code for SharpDevelop 4.0</a>.</li>
+
+      <li>Extract the source code for SharpDevelop 4.0.</li>
+
+      <li>Build SharpDevelop 4.0 by running debugbuild.bat.</li>
+
+      <li>Download 
+      <a href="http://mb-unit.googlecode.com/files/GallioBundle-3.1.397.0.zip">
+      Gallio v3.1 Update 2 build 397</a>.</li>
+
+      <li>In the extracted SharpDevelop source code create a new folder 
+      called Gallio inside the samples\Gallio folder.</li>
+
+      <li>Extract the contents of the Gallio zip file into the 
+      samples\Gallio\Gallio folder.</li>
+
+      <li>The Gallio sample addin requires the Gallio binaries to be in 
+      the samples\Gallio\Gallio\bin folder.</li>
+
+      <li>Open the samples\Gallio\Gallio.SharpDevelop.sln into 
+      SharpDevelop.</li>
+
+      <li>Edit the Gallio.SharpDevelop\Gallio.SharpDevelop.addin file 
+      so the full path to  Gallio.Echo.exe is correct on your 
+      machine.</li>
+
+      <li>Build the Gallio.SharpDevelop solution.</li>
+
+      <li>Restart SharpDevelop built from source code and the addin 
+      will be loaded.</li>
+
+    </ol>
+
+    <h2>License</h2>
+
+    <p>The code in this sample is licensed under the LGPL.</p>
+
+  </body>
+
+</html>
+

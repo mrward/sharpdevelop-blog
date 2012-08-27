@@ -1,0 +1,124 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>IronRuby Integration Update</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body class="xml">
+
+    <p>Support for IronRuby in SharpDevelop has moved on since the 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/archive/2009/10/04/IronRubyIntegrationInSharpDevelop31.aspx"
+    >last alpha release of the IronRuby addin</a>. This addin now ships 
+    with SharpDevelop 3.2 which is available to download from the 
+    <a href="http://build.sharpdevelop.net/buildartefacts/">build 
+    server</a>. The main new features are support for IronRuby 1.0 RC 1 
+    and the ability to debug IronRuby applications.</p>
+
+    <h2>New Features</h2>
+
+    <ul>
+
+      <li>Windows Forms designer support now complete</li>
+
+      <li>Converting entire C# and VB.NET projects to IronRuby.</li>
+
+      <li>Debugger support for IronRuby applications.</li>
+
+      <li>Smart indenting for IronRuby code.</li>
+
+      <li>IronRuby 1.0 RC 1 support.</li>
+
+    </ul>
+
+    <p>Currently there is no support for IronRuby code completion.</p>
+
+    <p>Now we will take a look at some of the new features in more 
+    depth.</p>
+
+    <h2>Running an IronRuby Application</h2>
+
+    <p>After you create an IronRuby application you can run it 
+    immediately without having to edit the project options as you did 
+    previously. The project templates have been updated so that 
+    everything is ready to go straight away. Simply select <b>Run</b> 
+    from the <b>Debug</b> menu to run your application with the 
+    IronRuby console.</p>
+
+    <p><img alt="Debug run menu option"
+     src="../Help/Images/DebugRunMenuOption.png"/></p>
+
+    <h2>Debugging an IronRuby Application</h2>
+
+    <p>In order to get the debugger to work well when debugging an 
+    IronRuby application you should change the debugger options. To 
+    open the debugger options select <b>Options</b> from the 
+    <b>Tools</b> menu, then select the <b>Debugging</b> category. Only 
+    the &apos;Just My Code&apos; feature should be selected and 
+    everything else should be unselected, as shown in the screenshot 
+    below.</p>
+
+    <p>
+    <img alt="Debugger options when debugging an IronRuby application"
+     src="Images/IronRubyDebuggerOptions.png"/></p>
+
+    <p>You can set your breakpoints in the normal way either by 
+    clicking in the left hand margin of the text editor or by selecting 
+    <b>Toggle Breakpoint</b> from the <b>Debug</b> menu.</p>
+
+    <p>Selecting <b>Run</b> from the <b>Debug</b> menu will run your 
+    IronRuby application under the debugger. Alternatively you can 
+    select <b>Run</b> from the <b>Ruby</b> menu which will run the code 
+    currently active text editor window. Selecting either of these will 
+    run the IronRuby console in debug mode with SharpDevelop&apos;s 
+    debugger.</p>
+
+    <p><img alt="Breakpoint hit in IronRuby application"
+     src="Images/DebuggingIronRubyCode.png"/></p>
+
+    <h2>Converting a C# or VB.NET Project to IronRuby</h2>
+
+    <p>To convert a VB.NET or C# project to IronRuby open the project 
+    and then select <b>Convert from C# to Ruby</b> or <b>Convert from 
+    VB.NET to Ruby</b> from the <b>Project</b> menu.</p>
+
+    <p><img alt="Convert project to Ruby menu item"
+     src="../Blog/Images/ConvertProjectToRubyMenuItem.png"/></p>
+
+    <h2>Extra Ruby Libraries</h2>
+
+    <p>The 
+    <a href="http://ironruby.codeplex.com/Release/ProjectReleases.aspx?ReleaseId=35312#DownloadId=93832"
+    >IronRuby 1.0 RC 1 download</a> from 
+    <a href="http://ironruby.codeplex.com">codeplex</a> includes extra 
+    Ruby libraries that are not shipping with SharpDevelop. If you want 
+    to use these libraries then download the IronRuby zip file and copy 
+    the <b>lib</b> folder to the IronRuby addin folder:</p>
+
+    <p>C:\Program 
+    Files\SharpDevelop\3.0\AddIns\AddIns\BackendBindings\RubyBinding</p>
+
+    <p>The IronRuby console (ir.exe) is configured to look in the 
+    <b>lib</b> subfolder by information in the ir.exe.config file:</p>
+
+    <pre>&lt;options&gt; 
+   &lt;set language=&apos;Ruby&apos; option=&apos;LibraryPaths&apos; value=&apos;lib\IronRuby;lib\ruby\site_ruby\1.8;lib\ruby\site_ruby;lib\ruby\1.8&apos;/&gt; 
+&lt;/options&gt;</pre>
+    <p>If you want to put these Ruby libraries somewhere else then the 
+    ir.exe.config file should be modified.</p>
+
+    <h2>IronRuby Downloads</h2>
+
+    <p>
+    <a href="http://ironruby.codeplex.com/Release/ProjectReleases.aspx?ReleaseId=35312#DownloadId=93832"
+    >IronRuby 1.0 RC 1 from Codeplex</a></p>
+
+  </body>
+
+</html>
+

@@ -1,0 +1,127 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Editing XML</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>Whilst editing XML files SharpDevelop provides namespace, 
+    element, attribute and attribute value completion based on its 
+    schema.</p>
+
+    <h2>Namespace Completion</h2>
+
+    <p><img alt="Xml namespace completion"
+     src="Images/FeatureTourXmlNamespaceCompletion.png"/></p>
+
+    <p>On typing the = character, after the xmlns attribute, a list of 
+    namespaces will be shown. A namespace in the list can be selected 
+    in a similar way to code completion by using the up and down cursor 
+    keys, or by typing in the first few characters of the namespace, 
+    and then pressing the <b>Tab</b> key to insert the namespace.</p>
+
+    <p><img alt="Namespace inserted"
+     src="Images/FeatureTourXmlNamespaceInserted.png"/></p>
+
+    <h2>Element Completion</h2>
+
+    <p><img alt="Element completion"
+     src="Images/FeatureTourXmlElementCompletion.png"/></p>
+
+    <p>On typing an opening tag a list of elements that can be added at 
+    the current location will be displayed.</p>
+
+    <h2>Attribute Completion</h2>
+
+    <p><img alt="Attribute completion"
+     src="Images/FeatureTourXmlAttributeCompletion.png"/></p>
+
+    <p>On typing a space character after an element name a list of 
+    attributes for that element will be shown. Inserting the attribute 
+    will also insert the attribute value quotes ready for you to type 
+    in its value.</p>
+
+    <p><img alt="Attribute inserted"
+     src="Images/FeatureTourXmlAttributeInserted.png"/></p>
+
+    <h2>Attribute Value Completion</h2>
+
+    <p><img alt="Attribute value completion"
+     src="Images/FeatureTourXmlAttributeValueCompletion.png"/></p>
+
+    <p>On typing the first character of the attribute value a list of 
+    possible values, as inferred from the schema, are displayed.</p>
+
+    <h2>Schema Annotation</h2>
+
+    <p><img alt="Schema annotation"
+     src="Images/FeatureTourXmlSchemaAnnotation.png"/></p>
+
+    <p>If the schema contains any annotation then this will be 
+    displayed.</p>
+
+    <h2>XML Validation</h2>
+
+    <p>To validate an xml document against its schema, first associate 
+    a namespace with it using the xmlns attribute, then from the 
+    <b>XML</b> menu select <b>Validate XML</b>.</p>
+
+    <p><img alt="Validate XML menu option"
+     src="../Help/Images/ValidateXmlMenuItem.png"/></p>
+
+    <p>Errors will be shown in the <b>Output</b> window and the 
+    <b>Errors</b> window.</p>
+
+    <p><img alt="XML validation errors reported"
+     src="Images/FeatureTourXmlValidationErrors.png"/></p>
+
+    <p>Clicking an entry in the <b>Errors</b> window will move the 
+    cursor to the position of the error.</p>
+
+    <h2>Configuring Schemas</h2>
+
+    <p>The XML schemas that SharpDevelop is aware of can be viewed and 
+    configured from the options dialog box. From the <b>Tools</b> menu 
+    select <b>Options...</b>, expand the <b>Text Editor</b> category 
+    and select <b>XML Schemas</b>.</p>
+
+    <p><img alt="Schema options dialog"
+     src="../Help/Images/XmlSchemasOptionsDialog.png"/></p>
+
+    <p>In the <b>Schemas</b> group box schemas that have been added by 
+    you are highlighted in black text. System schemas, those that are 
+    installed with the XML Editor, are displayed in grey text. Only 
+    schemas that have been added by you can be removed. Clicking the 
+    <b>Add</b> button opens up the open file dialog allowing you to 
+    browse to an .xsd file and add it.</p>
+
+    <p>The <b>File Extensions</b> group box shows default associations 
+    between a file extension and a schema. For example, <b>.build</b> 
+    files could be associated with a NAnt schema, then whenever a 
+    <b>.build</b> file is opened it automatically gets XML completion 
+    for that schema without having to specify an xmlns attribute. 
+    Specifying an xmlns attribute will override the default schema 
+    association. To associate a schema with an xml file extension click 
+    the browse button <img alt="Browse button"
+     src="../Help/Images/BrowseButton.png"/> and select a schema from 
+    the list.</p>
+
+    <p>The <b>Prefix</b> text box is used to specify the default 
+    namespace prefix associated with an xml element. This prefix will 
+    be used in the completion list (eg. &quot;xs:schema&quot;).</p>
+
+    <p>&lt; <a href="FeatureTourCodeCoverage.html">previous</a> | 
+    <a href="FeatureTour.html">home</a> | 
+    <a href="FeatureTourCreatingBooApplications.html">next</a> &gt;</p>
+
+  </body>
+
+</html>
+

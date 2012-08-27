@@ -1,0 +1,138 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>IronPython 2 Forms Designer</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>Support for designing Windows Forms in IronPython is now 
+    available in SharpDevelop 3.1. The 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/archive/2007/10/21/IronPythonIntegrationInSharpDevelop22.aspx">
+    original IronPython forms designer</a> was removed when 
+    SharpDevelop 3.0 began supporting 
+    <a href="http://www.codeplex.com/IronPython">IronPython 2.0</a> 
+    which had removed support for generating IronPython code from 
+    <a href="http://msdn.microsoft.com/en-us/library/y2k85ax6.aspx">
+    Microsoft&apos;s CodeDOM</a>. The forms designer has now been 
+    re-implemented to use the IronPython 
+    <a href="http://en.wikipedia.org/wiki/Abstract_syntax_tree">
+    abstract syntax tree</a> (AST) and no longer relies on the 
+    CodeDOM.  </p>
+
+    <h2>Creating a Windows Application</h2>
+
+    <p>To create a Windows Application open up the new project dialog 
+    by selecting <b>New</b> then <b>Solution</b> from the <b>File</b> 
+    menu. Select the Python category to show the available project 
+    templates. Select the Windows Application project template, enter a 
+    name and location and click the Create button.</p>
+
+    <p><img alt="New Python Project Dialog"
+     src="../Blog/Images/NewPythonWinFormsProject.png"/></p>
+
+    <h2>Designing Windows Forms</h2>
+
+    <p>The Windows Forms designer is not yet complete so be warned that 
+    it could generate form code that will no longer compile.</p>
+
+    <p>The designer can be opened by opening a form in the text editor 
+    and selecting the Design tab at the bottom of the editor.</p>
+
+    <p><img alt="Python main form before opening the designer"
+     src="../Blog/Images/PythonMainFormBeforeOpeningInDesigner.png"/></p>
+
+    <p>Once open in the designer you can add controls to the form by 
+    dragging the controls from the Tools window. In the screenshot 
+    below a label, text box and a button have been added.</p>
+
+    <p><img alt="Main form designed in designer"
+     src="../Blog/Images/PythonMainFormInDesigner.png"/></p>
+
+    <p>Click the Source tab at the bottom of the editor to view the 
+    generated code in the InitializeComponents method.</p>
+
+    <p><img alt="Generated form code"
+     src="../Blog/Images/PythonMainFormGeneratedCode.png"/></p>
+
+    <h2>Limitations</h2>
+
+    <p>The IronPython forms designer is not yet complete and the 
+    following are some of the known limitations.</p>
+
+    <ol>
+
+      <li>No support for project or local form resources.</li>
+
+      <li>No support for icons.</li>
+
+      <li>Incomplete support for ToolStripItems and menu strips.</li>
+
+      <li>Incomplete support for ListViewItems.</li>
+
+      <li>No support for TreeViewItems.</li>
+
+      <li>Incomplete support for non-visual components (e.g. 
+      Timers).</li>
+
+      <li>Controls needed to be fully namespace qualified.</li>
+
+    </ol>
+
+    <h2>Forms Designer Internals</h2>
+
+    <p>For those interested in how the forms designer actually works at 
+    a high level we will now look at what the IronPython forms designer 
+    does when loading and then generating code for a form. </p>
+
+    <p>To show the form in the designer the following steps are 
+    executed.</p>
+
+    <ol>
+
+      <li>The form&apos;s code is parsed and an IronPython AST 
+      (PythonAst object) is created.</li>
+
+      <li>The AST is then visited and each control is added to the 
+      forms designer and the control&apos;s properties are set.</li>
+
+      <li>The form&apos;s properties are set in the designer and the 
+      form is displayed.</li>
+
+    </ol>
+
+    <p>To generate the code after the form has been designed the 
+    following steps are executed.</p>
+
+    <ol>
+
+      <li>The form is obtained from the forms designer.</li>
+
+      <li>Each of the child components of the form have their 
+      properties checked to see if they need to be serialized. This can 
+      be done by getting all the 
+      <a href="http://msdn.microsoft.com/en-us/library/system.componentmodel.typedescriptor.getproperties.aspx">
+      property descriptors</a> and then checking the 
+      <a href="http://msdn.microsoft.com/en-us/library/system.componentmodel.propertydescriptor.shouldserializevalue.aspx">
+      ShouldSerializeValue</a> method. If they do need to be serialized 
+      then code is generated for them and added to a StringBuilder.</li>
+
+      <li>After all the child components are added the code for the 
+      form is generated.</li>
+
+      <li>Finally the generated code is inserted into the text editor 
+      inside the InitializeComponent method, replacing any existing 
+      code.</li>
+
+    </ol>
+
+  </body>
+
+</html>
+

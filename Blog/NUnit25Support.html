@@ -1,0 +1,153 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>NUnit 2.5 Support</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop 3.1 now supports <a href="http://nunit.org">NUnit 
+    2.5</a>.</p>
+
+    <p>A summary of which NUnit version is supported by SharpDevelop is 
+    shown in the table below.</p>
+
+    <table class="article">
+
+      <tr>
+
+        <td>SharpDevelop 3.1</td>
+
+        <td>NUnit 2.5</td>
+
+      </tr>
+
+      <tr>
+
+        <td>SharpDevelop 3.0</td>
+
+        <td>NUnit 2.4.8</td>
+
+      </tr>
+
+      <tr>
+
+        <td>SharpDevelop 2.2.1</td>
+
+        <td>NUnit 2.4.7</td>
+
+      </tr>
+
+      <tr>
+
+        <td>SharpDevelop 1.1</td>
+
+        <td>NUnit 2.2</td>
+
+      </tr>
+
+    </table>
+
+    <h2>NUnit 2.5 Changes</h2>
+
+    <p>NUnit 2.5 has changed quite substantially compared with the 
+    previous 2.4.8 release, as outlined in the 
+    <a href="http://nunit.com/index.php?p=releaseNotes&amp;r=2.5">NUnit 
+    2.5 release notes</a>. The problems that we had when migrating 
+    SharpDevelop&apos;s unit tests to NUnit 2.5 were as follows.</p>
+
+    <ol>
+
+      <li>
+
+        <b>Assert.IsInstanceOfType has been replaced by 
+        Assert.IsInstanceOf.</b>
+        <p>Your code will still compile and work if 
+        Assert.IsInstanceOfType is used but you will get compiler 
+        warnings.</p>
+
+      </li>
+
+      <li>
+
+        <b>NUnit.Framework.SyntaxHelpers namespace no longer exists.</b>
+        <p>All classes that were in this namespace have been moved to 
+        the NUnit.Framework namespace.</p>
+
+      </li>
+
+      <li>
+
+        <b>The Has.Count constraint no longer takes an integer 
+        parameter.</b>
+        <p>To fix this problem replace code such as:</p>
+
+        <pre>Assert.That(classesCollection, Has.Count(1));</pre>
+        <p>With the following:</p>
+
+        <pre>Assert.That(classesCollection.Has.Count.EqualTo(1));</pre>
+      </li>
+
+      <li>
+
+        <b>Overriding a [TestFixtureSetUp] method in a derived class 
+        using the new keyword no longer works.</b>
+        <p>Some of the SharpDevelop unit tests were overriding an 
+        abstract base test class [TestFixtureSetUp] method in a derived 
+        class by using the new keyword, as shown below.</p>
+
+        <p>Base class:</p>
+
+        <pre>[TestFixtureSetUp] 
+public void SetUpFixture()  
+{ 
+    // Setup code. 
+}</pre>
+        <p>Derived class:</p>
+
+        <pre>[TestFixtureSetUp] 
+public new void SetUpFixture()  
+{     
+    // Extra setup code. 
+    base.SetUpFixture(); 
+}</pre>
+        <p>In NUnit 2.4.8 the SetUpFixture method in the derived class 
+        would be called when running the tests allowing it to execute 
+        some extra setup steps. In NUnit 2.5 the base class 
+        SetUpFixture method is called instead and the derived class 
+        method is never called. To resolve the problem we changed the 
+        base class so it used a virtual method and allowed the derived 
+        class to override this to execute its extra setup steps.</p>
+
+        <p>Base class:</p>
+
+        <pre>[TestFixtureSetUp] 
+public void SetUpFixture()  
+{ 
+    BeforeSetUpFixture(); 
+    // Setup code. 
+} 
+ 
+public virtual void BeforeSetUpFixture() 
+{ 
+}</pre>
+        <p>Derived class:</p>
+
+        <pre>public override void BeforeSetUpFixture() 
+{ 
+     // Extra setup code. 
+}</pre>
+      </li>
+
+    </ol>
+
+  </body>
+
+</html>
+

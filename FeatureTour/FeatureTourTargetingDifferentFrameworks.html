@@ -1,0 +1,108 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Targeting Different Frameworks</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop has the ability to compile your code against 
+    previous versions of Microsoft&apos;s .NET Framework, 
+    Microsoft&apos;s Compact Framework or 
+    <a href="http://mono-project.com">Mono</a> (an open source 
+    implementation of the .NET Framework sponsored by 
+    <a href="http://www.novell.com">Novell</a>) if they are installed. 
+    Currently it is only possible to target different frameworks with 
+    C# or VB.NET applications.</p>
+
+    <p>From the <b>Project</b> menu select <b>Project Options</b>.</p>
+
+    <p><img alt="Project options menu item"
+     src="../Help/Images/ProjectOptionsMenuItem.png"/></p>
+
+    <p>Open the <b>Compiling</b> tab and select the desired framework 
+    from the <b>Target Framework</b> drop down list.</p>
+
+    <p><img alt="Selecting the target framework"
+     src="Images/FeatureTourTargetingDifferentFrameworks.png"/></p>
+
+    <p>Once the target framework has been selected you will get code 
+    completion for that particular framework.</p>
+
+    <p>When targeting a previous framework version there are a few 
+    limitations that you should be aware of. The Forms Designer will 
+    generate code and resources that are .NET 2.0 specific. Resource 
+    files (.resx) will use .NET 2.0 types when compiled into your 
+    assembly.</p>
+
+    <h2>Cross Platform Development</h2>
+
+    <p>Whilst Microsoft&apos;s .NET Framework only runs on Windows, the 
+    <a href="http://mono-project.com">Mono</a> framework supports 
+    Linux, Mac OS X, Sun Solaris, BSD and Microsoft Windows. Mono has 
+    its own implementation of Microsoft&apos;s System.Windows.Forms, 
+    which is not quite 100% feature complete, at least for .NET 2.0, 
+    but is still under active development. Another alternative is to 
+    use Gtk# or Glade# to create a cross platform GUI application. 
+    SharpDevelop provides Gtk# and Glade# project and file templates. 
+    To design the UI you can use the Glade designer that ships with 
+    Mono.</p>
+
+    <p>To target Mono, open the project&apos;s <b>Compiling</b> options 
+    and select either <b>Mono 1.1</b> or <b>Mono 2.0</b> from the 
+    <b>Target Framework</b> drop down list. With <b>Mono 1.1</b> 
+    selected Mono&apos;s Mcs compiler will be used. With <b>Mono 
+    2.0</b> selected Mono&apos;s Gmcs compiler will be used.</p>
+
+    <p>In order to run your application under Mono, the project needs 
+    to be configured. From the project options, open the <b>Debug</b> 
+    tab, switch the <b>Start Action</b> to <b>Start external 
+    program</b> and enter the path to the Mono executable, and finally 
+    set the <b>Command line arguments</b> to <b>${TargetPath}</b>.</p>
+
+    <p><img alt="Debug options set to run under Mono"
+     src="Images/FeatureTourRunningUnderMono.png"/></p>
+
+    <p>To run your application under Mono, from the <b>Debug</b> menu 
+    select <b>Run without debugger</b>.</p>
+
+    <p><img alt="Run without debugger menu option"
+     src="../Help/Images/DebugRunWithoutDebuggerMenuItem.png"/></p>
+
+    <p>Code built using Mono&apos;s compilers cannot be debugged on 
+    Windows. The Mono compilers create their own open source debugging 
+    symbols binary (.mdb) which SharpDevelop&apos;s debugger does not 
+    support. There is also no Mono debugger available for Windows. In 
+    order to debug a Mono application it needs to be built using the 
+    Microsoft&apos;s C# compiler.</p>
+
+    <p>SharpDevelop supports assemblies that reside in Mono&apos;s GAC. 
+    From the <b>Project</b> menu select <b>Add Mono Reference</b>.</p>
+
+    <p><img alt="Adding a Mono Reference menu option"
+     src="../Help/Images/ProjectAddMonoReferenceMenuItem.png"/></p>
+
+    <p>This will open the <b>Add Reference</b> dialog box where a Mono 
+    GAC entry can be selected and added to the project.</p>
+
+    <p><img alt="Add Mono Reference dialog"
+     src="../Help/Images/AddMonoReferenceDialog.png"/></p>
+
+    <p>There is no support for the generation of Makefiles that would 
+    be required to build the source code on non-Microsoft platforms, so 
+    other tools would need to be used.</p>
+
+    <p>&lt; <a href="FeatureTourEditingXml.html">previous</a> | 
+    <a href="FeatureTour.html">home</a> | 
+    <a href="FeatureTourCreatingBooApplications.html">next</a> &gt;</p>
+
+  </body>
+
+</html>
+

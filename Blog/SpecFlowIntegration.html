@@ -1,0 +1,311 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>SpecFlow Integration</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>The <a href="http://specflow.org/">SpecFlow</a> team recently 
+    released version 1.7 and with it they included 
+    <a href="http://gasparnagy.blogspot.com/2011/08/enhanced-upgrading-options-in-specflow.html"
+    >support for SharpDevelop 4.0</a>. SpecFlow is an open source 
+    framework that you can use to do 
+    <a href="http://en.wikipedia.org/wiki/Behavior_Driven_Development">
+    Behaviour Driven Development (BDD)</a> on .NET. It allows you to 
+    bind business requirements to the code. Let us take a look at how 
+    SpecFlow integrates with SharpDevelop.</p>
+
+    <h2>Installation</h2>
+
+    <p>Download and install the following:</p>
+
+    <ol>
+
+      <li>
+      <a href="http://sourceforge.net/projects/sharpdevelop/files/SharpDevelop%204.x/4.0/SharpDevelop_4.0.0.7070_Setup.msi/download"
+      >SharpDevelop 4.0</a></li>
+
+      <li><a href="https://github.com/techtalk/SpecFlow/downloads"
+      >SpecFlow 1.7.0</a></li>
+
+    </ol>
+
+    <p>If SharpDevelop is installed first then the SpecFlow installer 
+    will  detect SharpDevelop, as shown in the screenshot below.</p>
+
+    <p><img alt="SpecFlow installer detecting SharpDevelop 4.0"
+     src="Images/SpecflowSetupDialogDetectedSharpDevelop4.png"/></p>
+
+    <p>The installer will then add a set of SpecFlow templates to 
+    SharpDevelop. It will also install a SharpDevelop addin which you 
+    will need to register using the addin manager. To register the 
+    SpecFlow addin start SharpDevelop and from the Tools menu select 
+    AddIn Manager. This will open the AddIn Manager dialog.</p>
+
+    <p><img alt="AddIn Manager dialog"
+     src="Images/AddInManagerDialogInSharpDevelop4.png"/></p>
+
+    <p>Click the Install AddIn button and browse to the SpecFlow 
+    installation folder. The default installation folder for SpecFlow 
+    is <b>C:\Program Files\TechTalk\SpecFlow</b>. In this folder find 
+    the <b>TechTalk.SpecFlow.SharpDevelop4Integration.addin</b> file, 
+    select it and click the Open button. The SpecFlow addin should then 
+    be displayed in the AddIn Manager dialog.</p>
+
+    <p><img alt="SpecFlow addin installed in SharpDevelop 4.0"
+     src="Images/SpecFlowAddInInstalledInSharpDevelop4.png"/></p>
+
+    <p>Restart SharpDevelop so the SpecFlow addin is loaded and is 
+    ready to be used.</p>
+
+    <p>Now let us take a look at how to use SpecFlow with 
+    SharpDevelop.</p>
+
+    <h2>Using SpecFlow</h2>
+
+    <p>Here we will follow the 
+    <a href="http://specflow.org/specflow/workflow.aspx">workflow</a> 
+    that is shown on the SpecFlow web site. This workflow looks at 
+    creating a bowling game using SpecFlow.</p>
+
+    <p>In SharpDevelop create a new C# class library project called 
+    Bowling. Right click the project just created and select Add New 
+    Item. In the New File dialog open the <b>SpecFlow</b> category and 
+    select the <b>SpecFlow Feature</b> template. Change the filename to 
+    be ScoreCalculation.feature. Click the Create button to save the 
+    file.</p>
+
+    <p><img alt="SpecFlow feature file template in New File Dialog"
+     src="Images/SpecFlowFeatureFileTemplateInNewFileDialog.png"/></p>
+
+    <p>Replace the existing text in the feature file created with the 
+    text shown below.</p>
+
+    <pre>Feature: Score Calculation 
+ In order to know my performance 
+ As a player 
+ I want the system to calculate my total score 
+ 
+Scenario: Gutter Game 
+ Given a new bowling game 
+ When all of my balls are landing in the gutter 
+ Then my total score should be 0 
+ 
+Scenario: All Strikes 
+ Given a new bowling game 
+ When all of my rolls are strikes 
+ Then my total score should be 300</pre>
+    <p>This is the specification for one part of the game. It is 
+    written in a language called 
+    <a href="https://github.com/cucumber/cucumber/wiki/Gherkin">
+    Gherkin</a> which gives you a user friendly way to specify a set of 
+    behaviours that your application should have. More information 
+    about the Gherkin language can be found on the 
+    <a href="https://github.com/cucumber/cucumber/wiki/Gherkin">Gherkin 
+    wiki</a>.</p>
+
+    <p>Now select this feature file in the Projects window, right click 
+    and select Properties. In the file properties change the Custom 
+    Tool to be <b>SpecFlowSingleFileGenerator</b>.</p>
+
+    <p>
+    <img alt="SpecFlowSingleFileGenerator custom tool set in file properties"
+     src="Images/SpecFlowSingleFileGeneratorCustomToolSetInFileProperties.png"/></p>
+
+    <p>Now every time you save the feature file a new file will be 
+    auto-generated.</p>
+
+    <p><img alt="ScoreCalculation.feature.cs generated file."
+     src="Images/SpecFlowSingleFileGeneratorCustomToolGeneratedFileInProjectsWindow.png"/></p>
+
+    <p>If you open this generated file you will see that it contains a 
+    class that has two NUnit tests.</p>
+
+    <p><img alt="Generated file with NUnit tests."
+     src="Images/SpecFlowSingleFileGeneratorCustomToolGeneratedFileContents.png"/></p>
+
+    <p>To run the unit tests you will need to add a reference to NUnit 
+    and SpecFlow to the project. In the Projects window, right click 
+    your project and select Add Reference. Select the .NET Assembly 
+    Browser tab and browse to the NUnit.Framework.dll file that can be 
+    found in the SharpDevelop folder C:\Program 
+    Files\SharpDevelop\4.0\bin\Tools\NUnit and add that file as a 
+    reference. Do the same for the TechTalk.SpecFlow.dll file which can 
+    be found in the C:\Program Files\TechTalk\SpecFlow folder.</p>
+
+    <p>Now create a new file called BowlingSteps.cs and copy the 
+    following code into it.</p>
+
+    <pre>using System; 
+using NUnit.Framework; 
+using TechTalk.SpecFlow; 
+ 
+namespace Bowling 
+{ 
+ 
+ [Binding] 
+ public class BowlingSteps 
+ { 
+  private Game _game; 
+ 
+  [Given(@&quot;a new bowling game&quot;)] 
+  public void GivenANewBowlingGame() 
+  { 
+   _game = new Game(); 
+  } 
+ 
+  [When(@&quot;all of my balls are landing in the gutter&quot;)] 
+  public void WhenAllOfMyBallsAreLandingInTheGutter() 
+  { 
+   for (int i = 0; i &lt; 20; i++) 
+   { 
+    _game.Roll(0); 
+   } 
+  } 
+ 
+  [When(@&quot;all of my rolls are strikes&quot;)] 
+  public void WhenAllOfMyRollsAreStrikes() 
+  { 
+   for (int i = 0; i &lt; 12; i++) 
+   { 
+    _game.Roll(10); 
+   } 
+  } 
+ 
+  [Then(@&quot;my total score should be (\d+)&quot;)] 
+  public void ThenMyTotalScoreShouldBe(int score) 
+  { 
+   Assert.AreEqual(score, _game.Score); 
+  } 
+ 
+  [When(@&quot;I roll (\d+)&quot;)] 
+  public void WhenIRoll(int pins) 
+  { 
+   _game.Roll(pins); 
+  } 
+ 
+  [When(@&quot;I roll (\d+) and (\d+)&quot;)] 
+  public void WhenIRoll(int pins1, int pins2) 
+  { 
+   _game.Roll(pins1); 
+   _game.Roll(pins2); 
+  }  
+ 
+  [When(@&quot;I roll (\d+) times (\d+) and (\d+)&quot;)] 
+  public void WhenIRollSeveralTimes2(int rollCount, int pins1, int pins2) 
+  { 
+   for (int i = 0; i &lt; rollCount; i++) 
+   { 
+    _game.Roll(pins1); 
+    _game.Roll(pins2); 
+   } 
+  } 
+ 
+  [When(@&quot;I roll the following series:(.*)&quot;)] 
+  public void WhenIRollTheFollowingSeries(string series) 
+  { 
+   foreach (var roll in series.Trim().Split(&apos;,&apos;)) 
+   { 
+    _game.Roll(int.Parse(roll)); 
+   } 
+  } 
+ 
+  [When(@&quot;I roll&quot;)] 
+  public void WhenIRoll(Table rolls) 
+  { 
+   foreach (var row in rolls.Rows) 
+   { 
+    _game.Roll(int.Parse(row[&quot;Pins&quot;])); 
+   } 
+  } 
+ } 
+}</pre>
+    <p>The BowlingSteps.cs file shown above implements the scenarios 
+    defined in the feature file and will be used by the unit tests to 
+    verify the implementation works as expected.</p>
+
+    <p>The only bit that is missing is the code that implements the 
+    bowling game logic. Create a file called Game.cs and copy the code 
+    shown into it.</p>
+
+    <pre>namespace Bowling 
+{ 
+ public class Game 
+ { 
+  public void Roll(int i) 
+  {     
+  } 
+   
+  public int Score {  
+   get { return -1; } 
+  } 
+ } 
+} 
+</pre>
+    <p>The Game.cs file contains the main Game class that implements 
+    the logic that we are going to test. Currently this code is 
+    incorrect so we are expecting the unit tests to fail.</p>
+
+    <p>In the Unit Tests window (View | Tools | Unit Tests) click the 
+    Run all tests toolbar button. All the tests should fail as shown 
+    below.</p>
+
+    <p><img alt="All specflow unit tests failed."
+     src="Images/SpecFlowUnitTestsAllFailed.png"/></p>
+
+    <p>Now we need to fix the tests. The GutterGame test is the easiest 
+    to get working. Edit the Game class and change the Score property 
+    so it returns 0.</p>
+
+    <pre>namespace Bowling 
+{ 
+ public class Game 
+ { 
+  public void Roll(int i) 
+  { 
+  } 
+   
+  public int Score {  
+   get { return 0; } 
+  } 
+ } 
+}</pre>
+    <p>Now when you run the unit tests again the GutterGame test will 
+    pass.</p>
+
+    <p><img alt="SpecFlow gutter game unit test passes"
+     src="Images/SpecFlowUnitTestsGutterGameTestPassed.png"/></p>
+
+    <p>The next step would be to change the Game class so the 
+    AllStrikes unit test will pass. Then you could define more 
+    scenarios in feature files to cover more functionality that you 
+    want the bowling game to have. Then you would go through the 
+    process just described until you have a working solution that meets 
+    all the requirements. These steps are not shown here but hopefully 
+    you get the idea.</p>
+
+    <p>We have looked at how SpecFlow integrates with SharpDevelop and 
+    walked through the process of defining a set of scenarios that our 
+    application should have, creating unit tests to check the scenarios 
+    are implemented correctly and finally implementing the application 
+    logic so the unit tests pass.</p>
+
+    <h2>Further Information</h2>
+
+    <p>More information on SpecFlow can be found on the 
+    <a href="http://www.specflow.org/specflow/getting-started.aspx">
+    SpecFlow web site</a> and on the 
+    <a href="https://github.com/techtalk/SpecFlow/wiki">SpecFlow GitHub 
+    wiki</a>.</p>
+
+  </body>
+
+</html>
+

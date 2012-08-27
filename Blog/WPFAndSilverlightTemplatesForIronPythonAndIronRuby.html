@@ -1,0 +1,76 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>WPF and Silverlight Templates for IronPython and 
+    IronRuby</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop 4.0 now includes templates to create WPF and 
+    Silverlight applications for IronRuby and IronPython.</p>
+
+    <p><img alt="IronRuby project templates"
+     src="Images/NewWPFAndSilverlightIronRubyProjectTemplates.png"/></p>
+
+    <p>The WPF template will create a basic WPF application that loads 
+    its main window from disk by using 
+    <a href="http://msdn.microsoft.com/en-us/library/system.windows.markup.xamlreader.load.aspx">
+    XamlReader.Load</a> and then displays it.</p>
+
+    <p>The Silverlight template will create a basic Silverlight project 
+    with an IronPython or IronRuby script file and a web page. The web 
+    page (index.html) will open up the IronPython or IronRuby console 
+    in the browser and run the script. The script file does not do much 
+    apart from change the text in the browser.</p>
+
+    <p>On running the Silverlight project SharpDevelop will launch 
+    Chiron and allow you to browse to the project&apos;s web page. 
+    Chiron is an application that can be used as a personal web server 
+    to host your silverlight application. It can also be used to 
+    package up your Silverlight application ready for deployment.</p>
+
+    <p>
+    <img alt="IronRuby silverlight application running in the browser"
+     src="Images/IronRubySilverlightApplicationRunningInBrowser.png"/></p>
+
+    <p>All the existing IronPython project templates have also changed. 
+    When a new IronPython project is run, by selecting the menu item 
+    <b>Debug</b> | <b>Run</b>, it will now run the IronPython console 
+    (ipy.exe) instead of starting the project&apos;s executable. This 
+    change makes IronPython projects consistent with IronRuby projects. 
+    It also means you can debug a new IronPython application straight 
+    away without having to change the project options.</p>
+
+    <p>To switch back to the previous behaviour, and launch the 
+    project&apos;s executable instead of ipy.exe, change the <b>Start 
+    Action</b> in the project options to <b>Start project</b>. Note 
+    that debugging the project&apos;s executable is not supported.</p>
+
+    <p>The screenshot below shows the project options for a new 
+    IronPython project.</p>
+
+    <p><img alt="IronPython project options"
+     src="Images/PythonProjectOptionsForDebugging.png"/></p>
+
+    <p>For more information on writing Silverlight applications in 
+    IronPython and IronRuby see the following web sites.</p>
+
+    <p>
+    <a href="http://ironpython.net/ironpython/browser/">http://ironpython.net/ironpython/browser/</a></p>
+
+    <p>
+    <a href="http://ironruby.net/Browser">http://ironruby.net/Browser</a></p>
+
+    <p />
+
+  </body>
+
+</html>
+

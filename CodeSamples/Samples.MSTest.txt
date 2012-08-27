@@ -1,0 +1,115 @@
+===Overview===
+A unit test addin that adds support for MS Test to SharpDevelop 4. The addin has been tested with MS Test that ships with Visual Studio 2010.
+
+===Features===
+Create a new project and add a reference to '''Microsoft.VisualStudio.QualityTools.UnitTestFramework..dll'''. Create a new test class.
+
+@@using System; 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+ 
+namespace MyTests 
+{ 
+ [TestClass] 
+ public class MyClass 
+ { 
+  [TestMethod] 
+  public void SuccessTest() 
+  { 
+   int expected = 0; 
+   int actual = 0; 
+   Assert.AreEqual(expected, actual); 
+  } 
+   
+  [TestMethod] 
+  public void FailureTest() 
+  { 
+   int expected = 0; 
+   int actual = 1; 
+   Assert.AreEqual(expected, actual); 
+  } 
+ } 
+}@@
+
+In the '''Unit Tests''' window the MS Tests will be displayed.
+
+[imageauto||{UP}/Samples/MSTestAddin/MSTestAddin.UnitTestsWindow.png|{UP}/Samples/MSTestAddin/MSTestAddin.UnitTestsWindow.png]
+
+The unit tests can be run by right clicking and selecting '''Run tests'''.
+
+The '''Unit Tests''' window will update to show the tests that passed and failed.
+
+[imageauto||{UP}/Samples/MSTestAddin/MSTestAddin.UnitTestsWindowAfterTestRun.png|{UP}/Samples/MSTestAddin/MSTestAddin.UnitTestsWindowAfterTestRun.png]
+
+The output from the MS Test runner (mstest.exe) will be displayed in the '''Output''' window.
+
+[imageauto||{UP}/Samples/MSTestAddin/MSTestAddin.OutputWindow.png|{UP}/Samples/MSTestAddin/MSTestAddin.OutputWindow.png]
+
+Any test failures are displayed in the '''Errors''' window.
+
+[imageauto||{UP}/Samples/MSTestAddin/MSTestAddin.ErrorsWindow.png|{UP}/Samples/MSTestAddin/GallioAddin.ErrorsWindow.png]
+
+Note that running tests with the debugger or with code coverage does not work.
+
+===How it Works===
+The addin uses the '''/SharpDevelop/UnitTesting/TestFrameworks''' extension point in the addin xml to add its own test runners.
+
+@@<Path name="/SharpDevelop/UnitTesting/TestFrameworks"> 
+  <TestFramework 
+    id="MSTest" 
+    class="MSTest.SharpDevelop.MSTestFramework" 
+    supportedProjects=".csproj" /> 
+ </Path>@@
+
+The extension point specifies that C# are supported. 
+
+The MSTestFramework class implements the '''ITestFramework''' interface as shown below.
+
+@@ public interface ITestFramework 
+ { 
+  bool IsTestMember(IMember member); 
+  bool IsTestClass(IClass c); 
+  bool IsTestProject(IProject project); 
+  IEnumerable<TestMember> GetTestMembersFor(IClass c);
+   
+  ITestRunner CreateTestRunner(); 
+  ITestRunner CreateTestDebugger(); 
+   
+  bool IsBuildNeededBeforeTestRun { get; } 
+ }@@
+
+The '''IsTestMember''', '''GetTestMembersFor''', '''IsTestClass''' and '''IsTestProject''' methods are called by SharpDevelop to determine whether a method, class or project contains a unit test and should be added to the Unit Tests tree.
+
+The '''CreateTestRunner''' and '''CreateTestDebugger''' methods are called when the unit tests are run.
+
+The '''IsBuildNeededBeforeTestRun''' should return true unless you are supporting a project that does not require any compilation before the tests are run.
+
+A test runner needs to implement the '''ITestRunner''' interface as shown below.
+
+@@ public interface ITestRunner : IDisposable 
+ { 
+  event TestFinishedEventHandler TestFinished; 
+  event EventHandler AllTestsFinished; 
+  event MessageReceivedEventHandler MessageReceived; 
+  void Start(SelectedTests selectedTests); 
+  void Stop(); 
+ }@@
+
+The '''TestFinished''' event should be raised when a single test has finished.
+
+The '''AllTestsFinished''' event should be raised when the test run is complete.
+
+The '''MessageReceived''' event can be used to show messages in SharpDevelop's Output window.
+
+The MSTestRunner uses the mstest.exe test runner to execute the unit tests. The full path to this is defined via a property that can be set in the Tools Options dialog under the Tools - MS Test.
+
+===Building===
+# Download the [http://build.sharpdevelop.net/buildartefacts/|source code for SharpDevelop 4]
+# Extract the source code for SharpDevelop 4
+# Build SharpDevelop 4.0 by running debugbuild.bat.
+# Open the samples\MSTest\MSTest.SharpDevelop.sln into SharpDevelop.
+# Build the MSTest.SharpDevelop solution.
+# Restart SharpDevelop built from source code and the addin will be loaded.
+
+===License===
+The code in this sample is licensed under the LGPL.
+

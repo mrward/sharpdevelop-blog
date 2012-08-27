@@ -1,0 +1,174 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Unit Testing Changes in SharpDevelop 2.1</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>The Unit Tests window in SharpDevelop 2.1 (revision 2039) has 
+    been changed in order to fix a few bugs and problems that it had. 
+    How you unit test in SharpDevelop is still the same, as explained 
+    in the 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/articles/FeatureTourUnitTesting.aspx"
+    >Unit Testing feature tour</a>, but there are some new features 
+    shown below. Most of the changes have been behind the scenes so 
+    everything should look the essentially the same.</p>
+
+    <p><img alt="Unit Tests window in SharpDevelop 2.1"
+     src="Images/UnitTestsWindowSD21.png"/></p>
+
+    <h2>New Features</h2>
+
+    <ul>
+
+      <li>Unit Tests window shows classes and methods obtained from 
+      SharpDevelop&apos;s parser.</li>
+
+      <li>Unit Tests tree dynamically updates itself to show new test 
+      methods and classes as the parser information is updated.</li>
+
+      <li>All tests are run using a slightly modified 
+      nunit-console.exe.</li>
+
+      <li>You can now run all tests from all the projects with the 
+      debugger or with code coverage in one step. Previously you had to 
+      select an individual project in the Unit Tests window.</li>
+
+      <li>Running a test with code coverage or with the debugger will 
+      now update the Unit Tests tree.</li>
+
+      <li>Running tests from the Unit Tests window will use the test 
+      project&apos;s app.config so you can now run tests in a 
+      <b>STA</b> or <b>MTA</b>.</li>
+
+      <li>The <b>Reload</b> and <b>Unload</b> toolbar buttons have been 
+      removed since they are no longer needed.</li>
+
+    </ul>
+
+    <h2>Running Tests in a STA or MTA</h2>
+
+    <p>By default SharpDevelop runs tests in the <b>MTA</b>. This is 
+    the default behaviour of <a href="http://nunit.org">NUnit</a> which 
+    is what SharpDevelop uses.</p>
+
+    <p>To run your tests in an <b>STA</b> you can create an 
+    <b>app.config</b> file for your test project as shown below:</p>
+
+    <div id="xml">
+
+      <pre>    &lt;configuration&gt; 
+           &lt;configSections&gt;
+                   &lt;sectionGroup name=&quot;NUnit&quot;&gt;
+                           &lt;section name=&quot;TestRunner&quot;
+                                    type=&quot;System.Configuration.NameValueSectionHandler&quot; /&gt;
+                   &lt;/sectionGroup&gt;
+           &lt;/configSections&gt;
+           &lt;NUnit&gt;
+                   &lt;TestRunner&gt;
+                           &lt;!-- Valid values are STA,MTA. Others ignored. --&gt;
+                           &lt;add key=&quot;ApartmentState&quot; value=&quot;STA&quot; /&gt;
+                   &lt;/TestRunner&gt;
+           &lt;/NUnit&gt;
+    &lt;/configuration&gt;</pre>
+    </div>
+
+    <h2>Unit Tests Internals</h2>
+
+    <p>In this section we will look at what is actually happening when 
+    you open a solution and then run its tests.</p>
+
+    <h3>Dynamically Updating Unit Tests Tree</h3>
+
+    <p>When a solution is opened in SharpDevelop any project that has a 
+    reference to the <b>NUnit.Framework</b> assembly will have a 
+    corresponding tree node added to the Unit Tests tree. Expanding the 
+    project node shows test classes grouped according to namespace. 
+    Expanding a test class node shows the individual test methods.</p>
+
+    <p>What classes and methods are considered to be test fixtures and 
+    tests are all determined based on the information from 
+    SharpDevelop&apos;s parser. If a class has a <b>[TestFixture]</b> 
+    attribute then it is considered a test class. If a method has a 
+    <b>[Test]</b> attribute then it is considered a test method.</p>
+
+    <p>The Unit Tests window will update itself as the parser notices 
+    changes in your code. So new test classes and methods will appear 
+    in the test tree as you type.</p>
+
+    <h3>Customised NUnit-Console</h3>
+
+    <p>Whenever you run unit tests in SharpDevelop nunit-console.exe is 
+    involved. This NUnit-Console is a slightly modified version of that 
+    which ships with <a href="http://nunit.org">NUnit</a> 2.2.8. It has 
+    three extra command line arguments:</p>
+
+    <ol>
+
+      <li>
+
+        <b>testMethodName</b>
+        <p>Added by 
+        <a href="http://wiki.sharpdevelop.net/default.aspx/SharpDevelop.DanielGrunwald"
+        >Daniel Grunwald</a> in SharpDevelop 2.0. This allows 
+        NUnit-Console to run a single test and takes the fully 
+        qualified test method name.</p>
+
+      </li>
+
+      <li>
+
+        <b>results</b>
+        <p>Used to specify the filename where the test results are 
+        written to as they occur.</p>
+
+      </li>
+
+      <li>
+
+        <b>namespaceFilter</b>
+        <p>If this argument is used then NUnit-Console will only run 
+        the tests that exist in the specified namespace. SharpDevelop 
+        sets this argument when you select a namespace node in the Unit 
+        Tests tree and run the tests.</p>
+
+      </li>
+
+    </ol>
+
+    <p>As the tests are run SharpDevelop monitors the generated test 
+    results file. As each test result is added to the file the Unit 
+    Tests tree is updated with the usual red, green and yellow colours. 
+    Any test failures are added to the <b>Errors</b> window.</p>
+
+    <p>Whenever you run a test or set of tests nunit-console.exe will 
+    be run, either by SharpDevelop itself, or by 
+    <a href="http://ncover.org">NCover</a> when looking at code 
+    coverage, or by the debugger when you need to debug your tests.</p>
+
+    <p><b>[Update 25th November, 2006]</b></p>
+
+    <p>In revision 2076 you can now select a namespace node in the Unit 
+    Tests tree and run only those tests for that namespace. This was 
+    done by adding a new namespace filter argument to 
+    nunit-console.exe. The post has been updated to reflect this.</p>
+
+    <p />
+
+    <p />
+
+    <p />
+
+    <p />
+
+  </body>
+
+</html>
+

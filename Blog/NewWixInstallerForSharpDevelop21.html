@@ -1,0 +1,139 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>New WiX Installer for SharpDevelop 2.1</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p><a href="http://chrison.net">Chris</a> just 
+    <a href="http://community.sharpdevelop.net/forums/thread/11216.aspx"
+    >announced</a> in the forums that the 
+    <a href="http://build.sharpdevelop.net/">build server</a> is now up 
+    and running for SharpDevelop 2.1. This includes a new installer for 
+    SharpDevelop using <a href="http://wix.sourceforge.net">WiX</a> 
+    rather than <a href="http://nsis.sourceforge.net/">NSIS</a>. If 
+    there are any problems with this installer please report them in 
+    the <a href="http://community.sharpdevelop.net/forums/">
+    forum</a>.</p>
+
+    <h2>Installing</h2>
+
+    <p>The installer is now an MSI file and not an executable as it was 
+    previously. To install, download the MSI file and then double click 
+    it to install, or right click the file and select 
+    <b>Install</b>.</p>
+
+    <p>If you install under an account with Administrator privileges 
+    SharpDevelop will be installed for <b>All Users</b>.</p>
+
+    <p>You can install SharpDevelop under a non-privileged account, 
+    however the following things will not be done:</p>
+
+    <ul>
+
+      <li><b>NGen</b> is not run on SharpDevelop.exe.</li>
+
+      <li><b>NUnit</b> is not installed in the <b>GAC</b>. Without this 
+      the <b>Unit Testing</b> window cannot be used.</li>
+
+    </ul>
+
+    <h2>Uninstalling</h2>
+
+    <p>Open the <b>Control Panel</b>.</p>
+
+    <p>Select <b>Add or Remove Programs</b>.</p>
+
+    <p>Select <b>SharpDevelop 2.1</b>.</p>
+
+    <p>Click the <b>Remove</b> button.</p>
+
+    <h2>Upgrading</h2>
+
+    <p>The new installer now supports upgrades and will upgrade an old 
+    SharpDevelop 2.1 if it finds one. To upgrade simply run the new 
+    installer without uninstalling the previous version of 
+    SharpDevelop.</p>
+
+    <p>You cannot install an older version over the top of an existing 
+    installation (i.e. downgrade).</p>
+
+    <p>You can install SharpDevelop 2 alongside SharpDevelop 2.1.</p>
+
+    <h2>What does the Installer do?</h2>
+
+    <ul>
+
+      <li>Installs the SharpDevelop files.</li>
+
+      <li>Adds a desktop shortcut to the SharpDevelop executable.</li>
+
+      <li>Adds program menu shortcuts for SharpDevelop and a link to 
+      the SharpDevelop website.</li>
+
+      <li><b>NGens</b> the SharpDevelop executable (Admin only).</li>
+
+      <li>Installs <b>NUnit</b> into the GAC (Admin only).</li>
+
+      <li>
+
+        Registers file associations for:
+        <ul>
+
+          <li>.booproj</li>
+
+          <li>.cmbx</li>
+
+          <li>.csproj</li>
+
+          <li>.prjx</li>
+
+          <li>.sdaddin</li>
+
+          <li>.sln</li>
+
+          <li>.vbproj</li>
+
+          <li>.wixproj</li>
+
+          <li>.xfrm</li>
+
+        </ul>
+
+      </li>
+
+    </ul>
+
+    <h2>Future Improvements</h2>
+
+    <p>The following improvements should hopefully be added to the 
+    installer at some point.</p>
+
+    <ul>
+
+      <li>Optional file assocation with SharpDevelop.</li>
+
+      <li>Choose UI language.</li>
+
+      <li>Choose name of program group.</li>
+
+      <li>Option to install source code.</li>
+
+      <li>Check if optional components (e.g. FxCop, NCover) are 
+      installed and advise the user to install them to activate certain 
+      features inside SharpDevelop.</li>
+
+    </ul>
+
+
+  </body>
+
+</html>
+

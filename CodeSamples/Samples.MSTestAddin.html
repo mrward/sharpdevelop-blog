@@ -1,0 +1,69 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Using MS Test with SharpDevelop</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop 4.2 now has a new 
+    <a href="http://wiki.sharpdevelop.net/InsideSharpDevelop.Samples-MSTestAddin.ashx"
+    >sample addin</a> that adds integrated support for running tests 
+    with 
+    <a href="http://http://msdn.microsoft.com/en-us/library/ms182489%28v=vs.100%29.aspx"
+    >MS Test</a>.</p>
+
+    <h2>Features</h2>
+
+    <p>Given the following code:</p>
+
+    <p><img src="Images/MSTestAddinTestClassSourceCode.png"/></p>
+
+    <p>In the <b>Unit Tests</b> window the MS Tests will be displayed. 
+    The unit tests can be run by right clicking and selecting <b>Run 
+    tests</b>. The <b>Unit Tests</b> window will update to show the 
+    tests that passed and failed.</p>
+
+    <p>
+    <img src="Images/MSTestAddinUnitTestsWindowAfterTestRun.png"/></p>
+
+    <p>The output from the MS test runner (mstest.exe) will be 
+    displayed in the <b>Output</b> window.</p>
+
+    <p><img src="Images/MSTestAddinOutputWindow.png"/></p>
+
+    <p>Any test failures are displayed in the <b>Errors</b> window.</p>
+
+    <p><img src="Images/MSTestAddinErrorsWindow.png"/></p>
+
+    <p>There is a default path defined for mstest.exe which points to 
+    the Visual Studio 2010 folder but you can alter this path from the 
+    Tools Options dialog under Tools - MS Test.</p>
+
+    <p>Note that running tests with the debugger or with code coverage 
+    does not work.</p>
+
+    <p>Full details on how the addin works can be found in the 
+    <a href="http://wiki.sharpdevelop.net/InsideSharpDevelop.Samples-MSTestAddin.ashx"
+    >wiki</a>.</p>
+
+    <h2>Using the MS Test addin</h2>
+
+    <p>To use the MS Test addin either follow the instructions in the 
+    wiki to build it from source or download the 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/MSTest/MSTest.zip"
+    >pre-built addin</a> and register it with SharpDevelop using the 
+    Addin Manager by selecting AddIn Manager from the Tools menu.</p>
+
+    <p />
+
+  </body>
+
+</html>
+

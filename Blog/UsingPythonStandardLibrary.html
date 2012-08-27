@@ -1,0 +1,106 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Using the Python Standard Library</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>Here is a short walkthrough on how to use the 
+    <a href="http://docs.python.org/library/">Python Standard 
+    Library</a> with 
+    <a href="http://www.sharpdevelop.net/OpenSource/SD/Download/">
+    SharpDevelop 3.0</a> and IronPython 2.0.</p>
+
+    <h2>Prerequisites</h2>
+
+    <p>You will need to have SharpDevelop 3.0 and Python 2.5 installed 
+    on your machine. These can be downloaded from the following 
+    locations.</p>
+
+    <ul>
+
+      <li>
+      <a href="http://www.sharpdevelop.net/OpenSource/SD/Download/#SharpDevelop30">SharpDevelop 
+      3.0</a></li>
+
+      <li>
+      <a href="http://www.python.org/download/releases/2.5.4/">Python 
+      2.5</a></li>
+
+    </ul>
+
+    <p>Note that using Python 2.6 is not supported. The following 
+    section assumes that Python 2.5 was installed into the C:\Python25 
+    folder.</p>
+
+    <h2>Using the Python Standard Library</h2>
+
+    <p>First we will create an IronPython console application in 
+    SharpDevelop. From the <b>File</b> menu select <b>New</b> and then 
+    <b>Solution</b>. In the New Project window select the <b>Python</b> 
+    category and select the <b>Console Application</b> template.</p>
+
+    <p><img alt="New Python Console Application template"
+     src="../Blog/Images/NewPythonConsoleProject.png"/></p>
+
+    <p>Give the project a name, select its location and click the 
+    <b>Create</b> button.</p>
+
+    <p>To use the Python Standard Library the project needs a reference 
+    to IronPython.dll, which should be added by default, and a 
+    reference to IronPython.Modules.dll. Open the <b>Projects</b> 
+    window, if it is not already open, by selecting <b>Projects</b> 
+    from the <b>View</b> menu. Right click the project&apos;s 
+    references and select <b>Add Reference</b>. In the <b>Add 
+    Reference</b> dialog first add a reference to <b>mscorlib</b>, this 
+    reference is only needed since we are going to use the 
+    System.Console class to pause the console output. Then select the 
+    <b>.NET Assembly Browser</b> tab and click the <b>Browse</b> 
+    button. Locate the IronPython.Modules.dll file and select it. This 
+    file should be in the following folder:</p>
+
+    <p>C:\Program 
+    Files\SharpDevelop\3.0\AddIns\AddIns\BackendBindings\PythonBinding</p>
+
+    <p>Click OK to close the Add Reference dialog.</p>
+
+    <p>In the Program.py file change the code to the following:</p>
+
+    <pre># Add Python Standard Library to search path. 
+import sys 
+sys.path.append(&quot;c:\python25\lib&quot;) 
+ 
+# Use Python Standard Library os module. 
+import os 
+print os.getcwd() 
+ 
+# Wait for a key press before closing the console window. 
+import System 
+print &quot;Press any key to continue...&quot; 
+System.Console.ReadKey(True) </pre>
+    <p>The sys.path.append line adds the Python Standard Library to the 
+    search path. After that the os module is imported and the os.getcwd 
+    method is called to get the current working directory and this is 
+    output to the console window. The last three lines of code are just 
+    used to pause the console window so we can see the output.</p>
+
+    <p>Compile the above code by selecting <b>Build Solution</b> from 
+    the <b>Build</b> menu.</p>
+
+    <p>Finally run the application by selecting <b>Run</b> from the 
+    <b>Debug</b> menu.</p>
+
+    <p><img alt="Output from Python Console application."
+     src="../Blog/Images/PythonConsoleAppOutputWindow.png"/></p>
+
+  </body>
+
+</html>
+

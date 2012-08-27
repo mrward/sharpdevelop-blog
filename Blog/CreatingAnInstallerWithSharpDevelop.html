@@ -1,0 +1,682 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Creating an Installer with SharpDevelop</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>This tutorial will walk you through creating an installer from 
+    scratch using the integrated <a href="http://wix.sourceforge.net">
+    WiX</a> support included with SharpDevelop 2.1.</p>
+
+    <p>The installer that will be created is a real-world example and 
+    was used by <a href="http://chrison.net">Christoph Wille</a> as the 
+    starting point for his 
+    <a href=" http://chrison.net/CCCP12AvailableWithSetup.aspx">Code 
+    Comment Checking Policy for Visual Studio Team System</a> 
+    installer.</p>
+
+    <p>Please note that you will need a recent version of 
+    <a href="http://build.sharpdevelop.net/BuildArtefacts/">
+    SharpDevelop 2.1</a> to follow this walkthrough. In beta 3 any 
+    changes made to the WiX project&apos;s options are incorrectly 
+    encoded on saving. This prevents the project from being 
+    compiled.</p>
+
+    <h2>Installer Requirements</h2>
+
+    <p>First, what does our installer need to do?</p>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Item</th>
+
+          <th>Description</th>
+
+        </tr>
+
+      </thead>
+
+      <tr>
+
+        <td>cccppol.dll (.NET assembly)</td>
+
+        <td>To be installed in Program Files.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>ICSharpCode.CCCPLib.dll (.NET assembly)</td>
+
+        <td>To be installed in the GAC</td>
+
+      </tr>
+
+      <tr>
+
+        <td>ICSharpCode.NRefactory.dll (.NET assembly)</td>
+
+        <td>To be installed in the GAC</td>
+
+      </tr>
+
+      <tr>
+
+        <td>ICSharpCode.SharpDevelop.Dom.dll (.NET assembly)</td>
+
+        <td>To be installed in the GAC</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+
+          Registry key: 
+          HKLM\SOFTWARE\Microsoft\VisualStudio\8.0\TeamFoundation\SourceControl\Checkin 
+          Policies
+          <p>Registry value name: cccppol</p>
+
+        </td>
+
+        <td>The registry value cccppol should contain the full path to 
+        the cccppol.dll assembly.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>License Information</td>
+
+        <td>The installer should show the license information in one of 
+        its dialogs.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>Installation Directory</td>
+
+        <td>The installer should allow the user to select where the 
+        cccppol file is to be installed. The default should be 
+        &quot;C:\Program Files\Cccp Policy&quot;</td>
+
+      </tr>
+
+    </table>
+
+    <p>It has four .NET assemblies to install. Three of which are to be 
+    registered in the GAC. It needs to create one registry key that 
+    points to the cccppol.dll file. The installer UI needs to show 
+    license information and allow you to choose the directory where the 
+    cccppol.dll file will be installed. Now let&apos;s create our 
+    installer.</p>
+
+    <h2>Creating a New Setup Project</h2>
+
+    <p>To create a new WiX setup project, from the <b>File</b> menu, 
+    select <b>New</b> and then select <b>Solution...</b>.</p>
+
+    <p><img alt="Menu option to create a new solution"
+     src="../Help/Images/FileNewSolutionMenuItem.png"/></p>
+
+    <p>This opens the <b>New Project</b> dialog box.</p>
+
+    <p><img alt="New Project dialog"
+     src="Images/CreateNewCccpSetupProject.png"/></p>
+
+    <p>Select the <b>Setup</b> category and then select <b>Empty Setup 
+    Project</b> from the list of available templates. We are going to 
+    use the empty project and try to keep the setup as simple as 
+    possible using as much of the functionality that WiX provides for 
+    us. Give the setup project a name and choose a location for it to 
+    be saved. Finally click the <b>Create</b> button.</p>
+
+    <p><img src="Images/NewEmptySetupProjectFiles.png"/></p>
+
+    <p>The empty setup project contains very little, just one Setup.wxs 
+    file, which is where we will start. At the moment the project will 
+    not compile, so let us fix that. First give your 
+    <a href="http://wix.sourceforge.net/manual-wix2/wix_xsd_product.htm"
+    >product</a> a name and a manufacturer.</p>
+
+    <div id="xml">
+
+      <pre> &lt;Product Id=&quot;8F3A52FE-BB54-4BC9-953C-7173D16AA96D&quot; 
+  Name=&quot;<b>Code Comment Checking Policy</b>&quot; 
+  Language=&quot;1033&quot; 
+  Version=&quot;1.0.0.0&quot; 
+  Manufacturer=&quot;<b>ic#code</b>&quot;&gt;</pre>
+    </div>
+
+    <p>Then give your 
+    <a href="http://wix.sourceforge.net/manual-wix2/wix_xsd_package.htm"
+    >package</a> a description.</p>
+
+    <div id="xml">
+
+      <pre> &lt;Package Id=&quot;A970C90A-3EFD-4121-B92D-2D0454643B38&quot; 
+  Description=&quot;<b>Installs Code Comment Checking Policy for VSTS</b>&quot; 
+  Comments=&quot;Comments&quot; 
+  InstallerVersion=&quot;200&quot; 
+  Compressed=&quot;yes&quot; 
+ /&gt;</pre>
+    </div>
+
+    <h2>Preparing to Add Files</h2>
+
+    <p>Before we add the four files to the installer we need to add a 
+    few extra bits to Setup.wxs. First we add a 
+    <a href="http://wix.sourceforge.net/manual-wix2/wix_xsd_media.htm">
+    media element</a> to the product.</p>
+
+    <div id="xml">
+
+      <pre>&lt;!-- 
+ Source media for the installation.  
+ Specifies a single cab file to be embedded in the installer&apos;s .msi.  
+--&gt; 
+&lt;Media Id=&quot;1&quot; Cabinet=&quot;contents.cab&quot; EmbedCab=&quot;yes&quot; CompressionLevel=&quot;high&quot;/&gt;</pre>
+    </div>
+
+    <p>Here we are specifying that the files should be embedded in the 
+    installer (.msi) and we want the compression to be high. Now we 
+    create a 
+    <a href="http://wix.sourceforge.net/manual-wix2/wix_xsd_directory.htm"
+    >directory</a> element, as highlighted below, so you should end up 
+    with a Setup.wxs file that looks like:</p>
+
+    <div id="xml">
+
+      <pre>&lt;Wix xmlns=&quot;http://schemas.microsoft.com/wix/2003/01/wi&quot;&gt; 
+ &lt;Product Id=&quot;8F3A52FE-BB54-4BC9-953C-7173D16AA96D&quot;
+  Name=&quot;Code Comment Checking Policy&quot;
+  Language=&quot;1033&quot;
+  Version=&quot;1.0.0.0&quot;
+  Manufacturer=&quot;ic#code&quot;&gt; 
+  &lt;Package Id=&quot;A970C90A-3EFD-4121-B92D-2D0454643B38&quot;
+   Description=&quot;Installs Code Comment Checking Policy for VSTS&quot; 
+   Comments=&quot;Comments&quot; InstallerVersion=&quot;200&quot; 
+   Compressed=&quot;yes&quot; /&gt; 
+  &lt;!-- 
+   Source media for the installation.  
+    Specifies a single cab file to be embedded in the installer&apos;s .msi.  
+  --&gt; 
+  &lt;Media Id=&quot;1&quot; Cabinet=&quot;contents.cab&quot; EmbedCab=&quot;yes&quot; CompressionLevel=&quot;high&quot; /&gt; 
+<b>  &lt;!-- Installation directory and files are defined in Files.wxs --&gt; 
+  &lt;Directory Id=&quot;TARGETDIR&quot; Name=&quot;SourceDir&quot;/&gt; </b>
+ &lt;/Product&gt; 
+&lt;/Wix&gt;</pre>
+    </div>
+
+    <p>The 
+    <a href="http://msdn2.microsoft.com/en-us/library/aa371857.aspx">
+    SourceDir</a> directory does not get created on installation. It is 
+    just the name used to identify where in the WiX XML to look for the 
+    files and directories that will be installed. Which is what we will 
+    now look at.</p>
+
+    <p>We are going to create a new WiX file (Files.wxs) that will 
+    contain information about the files to be installed. Open the 
+    <b>Project Explorer</b>, if it is not already open, by selecting 
+    <b>Projects</b> from the <b>View</b> menu.</p>
+
+    <p><img alt="View projects menu option"
+     src="../Help/Images/ViewProjectsMenuItem.png"/></p>
+
+    <p>In the <b>Projects Explorer</b> select the name of your project, 
+    right click, select <b>Add</b> and then <b>New Item...</b>.</p>
+
+    <p><img alt="Menu option to add a new file to a project"
+     src="Images/AddNewWixFileToProjectMenu.png"/></p>
+
+    <p>This opens the <b>New File</b> dialog box.</p>
+
+    <p><img alt="New File Dialog"
+     src="Images/NewFileDialogWithEmptySetupFileSelected.png"/></p>
+
+    <p>Select the <b>Setup</b> category, and then select <b>Empty Setup 
+    Document</b> from the list of available templates. Type in the name 
+    <b>Files.wxs</b> and then click the <b>Create</b> button to add the 
+    new file to your project.</p>
+
+    <p>Now in order to make SharpDevelop aware that we want to put the 
+    file information in Files.wxs we need to make a reference to the 
+    SourceDir directory element that we added to Setup.wxs. If we do 
+    not do this then when we add files using the Setup Files Editor the 
+    file information will be added to the Setup.wxs file inside the 
+    SourceDir directory element. So modify Files.wxs so it looks 
+    like:</p>
+
+    <div id="xml">
+
+      <pre>&lt;?xml version=&quot;1.0&quot;?&gt; 
+&lt;Wix xmlns=&quot;http://schemas.microsoft.com/wix/2003/01/wi&quot;&gt; 
+ &lt;Fragment&gt; 
+  &lt;DirectoryRef Id=&quot;TARGETDIR&quot;&gt; 
+  &lt;/DirectoryRef&gt; 
+ &lt;/Fragment&gt; 
+&lt;/Wix&gt;</pre>
+    </div>
+
+    <p>Here we have referenced the SourceDir directory element by 
+    referring to its Id <b>TARGETDIR</b>. Now save the Files.wxs file 
+    and close it. We are now ready to add some files.</p>
+
+    <h2>Adding Files</h2>
+
+    <p>Open up the Setup Files editor, from the <b>View</b> menu select 
+    <b>Setup</b> and then select <b>Files</b>.</p>
+
+    <p><img src="Images/ViewSetupFilesMenuItem.png"/></p>
+
+    <p>We first need to create the <b>Program Files</b> directory. The 
+    directories, when we create them, will be displayed in the left 
+    hand window. Right click in the left hand window, select <b>Add</b> 
+    and then select <b>Directory</b>.</p>
+
+    <p><img src="Images/SetupFilesAddDirectoryContextMenuItem.png"/></p>
+
+    <p>On the right hand side of the <b>Setup Files</b> window, fill in 
+    the details as shown below.</p>
+
+    <p><img src="Images/SetupFilesProgramFilesFolderCreated.png"/></p>
+
+    <p>Here we have specified the <b>Program Files</b> folder by using 
+    the special <b>ProgramFilesFolder</b> id. In this case the 
+    <b>Name</b> and <b>Long Name</b> of the directory do not matter and 
+    are not used when installing. If you are creating a custom folder, 
+    which is what we will do next, you will need to specify these 
+    values.</p>
+
+    <p>Now we need a <b>Cccp Policy</b> directory. This could be added 
+    as we did previously, but we can add a new directory and the files 
+    in one go to save us a lot of time. Here I made a <b>bin</b> folder 
+    and copied into it the four files that will be a part of our 
+    installer.</p>
+
+    <p><img src="Images/CccpBinaryFiles.png"/></p>
+
+    <p>From the <b>Setup Files</b> window, we can add the bin folder to 
+    the installer by right clicking <b>Program Files</b> and selecting 
+    <b>Add Directory...</b>.</p>
+
+    <p><img src="Images/SetupFilesAddDirectoriesContextMenu.png"/></p>
+
+    <p>Browse to the bin folder, select it and click the OK button.</p>
+
+    <p><img src="Images/SetupFilesAddCccpBinariesFolder.png"/></p>
+
+    <p>If you expand the bin folder just added you will see that the 
+    files have been added each inside their own 
+    <a href="http://wix.sourceforge.net/manual-wix2/wix_xsd_component.htm"
+    >component</a>.</p>
+
+    <p><img src="Images/SetupFilesCccpBinariesAdded.png"/>.</p>
+
+    <p>Select the <b>bin</b> folder and change the name by modifying 
+    the properties on the right hand side as shown below.</p>
+
+    <p><img src="Images/SetupFilesCccpFolderNamed.png"/></p>
+
+    <p>The files now need to be configured. The Cccppol is a .NET 
+    assembly which does not need to be installed in the GAC. The 
+    modified properties for this file are shown below.</p>
+
+    <p><img src="Images/SetupFilesCccpFileProperties.png"/></p>
+
+    <p>Here I have updated the 
+    <a href="http://wix.sourceforge.net/manual-wix2/wix_xsd_file.htm">
+    Assembly, AssemblyApplication, AssemblyManifest and KeyPath</a> 
+    properties. These need to be set for a .NET assembly.</p>
+
+    <p>The Assembly property indicates that the file is a .NET 
+    assembly.</p>
+
+    <p>The AssemblyManifest property is set to the id of the assembly 
+    manifest file. In general the manifest file is the assembly 
+    itself.</p>
+
+    <p>Setting the KeyPath to true means that the installer will use 
+    the existence of this file to indicate that the component is 
+    installed. It is a Windows Installer 
+    <a href="http://msdn2.microsoft.com/en-us/library/aa367520.aspx">
+    guideline</a> that this is set to true for a .NET assembly.</p>
+
+    <p>The AssemblyApplication property is set to the id of the file so 
+    it is not installed in the GAC. If the assembly needs to be 
+    registered in the GAC then the AssemblyApplication property should 
+    be left blank. If it is blank then the files will not be installed 
+    into Program Files and will only exist in the GAC. If you need 
+    these files to be installed into Program Files aswell you will need 
+    to create a separate component and fill in the AssemblyApplication 
+    property.</p>
+
+    <p>The other files should be configured in a similar way, the only 
+    difference that the AssemblyApplication should not be set since 
+    they are to be registered in the GAC. As an example, the properties 
+    for one file are shown below.</p>
+
+    <p><img src="Images/SetupFilesCccpLibFileProperties.png"/></p>
+
+    <h2>Adding a Registry Value</h2>
+
+    <p>Now that the files have been added we need to add the registry 
+    value. The registry value will point to the installed cccppol.dll 
+    so we will put it inside the same component. Select the CccppolDll 
+    component, right click, select <b>Add</b> and then select 
+    <b>Registry</b>.</p>
+
+    <p><img src="Images/SetupFilesAddRegistryContextMenu.png"/></p>
+
+    <p>Enter the registry properties as shown below.</p>
+
+    <p><img src="Images/SetupFilesRegistryProperties.png"/></p>
+
+    <p>This will create a registry value <b>cccppol</b> under the 
+    <b>HKLM\SOFTWARE\Microsoft\VisualStudio\8.0\TeamFoundation\SourceControl\Checkin 
+    Policies</b> key. The value is set to the full path to the 
+    cccppol.dll. This is done using a value of the form 
+    <b>[#FileId]</b> which will expand out when installed to the full 
+    path of the file. A value of the form <b>[!FileId]</b> would expand 
+    to the short name of the file (i.e. it includes ~ characters).</p>
+
+    <p>We have now finished with the <b>Setup Files</b> editor so you 
+    can close it. If you want you can open up the Files.wxs file and 
+    see the WiX XML that has been generated.</p>
+
+    <h2>Adding Features</h2>
+
+    <p>Now that we have added the files to the installer we need to 
+    associate these files with 
+    <a href="http://wix.sourceforge.net/manual-wix2/wix_xsd_feature.htm"
+    >features</a> so they will be installed. Currently SharpDevelop 
+    does not have a GUI editor for features so you will have to add 
+    them by hand. Open Setup.wxs and inside the Product element add the 
+    following:</p>
+
+    <div id="xml">
+
+      <pre>  &lt;!-- Features to install --&gt; 
+  &lt;Feature Id=&quot;Complete&quot; Level=&quot;1&quot;&gt; 
+   &lt;Feature Id=&quot;CodeCommentCheckingPolicyBinaries&quot; Level=&quot;1&quot;&gt; 
+    &lt;ComponentRef Id=&quot;CccppolDll&quot;/&gt; 
+    &lt;ComponentRef Id=&quot;ICSharpCode.CCCPLibDll&quot;/&gt; 
+    &lt;ComponentRef Id=&quot;ICSharpCode.NRefactoryDll&quot;/&gt; 
+    &lt;ComponentRef Id=&quot;ICSharpCode.SharpDevelop.DomDll&quot;/&gt; 
+   &lt;/Feature&gt; 
+  &lt;/Feature&gt;</pre>
+    </div>
+
+    <p>Here we have created two features, one called 
+    <b>CodeCommentCheckingPolicyBinaries</b> that references all the 
+    components we are going to install, and one parent feature called 
+    <b>Complete</b>. We could have just used the one feature to install 
+    everything. We have put the files into a separate feature so in the 
+    future we could an add extra feature containing documentation that 
+    could be optionally installed.</p>
+
+    <h2>Adding Dialogs</h2>
+
+    <p>Now we need to show some dialogs when the installer is run. WiX 
+    ships with a 
+    <a href="http://wix.sourceforge.net/manual-wix2/WixUI_dialog_library.htm"
+    >dialog library</a> which saves you the time and effort of creating 
+    new dialogs. The dialog library supports several different dialog 
+    sequences. We want to show a license and allow the user to choose 
+    the installation folder and for this we can use the 
+    <b>WixUI_InstallDir</b> sequence of dialogs. In Setup.wxs insert 
+    the following xml inside the Product element.</p>
+
+    <div id="xml">
+
+      <pre>  &lt;!-- Use Wix UI library --&gt; 
+  &lt;Property Id=&quot;WIXUI_INSTALLDIR&quot;&gt;INSTALLDIR&lt;/Property&gt; 
+  &lt;UIRef Id=&quot;WixUI_InstallDir&quot;/&gt;</pre>
+    </div>
+
+    <p>The <b>WIXUI_INSTALLDIR</b> property is used to tell the WiX 
+    dialog library the id of the directory that the user is allowed to 
+    configure. In our case it is <b>INSTALLDIR</b>.</p>
+
+    <p>Now we need to add the WiX dialog library to our project. In the 
+    <b>Project Browser</b>, select <b>WiX Libraries</b>, right click 
+    and select <b>Wix Library</b>.</p>
+
+    <p><img src="Images/AddWixLibrariesContextMenu.png"/></p>
+
+    <p>Now browse to the file <b>wixui.wixlib</b>, which is shipped 
+    with SharpDevelop in the subfolder <b>bin\Tools\Wix</b> folder. 
+    Select the file and click the <b>Open</b> button. The WiX dialog 
+    library should then be added to your project.</p>
+
+    <p><img src="Images/WixUiLibraryAddedToProject.png"/></p>
+
+    <p>Now we need to add the WiX localisation file (.wxl) to the 
+    project. A localisation file contains all the strings that are 
+    displayed in the dialogs. We are going to use the English 
+    localisation file since this is complete. For information on the 
+    status of other localisations refer to the 
+    <a href="http://www.tramontana.co.hu/wix/loc/index.php">WiX 
+    localisation project page</a>. From the <b>Project</b> menu select 
+    <b>Project Options</b>.</p>
+
+    <p><img src="../Help/Images/ProjectOptionsMenuItem.png"/></p>
+
+    <p>In the <b>Application</b> tab, locate the <b>Localisation string 
+    file</b> field, click the <b>Browse</b> button 
+    <img src="../Help/Images/BrowseButton.png"/> to open the <b>Open 
+    File</b> dialog, locate the <b>WixUI_en-us.wxl</b> file inside the 
+    <b>bin\Tools\Wix</b> folder, select it and click the <b>Open</b> 
+    button. The localisation file should then be added to the project 
+    options.</p>
+
+    <p><img src="Images/WixLocalisedFileSetInProjectOptions.png"/></p>
+
+    <p>Save the changes you have made to the project options. We have 
+    not quite finished, but you can test the dialogs if you want. First 
+    build the project. From the <b>Build</b> menu, select <b>Build 
+    Cccp.Setup</b>.</p>
+
+    <p><img src="Images/BuildCccpProjectMenuItem.png"/></p>
+
+    <p>Once the installer has built successfully, run it by selecting 
+    <b>Run</b> from the <b>Debug</b> menu.</p>
+
+    <p><img src="Images/DebugRunMenuOption.png"/></p>
+
+    <p>You should then see the first setup dialog.</p>
+
+    <p><img src="Images/CccpSetupDialog.png"/></p>
+
+    <h2>Showing the License</h2>
+
+    <p>If you tried out all the setup dialogs you will see that an end 
+    user license is displayed. In order to get a custom license shown 
+    we need to create a rich text document called <b>License.rtf</b> 
+    and put it into the same folder as the WiX project file 
+    (Cccp.Setup.wixproj). Then on rebuilding the project the custom 
+    license will be taken from this file, embedded into the installer 
+    and displayed when installing.</p>
+
+    <h2>Installation Conditions</h2>
+
+    <p>Now we want the installer to inform the user that the installer 
+    can only be run under the following conditions:</p>
+
+    <ul>
+
+      <li>.NET 2.0 is installed.</li>
+
+      <li>The OS is at least Windows 2000.</li>
+
+      <li>User has Administrator privileges.</li>
+
+    </ul>
+
+    <p>To do this we add three 
+    <a href="http://wix.sourceforge.net/manual-wix2/wix_xsd_condition.htm"
+    >Condition</a> elements to Setup.wxs inside the Product element.</p>
+
+    <div id="xml">
+
+      <pre>  &lt;!-- 
+   Check for .NET 2.0  
+  --&gt; 
+  &lt;Condition Message=&quot;This setup requires the .NET Framework 2.0 or higher.&quot;&gt; 
+   Installed OR MsiNetAssemblySupport &amp;gt;= &quot;2.0.50727&quot; 
+  &lt;/Condition&gt; 
+   
+  &lt;!-- 
+   Check for the operating system is at least Windows 2000 (VersionNT = 500).  
+  --&gt; 
+  &lt;Condition Message=&quot;The operating system you are using is not supported (95/98/ME/NT3.x/NT4.x).&quot;&gt; 
+   Installed OR VersionNT &amp;gt;= 500 
+  &lt;/Condition&gt; 
+   
+  &lt;!-- Check for admin rights --&gt; 
+  &lt;Condition Message=&quot;Administrator rights are required to install the Code Comment Checking Policy.&quot;&gt; 
+   Privileged 
+  &lt;/Condition&gt;</pre>
+    </div>
+
+    <p>If a condition fails then a message will be displayed. Some of 
+    the conditions also use have an <b>Installed OR</b> part which 
+    means the installer will never prevent the user from repairing or 
+    uninstalling the package if it is already installed.</p>
+
+    <p>Now all that is left to do is run the installer and check that 
+    it actually installs everything correctly.</p>
+
+    <h2>Validating the Installer</h2>
+
+    <p>After you have tested out your installer, making sure it creates 
+    the correct registry key, and copies the files to the correct 
+    location, you should validate the created msi file.</p>
+
+    <p>To validate the installer you can use one of the validation 
+    tools provided by Microsoft. One such tool is 
+    <a href="http://msdn2.microsoft.com/en-us/library/aa370557.aspx">
+    Orca</a> which is available as part of the 
+    <a href="http://www.microsoft.com/downloads/details.aspx?FamilyID=0baf2b35-c656-4969-ace8-e4c0c0716adb"
+    >Windows 2003 R2 Platform SDK</a>. Orca was originally created by 
+    <a href="http://blogs.msdn.com/robmen/archive/2003/10/11/56487.aspx"
+    >Rob Mensching</a> and as well as allowing you to validate your 
+    installer it also allows you to view and edit the various tables 
+    inside your .msi file.</p>
+
+    <p>To validate the installer with Orca.exe, use the <b>File</b> 
+    menu to open the .msi file, then from the <b>Tools</b> menu select 
+    <b>Validate</b>.</p>
+
+    <p><img src="Images/OrcaToolsValidateMenuItem.png"/></p>
+
+    <p>From the dialog that opens we can choose various validation 
+    suites.</p>
+
+    <p><img src="Images/OrcaValidationDialog.png"/></p>
+
+    <p>Validating the installer we just created against the <b>Full MSI 
+    Validation Suite</b> we see three warnings.</p>
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Error ID</th>
+
+          <th>Description</th>
+
+        </tr>
+
+      </thead>
+
+      <tr>
+
+        <td>
+        <a href="http://msdn2.microsoft.com/en-us/library/aa369026.aspx"
+        >ICE74</a></td>
+
+        <td>The UpgradeCode property is not authored in the Property 
+        table. It is strongly recommended that authors of installation 
+        packages specify an UpgradeCode for their application.</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <a href="http://msdn2.microsoft.com/en-us/library/aa369037.aspx"
+        >ICE82</a></td>
+
+        <td>This action WelcomeDlg has duplicate sequence number 1298 
+        in the table InstallUISequence</td>
+
+      </tr>
+
+      <tr>
+
+        <td>
+        <a href="http://msdn2.microsoft.com/en-us/library/aa369037.aspx"
+        >ICE82</a></td>
+
+        <td>This action MaintenanceWelcomeDlg has duplicate sequence 
+        number 1298 in the table InstallUISequence</td>
+
+      </tr>
+
+    </table>
+
+    <p>The two ICE82 warnings are from the WiX UI dialog library so we 
+    shall ignore them. The other error is about upgrades. If you are 
+    never going to support 
+    <a href="http://msdn2.microsoft.com/en-us/library/aa370579.aspx">
+    upgrades</a> then you can ignore it, but if you are or might do in 
+    the future we can fix the warning by adding an UpgradeCode 
+    attribute to the Product element.</p>
+
+    <div id="xml">
+
+      <pre>&lt;Wix xmlns=&quot;http://schemas.microsoft.com/wix/2003/01/wi&quot;&gt; 
+ &lt;Product Id=&quot;8F3A52FE-BB54-4BC9-953C-7173D16AA96D&quot;  
+          Name=&quot;Code Comment Checking Policy&quot;  
+          Language=&quot;1033&quot;  
+          Version=&quot;1.0.0.0&quot;  
+          Manufacturer=&quot;ic#code&quot; 
+          <b>UpgradeCode</b>=&quot;&quot;&gt;</pre>
+    </div>
+
+    <p>This value for this attribute is a GUID which can be quickly 
+    generated either by using the keyboard shortcut <b>Ctrl+Shift+G</b> 
+    or from the <b>Edit</b> menu, selecting <b>Insert</b> and then 
+    <b>Insert New GUID</b>.</p>
+
+    <h2>Other WiX Tutorials</h2>
+
+    <p>That&apos;s the end of this walkthrough. If you want more 
+    information about <a href="http://wix.sourceforge.net">WiX</a> than 
+    is given here, one of the best WiX tutorials available is that 
+    created by Gábor DEÁK JAHN which can be found at 
+    <a href="http://www.tramontana.co.hu/wix/">
+    http://www.tramontana.co.hu/wix/</a></p>
+
+    <p />
+
+  </body>
+
+</html>
+

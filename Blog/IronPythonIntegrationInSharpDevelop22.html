@@ -1,0 +1,277 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>IronPython Integration in SharpDevelop 2.2</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>Support for 
+    <a href="http://www.codeplex.com/IronPython/Release/ProjectReleases.aspx?ReleaseId=2573">
+    IronPython 1.1</a> is now available for 
+    <a href="http://www.sharpdevelop.net/OpenSource/SD/Download/GetFile.aspx?What=Setup&amp;Release=Serralongue">
+    SharpDevelop 2.2.1.2648</a>. The IronPython addin is an early alpha 
+    release and is not an official part of SharpDevelop 2.2.1 so it is 
+    available as a separate download at the end of this post.</p>
+
+    <p>The addin will not work with SharpDevelop 3.0 nor IronPython 
+    2.0.</p>
+
+    <h2>Features</h2>
+
+    <ul>
+
+      <li>Code folding</li>
+
+      <li>Syntax highlighting</li>
+
+      <li>File and project templates for Console and Windows Forms 
+      applications</li>
+
+      <li>Code completion (limited)</li>
+
+      <li>Windows Forms designer</li>
+
+      <li>C# and VB.NET code conversion to Python</li>
+
+    </ul>
+
+    <p>Please note that code completion, the forms designer and code 
+    conversion all need a lot more work.</p>
+
+    <h2>Creating a Windows Application</h2>
+
+    <p>Open up the new project dialog by selecting <b>New</b> then 
+    <b>Solution</b> from the <b>File</b> menu. Selecting the Python 
+    category will show two project templates. One will create a Windows 
+    console application and the other will create a Windows Forms 
+    application.</p>
+
+    <p><img alt="New Python Project Dialog"
+     src="../Blog/Images/NewPythonProjectDialog.png"/></p>
+
+    <p>Once you have created a new project you will then need to add a 
+    reference to the IronPython assembly. Open the <b>Projects</b> 
+    window by selecting <b>Projects</b> from the <b>View</b> menu. In 
+    the <b>Projects</b> window, right click the project and select 
+    <b>Add Reference</b>. Select the <b>.NET Assembly Browser</b> tab 
+    and click the <b>Browse</b> button. Then browse to IronPython.dll. 
+    The addin includes this file so can either extract it from there or 
+    if you installed it from the sdaddin file then you should be able 
+    to find the IronPython.dll in the folder:</p>
+
+    <p>C:\Documents and Settings\[YourUserName]\Application 
+    Data\ICSharpCode\SharpDevelop2.1\AddIns\ICSharpCode.PythonBinding</p>
+
+    <p>To build the application select <b>Build Solution</b> from the 
+    <b>Build</b> menu.</p>
+
+    <p>The built executables cannot be run with the debugger so instead 
+    select <b>Run without debugger</b> from the <b>Debug</b> menu. If 
+    you are running a windows app and nothing seems to happen then open 
+    a command line window and run it from there. This way you should 
+    see any errors reported from the IronPython runtime.</p>
+
+    <p>There are a few file templates which can be added to the project 
+    as shown below.</p>
+
+    <p><img src="../Blog/Images/NewPythonFileDialog.png"/></p>
+
+    <h2>Designing Windows Forms</h2>
+
+    <p>The Windows Forms designer is still in its early stages so 
+    please be warned that it may break the form&apos;s code or worse. 
+    Most of the Windows Forms controls work with the designer but 
+    things like adding columns to a list view will generate code that 
+    does not compile.</p>
+
+    <p>The designer can be opened in the usual way by opening the form 
+    in the text editor and selecting the Design tab at the bottom of 
+    the text editor.</p>
+
+    <p><img alt="Python main form before opening the designer"
+     src="../Blog/Images/PythonMainFormBeforeOpeningInDesigner.png"/></p>
+
+    <p>Once open in the designer you can add controls to the form in 
+    the usual way from the Tools window. In the screenshot below a 
+    label, text box and a button have been added.</p>
+
+    <p><img alt="Main form designed in designer"
+     src="../Blog/Images/PythonMainFormInDesigner.png"/></p>
+
+    <p>Click the Source tab to view the generated code in the 
+    InitializeComponents method.</p>
+
+    <p><img alt="Generated form code"
+     src="../Blog/Images/PythonMainFormGeneratedCode.png"/></p>
+
+    <h2>Code Folding</h2>
+
+    <p>Code folding allows you to collapse regions of a class.</p>
+
+    <p><img src="../Blog/Images/PythonClassBeforeFolding.png"/></p>
+
+    <p><img alt="Folded python code"
+     src="../Blog/Images/PythonClassFolded.png"/></p>
+
+    <h2>Code Completion</h2>
+
+    <p>Code completion is very limited currently. If you type a space 
+    after an import statement then you will get a list of namespaces 
+    available.</p>
+
+    <p><img alt="Import code completion"
+     src="../Blog/Images/PythonImportCodeCompletion.png"/></p>
+
+    <p>Code completion for classes is one area which has the most 
+    limited support. If you open Program.py you can get code completion 
+    for static classes such as System.Console but it does not work 
+    everywhere.</p>
+
+    <p>
+    <img src="../Blog/Images/PythonSystemNamespaceCodeCompletion.png"/></p>
+
+    <p><img alt="Console.WriteLine code completion"
+     src="../Blog/Images/PythonConsoleWriteLineCodeCompletion.png"/></p>
+
+    <p><img alt="Method insight for Python"
+     src="../Blog/Images/PythonConsoleWriteLineMethodInsight.png"/></p>
+
+    <h2>Code Conversion</h2>
+
+    <p>To convert VB.NET or C# to Python open the file you want to 
+    convert and then select <b>Convert code to Python</b> from the 
+    <b>Tools</b> menu.</p>
+
+    <p><img alt="Convert code to Python menu item"
+     src="../Blog/Images/ConvertCodeToPythonMenuItem.png"/></p>
+
+    <p>The code conversion is limited to classes so it will not convert 
+    an arbitary piece of code that is not inside a class. A C# class 
+    being converted to Python is shown below.</p>
+
+    <p><img alt="C# code before converting to Python"
+     src="../Blog/Images/CSharpCodeBeforeConversionToPython.png"/></p>
+
+    <p><img alt="Converted Python code"
+     src="../Blog/Images/ConvertedCSharpClassAsPython.png"/></p>
+
+    <p>The code conversion is still at an early stage of development so 
+    it will fail on complicated classes.</p>
+
+    <h2>Class View</h2>
+
+    <p>Classes in the open solution will be displayed in the Class 
+    browser (Select <b>Classes</b> from the <b>View</b> menu).</p>
+
+    <p><img alt="Python class in Classes window"
+     src="../Blog/Images/PythonClassInClassWindow.png"/></p>
+
+    <p>From there you can double click a class or method and the text 
+    editor will display the corresponding code.</p>
+
+    <h2>Standalone Python Files</h2>
+
+    <p>The addin has support for standalone Python files. If you open a 
+    file with a .py file extension then a Python menu will appear.</p>
+
+    <p><img alt="Python menu items"
+     src="../Blog/Images/PythonRunMenuItem.png"/></p>
+
+    <p>From this menu you can run ipy.exe and have it execute the file. 
+    Any output from the Python script will be shown in the Output 
+    window. </p>
+
+    <p>By default the ipy.exe run is the one that ships with the addin. 
+    You can choose another IronPython console by select <b>Options</b> 
+    from the <b>Tools</b> menu. Selecting the <b>Python</b> option 
+    allows you to choose another IronPython console.</p>
+
+    <p><img alt="Python options dialog"
+     src="../Blog/Images/PythonToolsOptionsDialog.png"/></p>
+
+    <h2>Installing the IronPython AddIn</h2>
+
+    <ol>
+
+      <li>Rename the <b>IronPythonAddIn-0.2.zip</b> file to 
+      <b>IronPythonAddIn-0.2.sdaddin</b>.</li>
+
+      <li>
+
+        From the 
+        <b>Tools</b>
+         menu select 
+        <b>AddIn Manager</b>
+         .
+        <p><img alt="Tools AddIn Manager menu item"
+         src="../Help/Images/ToolsAddInManagerMenuItem.png"/></p>
+
+      </li>
+
+      <li>
+
+        Click the 
+        <b>Install AddIn</b>
+         button.
+        <p><img alt="AddIn Manager dialog"
+         src="../Help/Images/AddInManagerDialog.png"/></p>
+
+      </li>
+
+      <li>
+
+        In the Open File Dialog browse to the 
+        <b>IronPythonAddIn-0.2.sdaddin</b>
+         file and click the 
+        <b>Open</b>
+         button.
+        <p><img alt="AddIn installed confirmation dialog."
+         src="../Blog/Images/IronPythonAddInInstalledDialog.png"/></p>
+
+      </li>
+
+      <li>Click the <b>Close</b> button.</li>
+
+      <li>Restart SharpDevelop.</li>
+
+    </ol>
+
+    <h2>Future Work</h2>
+
+    <p>Since SharpDevelop 2.2.1.2648 is the last release in the 2.x 
+    branch the next release of the IronPython addin will be for 
+    SharpDevelop 3.0 and it will support IronPython 2.0.</p>
+
+    <h2>Python Links</h2>
+
+    <p>Some of the Python tutorials and links used whilst creating the 
+    IronPython addin.</p>
+
+    <ol>
+
+      <li><a href="http://docs.python.org/">Python documentation</a> by 
+      Guido van Rossum the author of Python.</li>
+
+      <li><a href="http://www.diveintopython.org/">Dive into Python</a> 
+      book by Mark Pilgrim. The full text is available online.</li>
+
+      <li><a href="http://www.codeplex.com/IronPython">IronPython 
+      homepage</a>.</li>
+
+    </ol>
+
+    <p />
+
+    <p />
+
+  </body>
+
+</html>
+

@@ -1,0 +1,42 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>JavaScript Code Folding</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop 4.2 now includes support for JavaScript code 
+    folding and code regions.</p>
+
+    <p>When you open a JavaScript (.js) file into the text editor any 
+    functions that are defined can be folded.</p>
+
+    <p><img alt="JavaScript code folding in text editor"
+     src="Images/JavaScriptCodeFolding.png"/></p>
+
+    <p>The text editor also supports code regions.</p>
+
+    <pre>    //#region Canvas Test 
+     
+    tests[&apos;canvas&apos;] = function() { 
+        var elem = document.createElement( &apos;canvas&apos; ); 
+        return !!(elem.getContext &amp;&amp; elem.getContext(&apos;2d&apos;)); 
+    }; 
+     
+    //#endregion</pre>
+    <p>These regions can be folded as shown below.</p>
+
+    <p><img alt="JavaScript code regions folded in the text editor"
+     src="Images/JavaScriptCodeRegionFolding.png"/></p>
+
+  </body>
+
+</html>
+

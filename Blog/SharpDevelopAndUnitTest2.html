@@ -1,0 +1,44 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>SharpDevelop and unittest2</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop 4 has been updated to support running IronPython 
+    unit tests that use the 
+    <a href="http://pypi.python.org/pypi/unittest2">unittest2</a> 
+    library, as shown in the screenshot below.</p>
+
+    <p><img src="Images/PythonRunningTestsWithUnitTest2.png"/></p>
+
+    <p>Make sure unittest2 is on the Python path before running the 
+    unit tests.</p>
+
+    <p>Out of the box SharpDevelop will actually use the unittest 
+    library&apos;s test runner. This seems to work however if you 
+    actually need to use the unittest2 test runner then you can modify 
+    the following two files in the folder 
+    AddIns\AddIns\BackendBindings\PythonBinding\TestRunner.</p>
+
+    <ul>
+
+      <li>sdtest.py</li>
+
+      <li>sdtestrunner.py</li>
+
+    </ul>
+
+    <p />
+
+  </body>
+
+</html>
+

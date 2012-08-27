@@ -1,0 +1,103 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Unit Testing with IronPython</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>
+    <a href="http://build.sharpdevelop.net/buildartefacts/">SharpDevelop 
+    4</a> has been updated to support unit testing with IronPython.</p>
+
+    <p>First you will need to install 
+    <a href="http://python.org/download/">Python 2.6</a>. SharpDevelop 
+    uses the standard 
+    <a href="http://docs.python.org/library/unittest.html">Python unit 
+    test library</a> (unittest.py) to run the unit tests.</p>
+
+    <p>SharpDevelop should detect where the Python standard library is 
+    installed but if it does not then you can either specify the path 
+    to the standard library via the <b>IRONPYTHONPATH</b> environment 
+    variable or you can set the path in the <b>Options</b> dialog 
+    (Tools | Options | Tools | Python | Path), as shown below.</p>
+
+    <p>
+    <img alt="Setting the Python standard library path in Tools Options"
+     src="Images/PythonOptionsPythonStandardLibraryPath.png"/></p>
+
+    <p>Now we need to create some tests. Create two Python projects one 
+    to hold the unit tests and the other to hold the code that will be 
+    tested.</p>
+
+    <p>In the test project we add the following simple test class that 
+    has two tests, one that will work and one that will fail.</p>
+
+    <pre>import unittest 
+import MyClass 
+ 
+class MyClassTests(unittest.TestCase): 
+ def testSuccess(self): 
+  myclass = MyClass.MyClass() 
+  self.assertEqual(1, myclass.ReturnOne(), &quot;Test should work&quot;) 
+   
+ def testFailure(self): 
+  myclass = MyClass.MyClass() 
+  self.assertEqual(2, myclass.ReturnOne(), &quot;Test should fail&quot;) 
+</pre>
+    <p>Once this class is created you should see the unit tests 
+    displayed in the <b>Unit Tests</b> window (View | Tools | Unit 
+    Tests).</p>
+
+    <p><img alt="Python unit tests in Unit Tests window"
+     src="Images/PythonUnitTestsInUnitTestsWindow.png"/></p>
+
+    <p>In the other project we create a new class with the following 
+    code.</p>
+
+    <pre>class MyClass: 
+ def __init__(self): 
+  pass 
+   
+ def ReturnOne(self): 
+  return 1</pre>
+    <p>Now in the project containing the unit tests we need to add a 
+    project reference to the project containing MyClass. This is so 
+    that SharpDevelop knows to set up the paths correctly so MyClass 
+    can be found when the unit tests are run.</p>
+
+    <p>Once the project reference is added the unit tests can be run in 
+    the normal way by right clicking in the <b>Unit Tests</b> window 
+    and selecting <b>Run tests</b>. You can run all the tests in a 
+    project, all tests in a class or a single test method.</p>
+
+    <p><img alt="Python test results in Unit Tests window"
+     src="Images/PythonUnitTestResultsInUnitTestsWindow.png"/></p>
+
+    <p>The output generated when running the unit tests is shown in the 
+    <b>Output</b> window.</p>
+
+    <p><img alt="Python tests results in Output window"
+     src="Images/PythonUnitTestResultsInOutputWindow.png"/></p>
+
+    <p>Test failures are displayed in the <b>Errors</b> window. 
+    Clicking an error will open the corresponding code in the 
+    editor.</p>
+
+    <p><img alt="Python test results in Errors window"
+     src="Images/PythonUnitTestResultsInErrorsWindow.png"/></p>
+
+    <p>You cannot debug your unit tests at the moment since debugging 
+    IronPython code is not currently working in SharpDevelop 4.0. 
+    Running unit tests with code coverage is also not supported.</p>
+
+  </body>
+
+</html>
+

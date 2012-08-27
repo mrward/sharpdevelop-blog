@@ -1,0 +1,87 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>XML Comments</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>SharpDevelop has support for adding and previewing XML 
+    documentation comments in C# and VB.NET code. It also ships with 
+    <a href="http://www.codeplex.com/Sandcastle">Microsoft&apos;s 
+    Sandcastle</a> so you can generate your help file directly from the 
+    development environment.</p>
+
+    <h2>Adding XML Comments</h2>
+
+    <p>In a C# source file, typing in /// before a method will start an 
+    XML comment and SharpDevelop will generate a basic comment based on 
+    the method parameters and return value.</p>
+
+    <p><img alt="C# "
+     src="Images/FeatureTourXmlCommentCreated.png"/></p>
+
+    <p>In VB.NET an XML comment starts with &apos;&apos;&apos;.</p>
+
+    <p><img alt="VB.Net XML comment created"
+     src="Images/FeatureTourVBNetXmlCommentCreated.png"/></p>
+
+    <p>As you type SharpDevelop provides XML element completion inside 
+    the comment.</p>
+
+    <p><img alt="XML comment completion"
+     src="Images/FeatureTourXmlCommentCompletion.png"/></p>
+
+    <h2>Previewing the XML Comment</h2>
+
+    <p>With the cursor inside the comment, from the <b>Tools</b> menu 
+    select <b>Quick XML doc</b>, or alternatively use the keyboard 
+    shortcut <b>Ctrl+Q</b>. This opens up a window showing you a 
+    preview of the XML comment.</p>
+
+    <p><img alt="XML doc preview"
+     src="Images/FeatureTourXmlCommentPreviewDialog.png"/></p>
+
+    <h2>Generating Documentation</h2>
+
+    <p>By default the compiler does not generate XML comment 
+    documentation, to turn this on, select the name of the project in 
+    the <b>Project Explorer</b>, right click and select 
+    <b>Properties</b>. The project options are then opened. Select the 
+    <b>Compiling</b> tab and enable the XML comment generation by 
+    ticking the <b>XML documentation</b> check box.</p>
+
+    <p><img alt="Enabling XML comment generation in the project options"
+     src="Images/FeatureTourXmlCommentsEnabled.png"/></p>
+
+    <p>XML comment documentation will then be generated from the code 
+    when the project is compiled. Once compilation is complete you can 
+    use <a href="http://www.codeplex.com/Sandcastle">Sandcastle</a> to 
+    generate help documentation. From the <b>Project</b> menu, select 
+    <b>Build documentation from XML comments</b>.</p>
+
+    <p><img alt="Build documentation from XML comments menu item"
+     src="Images/FeatureTourBuildDocumentationFromXmlCommentsMenuItem.png"/></p>
+
+    <p>This runs the Sandcastle application where you can generate 
+    various types of documentation, such as MSDN-style HTML Help 
+    (.chm), Visual Studio .NET Help (HTML Help 2), and MSDN style web 
+    pages.</p>
+
+    <p><img alt="Sandcastle"
+     src="Images/FeatureTourSandcastleHelpFileBuilderDialog.png"/></p>
+
+    <p>&lt; <a href="FeatureTourCodeGeneration.html">previous</a> | 
+    <a href="FeatureTour.html">home</a> | 
+    <a href="FeatureTourCodeNavigation.html">next</a> &gt;</p>
+
+  </body>
+
+</html>
+

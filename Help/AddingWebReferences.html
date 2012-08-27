@@ -1,0 +1,188 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Adding Web References</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>To consume or call a web service from your application you can 
+    add a web reference to your project.Once the web reference has been 
+    added to your project the web service will be available to you as a 
+    web service proxy class, which you can create and execute any of 
+    its methods. Executing a method on this class will call the 
+    corresponding web service method and return the result. If the web 
+    service changes you can refresh the web reference which recreates 
+    the web service proxy class.</p>
+
+    <p>You can only add web references to C# and VB.NET projects.</p>
+
+    <h2>Adding a Web Reference</h2>
+
+    <ol>
+
+      <li>
+
+        With a project open in SharpDevelop, open the 
+        <b>View</b>
+         menu and select 
+        <b>Projects...</b>
+         to open the Projects Explorer.
+        <p><img alt="Menu item to open the Projects Explorer"
+         src="Images/ViewProjectsMenuItem.png"/></p>
+
+      </li>
+
+      <li>
+
+        In the Projects Explorer, right click the project and select 
+        <b>Add Web Reference</b>
+         .
+        <p><img alt="Menu item to add a web reference to a project"
+         src="Images/ProjectsViewAddWebReferenceContextMenuItem.png"/></p>
+
+        <p>This opens the <a href="AddWebReferenceDialogBox.html">Add 
+        Web Reference dialog box</a>.</p>
+
+        <p><img alt="Add Web Reference dialog"
+         src="Images/AddWebReferenceDialog.png"/>.</p>
+
+      </li>
+
+      <li>
+
+        Type in a URL and browse for a web service by pressing the 
+        return key or by clicking the 
+        <b>Go</b>
+         button . The screenshot below shows the 
+        <b>Add Web Reference</b>
+         dialog after the URL 
+        <b>http://localhost/Maths.asmx</b>
+         has been entered and the web service on the local machine has 
+        been found and displayed after clicking the 
+        <b>Go</b>
+         button.
+        <p><img alt="Add Web Reference dialog showing a web service"
+         src="Images/AddWebReferenceDialogFoundMathsWebService.png"/></p>
+
+      </li>
+
+      <li>Change the name of the web reference by changing the text in 
+      the <b>Reference Name</b> text box. The default value is set to 
+      the web service host name, which in the screenshot above is 
+      localhost.</li>
+
+      <li>Change the namespace to be used for the web proxy class by 
+      changing the text in the <b>Namespace</b> text box. The default 
+      value is set to the root namespace of the project followed by the 
+      web service host name.</li>
+
+      <li>
+
+        Click the 
+        <b>Add</b>
+         button to add the web reference to your project. SharpDevelop 
+        will then create the web reference and display it in the 
+        <b>Project Explorer</b>
+         . Expanding the web reference in the 
+        <b>Project Explorer</b>
+         you can see the files that SharpDevelop has generated.
+        <p><img alt="Web reference added in Project Explorer"
+         src="Images/ProjectViewWebReferenceAdded.png"/></p>
+
+        <p>Now you can use the web service proxy class in your 
+        application.</p>
+
+      </li>
+
+    </ol>
+
+    <h2>Refreshing a Web Reference</h2>
+
+    <p>If the web service changes you can recreate the web service 
+    proxy class to reflect any new methods or new parameters by 
+    refreshing the web reference.</p>
+
+    <ol>
+
+      <li>
+
+        Open the 
+        <b>View</b>
+         menu and select 
+        <b>Projects...</b>
+         to open the Projects Explorer.
+        <p><img alt="Menu item to open the Projects Explorer"
+         src="Images/ViewProjectsMenuItem.png"/></p>
+
+      </li>
+
+      <li>Expand the <b>Web References</b>.</li>
+
+      <li>
+
+        Select the name of the web reference you want to refresh, right 
+        click and select 
+        <b>Refresh Web Reference</b>
+         .
+        <p><img alt="Refresh web reference context menu item"
+         src="Images/WebReferenceRefreshContextMenuItem.png"/></p>
+
+      </li>
+
+      <li>
+
+        <p>The web service proxy will then be updated to reflect the 
+        changes made to the web service and you can update your 
+        code.</p>
+
+      </li>
+
+    </ol>
+
+    <h2>Removing a Web Reference</h2>
+
+    <ol>
+
+      <li>
+
+        Open the 
+        <b>View</b>
+         menu and select 
+        <b>Projects...</b>
+         to open the Projects Explorer.
+        <p><img alt="Menu item to open the Projects Explorer"
+         src="Images/ViewProjectsMenuItem.png"/></p>
+
+      </li>
+
+      <li>Expand <b>Web References</b>.</li>
+
+      <li>
+
+        Select the name of the web reference you want to remove, right 
+        click and select 
+        <b>Delete</b>
+         .
+        <p><img alt="Menu item to delete a web reference from a project"
+         src="Images/WebReferenceDeleteContextMenuItem.png"/></p>
+
+        <p>If your application has several web references you can 
+        delete all of them in one step by selecting <b>Web 
+        References</b> in the <b>Project Explorer</b>, right clicking 
+        and selecting <b>Delete</b>.</p>
+
+      </li>
+
+    </ol>
+
+  </body>
+
+</html>
+

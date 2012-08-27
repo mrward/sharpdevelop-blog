@@ -1,0 +1,151 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Adding References</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>To use a type in your application you need to add a reference to 
+    the assembly where that type is defined. A project created from a 
+    SharpDevelop project template will typically have a few default 
+    references already added to the project, for example, the VB.NET 
+    and C# Windows Application templates have the following references 
+    already added</p>
+
+    <ul>
+
+      <li>System</li>
+
+      <li>System.Data</li>
+
+      <li>System.Drawing</li>
+
+      <li>System.Windows.Forms</li>
+
+      <li>System.Xml</li>
+
+    </ul>
+
+    <h2>Adding a Reference</h2>
+
+    <ol>
+
+      <li>
+
+        From the 
+        <b>View</b>
+         menu select 
+        <b>Projects</b>
+         .
+        <p><img alt="View Projects menu item"
+         src="Images/ViewProjectsMenuItem.png"/></p>
+
+        <p>This opens the <b>Project Explorer</b>.</p>
+
+        <p><img alt="Project Explorer window"
+         src="Images/ProjectExplorerCSharpWindowsApplication.png"/></p>
+
+      </li>
+
+      <li>
+
+        Select the name of the project in the 
+        <b>Project Explorer</b>
+        , right click and select 
+        <b>Add Reference</b>
+         .
+        <p><img alt="Add reference context menu"
+         src="Images/ProjectExplorerCSharpWinAppAddReferenceContextMenuItem.png"/></p>
+
+        <p>Alternatively you can select <b>Add Reference</b> from the 
+        <b>Project</b> menu.</p>
+
+        <p><img alt="Project add reference menu item"
+         src="Images/ProjectAddReferenceMenuItem.png"/></p>
+
+        <p>This opens the <a href="AddReferenceDialogBox.html">Add 
+        Reference dialog box</a>.</p>
+
+        <p><img alt="Add reference dialog"
+         src="Images/AddReferenceDialog.png"/></p>
+
+        <p>From the dialog you can add a reference to an assembly in 
+        the GAC, a project reference, a COM reference or you can add a 
+        reference by browsing to an assembly on the file system.</p>
+
+      </li>
+
+      <li>
+
+        Select the desired assembly and click the 
+        <b>Select</b>
+         button. Multiple assemblies can be selected by holding down 
+        the 
+        <b>Ctrl</b>
+         key. Selected references are displayed in the 
+        <b>Selected References</b>
+         list at the bottom of the dialog. The screenshot below shows 
+        the System.Runtime.Remoting and the System.Web assemblies 
+        selected and ready to be added to the project.
+        <p>
+        <img alt="Selected references displayed in Add Reference dialog"
+         src="Images/AddReferenceDialogReferencesSelected.png"/></p>
+
+      </li>
+
+      <li>
+
+        Add the reference to your project by clicking the 
+        <b>OK</b>
+         button.
+        <p>The reference will be displayed under <b>References</b> in 
+        the <b>Project Explorer</b>. The screenshot below shows the 
+        System.Runtime.Remoting and System.Web references added to the 
+        project.</p>
+
+        <p><img alt="References added to the project"
+         src="Images/ProjectExplorerAssemblyReferencesAdded.png"/></p>
+
+      </li>
+
+    </ol>
+
+    <h2>Removing a Reference</h2>
+
+    <ol>
+
+      <li>Open the <b>Project Explorer</b>.</li>
+
+      <li>Expand the <b>References</b> by clicking the plus icon 
+      <img alt="Plus icon" src="Images/PlusIcon.png"/>.</li>
+
+      <li>
+
+        Select the reference you want to remove, right click and select 
+        <b>Remove</b>
+        .
+        <p><img alt="Removing an assembly reference from the project"
+         src="Images/ProjectExplorerRemoveAssemblyReferenceContextMenuItem.png"/></p>
+
+        <p>The reference will then be removed from the project.</p>
+
+        <p><img alt="Assembly reference removed"
+         src="Images/ProjectExplorerAssemblyReferenceRemoved.png"/></p>
+
+      </li>
+
+    </ol>
+
+    <p />
+
+  </body>
+
+</html>
+

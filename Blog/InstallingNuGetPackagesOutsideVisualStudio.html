@@ -1,0 +1,173 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Installing NuGet Packages outside of Visual Studio</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>There have been 
+    <a href="http://nuget.codeplex.com/discussions/246942">
+    discussions</a> about using 
+    <a href="http://blog.davidebbo.com/2011/05/thoughts-on-installing-and-updating.html"
+    >NuGet outside of Visual Studio</a> as well as an 
+    <a href="http://nuget.codeplex.com/workitem/818">open work item</a> 
+    in the NuGet issue tracker. Outside of Visual Studio in this 
+    context means using NuGet from the command line. There is support 
+    for this already with NuGet.exe so let us take a quick look at what 
+    is supported at the moment.</p>
+
+    <p>Currently you can use NuGet.exe to download packages without 
+    having to use Visual Studio. You can download a single package:</p>
+
+    <pre>nuget install nunit</pre>
+    <p>You can point NuGet.exe to your packages.config and it will 
+    download any missing packages:</p>
+
+    <pre>nuget install packages.config</pre>
+    <p>What NuGet.exe will not do is update your project file (.csproj) 
+    nor will it run any PowerShell scripts that the package uses. Which 
+    is OK in the majority of cases.</p>
+
+    <p>You can go further than this though. Since SharpDevelop supports 
+    updating project files as a proof of concept we have used 
+    SharpDevelop to extend NuGet further so now NuGet can support 
+    everything it does from within Visual Studio but from the command 
+    line. From the command line we are able to install a package, have 
+    the project file updated with assembly references and any new 
+    files, and finally have any PowerShell scripts included in the 
+    NuGet package processed.</p>
+
+    <p>Since NuGet uses PowerShell the simplest approach was to extend 
+    the existing PowerShell cmdlets included with SharpDevelop. Now you 
+    can write a few lines of PowerShell script to install a NuGet 
+    package into a project that has never had a NuGet package before, 
+    have the project itself updated and any package PowerShell scripts 
+    run. All this from the command line without Visual Studio open.</p>
+
+    <h2>Setting Everything Up</h2>
+
+    <p>Download the 
+    <a href="http://community.sharpdevelop.net/blogs/mattward/NuGet/NuGetOutsideVisualStudio.zip"
+    >zip file</a> containing the cmdlets and extract the assemblies.</p>
+
+    <p>First you will need to modify the PowerShell configuration. By 
+    default PowerShell will run under .NET 2.0 but we need it to run 
+    under .NET 4.0 since the cmdlets use .NET 4.0. Create a 
+    powershell.exe.config file in the 
+    C:\Windows\System32\WindowsPowerShell\v1.0 folder with the 
+    following contents:</p>
+
+    <pre>&lt;configuration&gt;  
+    &lt;startup useLegacyV2RuntimeActivationPolicy=&quot;true&quot;&gt;  
+        &lt;supportedRuntime version=&quot;v4.0.30319&quot;/&gt;  
+        &lt;supportedRuntime version=&quot;v2.0.50727&quot;/&gt;  
+    &lt;/startup&gt;  
+&lt;/configuration&gt;   </pre>
+    <p>The useLegacyV2RuntimeActivationPolicy attribute is required. 
+    For a great explanation of what this attribute is take a look at 
+    <a href="http://www.marklio.com/marklio/PermaLink,guid,ecc34c3c-be44-4422-86b7-900900e451f9.aspx"
+    >What is useLegacyV2RuntimeActivationPolicy for?</a> written by 
+    Mark Miller.</p>
+
+    <p>To be able to run PowerShell scripts included with a NuGet 
+    package the 
+    <a href="http://technet.microsoft.com/en-us/library/dd347641.aspx">
+    execution policy</a> will need to be changed:</p>
+
+    <pre>Set-ExecutionPolicy RemoteSigned -Scope Process</pre>
+    <p>Now import the Package Management Cmdlets assembly. The command 
+    below assumes the assembly is in the current working directory 
+    otherwise the full path to the assembly will be needed.</p>
+
+    <pre>import-module PackageManagement.Cmdlets.dll</pre>
+    <p>Now we are ready to use the cmdlets.</p>
+
+    <h2>Installing a Package</h2>
+
+    <p>First the install-package cmdlet has a new -solution parameter 
+    to support specifying the solution.</p>
+
+    <pre>install-package nunit -solution MySolution\MySolution.sln</pre>
+    <p>If you do not specify the project name then the first project in 
+    the solution will be used as the default project.</p>
+
+    <pre>install-package nunit -solution MySolution.sln -projectname MyProject</pre>
+    <h2>Uninstalling a Package</h2>
+
+    <p>To uninstall a package we can use the new -solution 
+    parameter.</p>
+
+    <pre>uninstall-package nunit -solution MySolution.sln -projectname MyProject</pre>
+    <h2>Updating a Package</h2>
+
+    <p>Once again we can specify the solution filename when updating a 
+    package.</p>
+
+    <pre>update-package nunit -solution MySolution.sln -projectname MyProject</pre>
+    <p>Ideally we would like to be able to update all projects in the 
+    solution in one go however this is not currently implemented.</p>
+
+    <h2>Setting a Default Project</h2>
+
+    <p>Instead of specifying the solution when running each command you 
+    can set a default project with the new Set-Project command.</p>
+
+    <pre>set-project MyProject d:\Projects\MyProject\MySolution.sln</pre>
+    <p>After setting the default project the other commands can be run 
+    without the need to specify the -solution parameter or the name of 
+    the project.</p>
+
+    <h2>Package PowerShell Scripts</h2>
+
+    <p>Since SharpDevelop has its own set of DTE objects any PowerShell 
+    scripts in the package can be run. Each of the cmdlets described 
+    above define the DTE variable before any Powershell scripts 
+    included with the package are run.</p>
+
+    <h2>Conclusion</h2>
+
+    <p>So finally we can now use a single PowerShell script to install 
+    packages into an empty project. As a simple example:</p>
+
+    <p>setup.ps1:</p>
+
+    <pre>import-module d:\scripts\PackageManagement.Cmdlets.dll 
+ 
+$solution = &quot;d:\Projects\MyProject\MyProject.sln&quot; 
+set-project MyProject $solution
+
+install-package nunit</pre>
+    <p>To run this from the command line with PowerShell:</p>
+
+    <pre>powershell -ExecutionPolicy RemoteSigned -File d:\projects\MyProject\setup.ps1</pre>
+    <h2>Issues</h2>
+
+    <p>If you are using $host.Version then within the PowerShell this 
+    will return the PowerShell host version and not the NuGet 
+    PowerShell host version.</p>
+
+    <p>Several extra SharpDevelop assemblies are included in the zip 
+    file. This could be reduced with some more work.</p>
+
+    <p>The formatting for NuGet packages is not defined so the output 
+    is a list of properties for each package object.</p>
+
+    <h2>Source Code</h2>
+
+    <p>The <a href="https://github.com/mrward/SharpDevelop/tree/nuget">
+    source code</a> is available on github. It is not a part of 
+    SharpDevelop since this was an prototype. So there are no unit 
+    tests for the new code and core parts of SharpDevelop have been 
+    changed to support the new PowerShell cmdlets.</p>
+
+  </body>
+
+</html>
+

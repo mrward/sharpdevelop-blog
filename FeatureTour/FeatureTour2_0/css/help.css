@@ -1,0 +1,85 @@
+body
+{
+	font-size: 10pt;
+	font-family: Tahoma;
+	background-color: #DCDDDE;
+}
+
+h1
+{
+	font-weight: bold;
+	font-size: 20pt;
+	font-family: Tahoma;
+}
+
+h2
+{
+	font-size: 14pt;
+	font-family: Tahoma;
+	font-weight: bold;
+}
+
+h3
+{
+	font-weight: bold;
+	font-size: 16pt;
+	font-family: Tahoma;
+}
+
+h4
+{
+	font-weight: bold;
+	font-size: 14pt;
+	font-family: Tahoma;
+}
+
+h5
+{
+	font-weight: bold;
+	font-size: 12pt;
+	font-family: Tahoma;
+}
+
+h6
+{
+	font-weight: bold;
+	font-size: 10pt;
+	font-family: Tahoma;
+}
+
+div.tip
+{
+	background-color: #ffffc3;
+}
+
+table
+{
+	border-color: darkgrey;
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-collapse: collapse;
+	border-spacing: 0px;
+	text-align: left;
+}
+
+table th	
+{
+	background-color: #ffffc3;
+	border-width: 1px 1px 1px 1px;
+	border-style: solid;
+	border-color: darkgrey;
+	padding: 2px 3px;
+	background: #cccccc;
+}
+
+table td
+{
+	border-width: 1px 1px 1px 1px;
+	border-color: darkgrey;
+	border-style: solid;
+	padding: 2px 3px;
+	background-color: white;
+}
+
+
+

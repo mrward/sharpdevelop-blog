@@ -1,0 +1,87 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>NuGet Packages for SharpDevelop</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>Now that 
+    <a href="http://haacked.com/archive/2011/01/13/aspnetmvc3-released.aspx"
+    >NuGet 1.0 has been released</a> and the 
+    <a href="http://blog.davidebbo.com/2011/01/introducing-nuget-gallery.html"
+    >NuGet package submission process has been made much easier</a> 
+    there are now NuGet packages for SharpDevelop that can be 
+    downloaded from the main NuGet package repository.</p>
+
+    <p>
+    <img alt="SharpDevelop packages in NuGet Add Package Reference dialog"
+     src="Images/TextEditorPackagesInPackageReferenceDialog.png"/></p>
+
+    <p>The packages currently available are:</p>
+
+    <h2>AvalonEdit</h2>
+
+    <p>Contains AvalonEdit the WPF-based text editor that is included 
+    with SharpDevelop 4.0. Two versions of AvalonEdit are included. One 
+    that targets .NET 3.5 and one that targets .NET 4.0. Download this 
+    package if you just want the AvalonEdit assembly and nothing 
+    else.</p>
+
+    <h2>AvalonEdit.Sample</h2>
+
+    <p>Contains sample code for AvalonEdit taken from 
+    <a href="http://www.codeproject.com/KB/edit/AvalonEdit.aspx">Daniel 
+    Grunwald&apos;s CodeProject article</a>. The sample code shows how 
+    to use the text editor&apos;s inside a WPF application including a 
+    simple example of code completion.</p>
+
+    <p>To get the sample code working in a WPF application created in 
+    Visual Studio 2010 you will need to:</p>
+
+    <ol>
+
+      <li>Add references to System.Windows.Forms and 
+      WindowsFormsIntegration.</li>
+
+      <li>
+
+        <p>Modify your App.xaml file so the StartupUri points to the 
+        AvalonEdit Sample window.</p>
+
+        <pre>&lt;Application 
+    x:Class=&quot;WpfApp.App&quot; 
+    xmlns=&quot;http://schemas.microsoft.com/winfx/2006/xaml/presentation&quot; 
+    xmlns:x=&quot;http://schemas.microsoft.com/winfx/2006/xaml&quot; 
+    StartupUri=&quot;/AvalonEdit.Sample/Window1.xaml&quot;&gt; 
+    &lt;Application.Resources&gt; 
+    &lt;/Application.Resources&gt; 
+&lt;/Application&gt;</pre>
+      </li>
+
+    </ol>
+
+    <h2>ICSharpCode.TextEditor</h2>
+
+    <p>Contains the text editor that is included in SharpDevelop 3.2.1. 
+    This text editor targets .NET 2.0.</p>
+
+    <h2>ICSharpCode.TextEditor.Sample</h2>
+
+    <p>Contains sample code for the text editor that is included in 
+    SharpDevelop 3.2.1. The code shows how to use the text editor in a 
+    Windows Forms application including a simple example of code 
+    completion.</p>
+
+    <p />
+
+  </body>
+
+</html>
+

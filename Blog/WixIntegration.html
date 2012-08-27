@@ -1,0 +1,389 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>WiX Integration</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>Support for creating <a href="http://wix.sourceforge.net">
+    WiX</a> setup packages is now available in SharpDevelop 2.1. It was 
+    originally disabled in SharpDevelop 2.0, but has now been 
+    re-enabled and some new features have been added. It is still a 
+    work in progress. Some parts are not quite finished and there are 
+    some missing features, but it is currently being used to build and 
+    maintain the installer for SharpDevelop itself. At the moment 
+    SharpDevelop ships with WiX 2.0.4221, but it will be updated to 
+    2.0.4415.0 shortly.</p>
+
+    <h2>Features</h2>
+
+    <ul>
+
+      <li>WiX project and file templates.</li>
+
+      <li>Build a setup package (.msi), merge module (.msm) or WiX 
+      Library (.wixlib) from inside SharpDevelop. All built using 
+      MSBuild and WiX&apos;s custom MSBuild tasks.</li>
+
+      <li>Add WiX libraries, WiX extensions and preprocessor variables 
+      to the WiX project.</li>
+
+      <li>WiX Dialog Designer.</li>
+
+      <li>Setup Dialogs window. Lists all dialogs in a project. Each 
+      dialog can then be opened up in the designer.</li>
+
+      <li>Setup Files editor. Add directories, components and files to 
+      the installer via a GUI instead of editing the XML.</li>
+
+    </ul>
+
+    <p>The next sections will look at the WiX support in more 
+    detail.</p>
+
+    <h2>Creating a WiX Project</h2>
+
+    <p>To create a new WiX project, from the <b>File</b> menu, select 
+    <b>New</b> and then select <b>Solution...</b>. In the <b>New 
+    Project</b> dialog select the <b>Setup</b> category.</p>
+
+    <p><img alt="WiX project templates in the New Project dialog"
+     src="Images/WixProjectTemplatesNonEmptyProjectSelected.png"/></p>
+
+    <p>SharpDevelop has two WiX project templates available</p>
+
+    <ul>
+
+      <li>
+
+        Empty Setup.
+        <p>This project template creates a Solution (.sln), a WiX 
+        Project (.wixproj) and a minimal WiX Setup file (.wxs).</p>
+
+      </li>
+
+      <li>
+
+        Setup.
+        <p>The Setup project template creates a basic WiX project which 
+        can be built immediately after creation.</p>
+
+        <p><img alt="Setup project open in Project Browser"
+         src="Images/WixProjectOpenInProjectBrowser.png"/></p>
+
+        <p>The installer created by this project installs a License.rtf 
+        file to the installation directory.</p>
+
+        <p>The Setup project template also has its own dialogs which 
+        can be customised.</p>
+
+      </li>
+
+    </ul>
+
+    <p>The Setup project is the project we will be using in this 
+    walkthrough.</p>
+
+    <h2>Building</h2>
+
+    <p>Building the WiX project is done in the same way as for other 
+    projects in SharpDevelop from the build menu.</p>
+
+    <p><img alt="Build menu for MySetup project"
+     src="Images/BuildMenuForMySetupProject.png"/></p>
+
+    <p>Output messages from the WiX compiler and linker are displayed 
+    in the Output window and any errors are added to the Errors 
+    window.</p>
+
+    <h2>Creating a Merge Module or WiX Library</h2>
+
+    <p>By default the project will build an MSI file. You can choose to 
+    create a merge module (.msm) or WiX Library (.wixlib) from the 
+    project options. Select the project in the <b>Project Browser</b>, 
+    then from the <b>Project</b> menu select <b>Project Options</b>.</p>
+
+    <p><img alt="WiX Project options"
+     src="Images/WixProjectApplicationOptions.png"/></p>
+
+    <p>From the <b>Application</b> tab you can change the output type 
+    to msi, msm or wixlib.</p>
+
+    <p><img alt="WiX Project output types"
+     src="Images/WixProjectOutputTypes.png"/></p>
+
+    <h2>Running</h2>
+
+    <p>To run the installer, select <b>Run</b> from the <b>Debug</b> 
+    menu or press <b>F5</b>. The installer will then be built and run 
+    and you will see the first dialog of your installer.</p>
+
+    <p><img alt="Running the installer from inside SharpDevelop"
+     src="Images/RunningWixInstallerFirstDialogShown.png"/></p>
+
+    <h2>Adding a new WiX File</h2>
+
+    <p>You can either have one big WiX setup file (.wxs) or split the 
+    project up into several different files. The WiX MSBuild tasks will 
+    compile all the WiX files and link them all into one installer.</p>
+
+    <p>To add a new WiX file, select the project in the <b>Project 
+    Browser</b> window, right click, select <b>Add</b> and then select 
+    <b>New Item...</b>. From the <b>New File dialog</b> selecting the 
+    <b>Setup</b> category will show you the WiX file templates.</p>
+
+    <p><img alt="WiX file templates in File dialog"
+     src="Images/WixFileTemplatesInNewFileDialog.png"/></p>
+
+    <h2>Adding WiX Libraries</h2>
+
+    <p>To add a wixlib to your project, select <b>WiX Libraries</b> in 
+    the <b>Project Browser</b>, right click and select <b>Add WiX 
+    Library</b>.</p>
+
+    <p><img alt="Add WiX Library menu item"
+     src="Images/WixProjectBrowserAddWixLibraryContextMenu.png"/></p>
+
+    <p>This opens up the file dialog where you can browse to one or 
+    more wixlibs and add them to the project.</p>
+
+    <h2>Adding WiX Extensions</h2>
+
+    <p>WiX extensions can be added to the project in the 
+    <b>Compiling</b>, <b>Library</b> and <b>Linking</b> tabs available 
+    from the project options. The <b>Compiling</b> tab determines what 
+    extensions are passed to Candle the WiX compiler. The 
+    <b>Linking</b> tab determines what extensions get passed to Light 
+    the WiX linker. The <b>Library</b> tab determines what extensions 
+    get passed to Lit the Wix Library Tool. If you are creating a setup 
+    package (.msi) then typically you should put the extensions in the 
+    <b>Compiling</b> and <b>Linking</b> tab. If you are creating a WiX 
+    Library (.wixlib) then you need to put the extensions in the 
+    <b>Library</b> tab.</p>
+
+    <p><img alt="WiX Linking tab showing extensions"
+     src="Images/WixLinkingTabShowingExtensions.png"/></p>
+
+    <p>The extensions can either be typed in directly into the 
+    Extensions text box, one per line, as shown above, or you can click 
+    the <b>Add</b> button to open the <b>Add Extensions</b> dialog and 
+    select one or more of the standard extensions WiX provides.</p>
+
+    <p><img alt="Add WiX Extensions dialog"
+     src="Images/AddWixExtensionsDialog.png"/></p>
+
+    <h2>Preprocessor Variables</h2>
+
+    <p><a href="http://wix.sourceforge.net/manual-wix2/preprocessor.htm"
+    >Preprocessor variables</a> can be added in the 
+    <b>Preprocessing</b> tab available from the project options.</p>
+
+    <p><img alt="WiX Preprocessor Variables defined in project options"
+     src="Images/WixPreprocessingVariablesDefined.png"/></p>
+
+    <p>In the screenshot above the DATADIR variable is defined. 
+    Generally the variable values will just be strings, but you can 
+    also use MSBuild properties. In the screenshot above the 
+    SharpDevelopBinPath MSBuild property is being used. You can use 
+    MSBuild properties here since these properties will be expanded 
+    before WiX compiles anything.</p>
+
+    <p>In the UserInterface.wxs file the DATADIR preprocessor variable 
+    is referenced as shown below:</p>
+
+    <p><code>&lt;Binary Id=&quot;dialog.bmp&quot; 
+    SourceFile=&quot;$(var.DATADIR)/default-dialog.bmp&quot; 
+    /&gt;</code></p>
+
+    <h2>Visually Designing a Dialog</h2>
+
+    <p>To open a setup dialog in the designer, open the WiX file, move 
+    the cursor so it is inside the dialog element, then click the 
+    <b>Design</b> tab.</p>
+
+    <p><img alt="WiX dialog in designer"
+     src="Images/WixDialogDesigner.png"/></p>
+
+    <p>You can also open a dialog in the designer from the <b>Setup 
+    Dialogs Window</b>, which is described in the next section.</p>
+
+    <p>You can have multiple dialogs defined in one WiX file or create 
+    one file per dialog, it is up to you. If you have multiple dialogs 
+    then you need to move the cursor inside the dialog element before 
+    you select the Design tab otherwise the designer will not know 
+    which dialog to load. If you have only one dialog element in the 
+    file then the cursor can be anywhere in the WiX document and does 
+    not need to be inside the dialog element.</p>
+
+    <p>In the designer you can reposition, resize and remove existing 
+    controls. You can also add new WiX controls from the Setup Dialog 
+    Controls tab by dragging them to the dialog.</p>
+
+    <p><img alt="Setup dialog controls in the toolbox"
+     src="Images/SetupDialogControlsToolbox.png"/></p>
+
+    <p>At the moment not all the WiX controls are supported and WiX 
+    specific properties are not available in the properties window.</p>
+
+    <h2>Setup Dialogs Window</h2>
+
+    <p>To open the <b>Setup Dialogs</b> window, from the <b>View</b> 
+    menu select <b>Setup</b> and then select <b>Dialogs</b>.</p>
+
+    <p><img alt="View setup dialogs menu item"
+     src="Images/ViewSetupDialogsMenuItem.png"/></p>
+
+    <p>The <b>Setup Dialogs</b> window is then opened.</p>
+
+    <p><img alt="Setup dialogs window"
+     src="Images/SetupDialogsWindow.png"/></p>
+
+    <p>This window lists all the dialogs available in the project. You 
+    can open a dialog into the designer by right clicking it and 
+    selecting <b>Open</b>. Or view its XML by selecting <b>View 
+    Code</b>.</p>
+
+    <h2>Visually Editing Directories, Components and Files</h2>
+
+    <p>To open the <b>Setup Files Editor</b>, from the <b>View</b> menu 
+    select <b>Setup</b> and then select <b>Files</b>.</p>
+
+    <p>The Setup Files Editor will look at all the WiX files in the 
+    project for the <b>TARGETDIR</b> Directory element or the 
+    DirectoryRef element. Once this is found then it will show the 
+    directories, components and files that will be installed.</p>
+
+    <p><img alt="Files editor" src="Images/SetupFilesEditor.png"/></p>
+
+    <p>The left hand side of the editor shows the files in a tree view. 
+    On the right hand side of the editor you can modify the properties 
+    of the currently selected item.</p>
+
+    <p>You can add directories, files and components to your installer 
+    by right clicking a tree node, selecting <b>Add</b> and then 
+    choosing an item to add.</p>
+
+    <p><img alt="Setup Files editor add menu"
+     src="Images/SetupFilesEditorAddMenu.png"/></p>
+
+    <h2>Adding Directories</h2>
+
+    <p>To add a directory and all its contents recursively to your 
+    setup, select the tree node where you want your directory added to, 
+    then right click and select <b>Add Directory</b>.</p>
+
+    <p><img alt="Add directories menu item"
+     src="Images/SetupFilesEditorAddDirectoryMenuItem.png"/></p>
+
+    <p>This opens the <b>Browser for Folder</b> dialog. Select the 
+    directory and then click <b>OK</b> to have that directory and all 
+    its contents added to the setup package. Every file added will have 
+    its own component.</p>
+
+    <h2>Future Improvements</h2>
+
+    <p>The WiX integration is not completely finished. Here is a list 
+    of items that will hopefully be added at some point.</p>
+
+    <ul>
+
+      <li>Improve the WiX dialog designer. Add support for all the WiX 
+      controls.</li>
+
+      <li>
+
+        <p>Improve the files editor.</p>
+
+        <ul>
+
+          <li>Drag and drop support.</li>
+
+          <li>Directory vs installer diff. Shows missing and new 
+          files.</li>
+
+        </ul>
+
+      </li>
+
+      <li>Add support for WiX include files (.wxi).</li>
+
+      <li>
+
+        <p>Add GUI Editors for:</p>
+
+        <ul>
+
+          <li>Features</li>
+
+          <li>Properties</li>
+
+          <li>Binaries</li>
+
+          <li>Icons</li>
+
+          <li>Sequences</li>
+
+          <li>Error and UI Text.</li>
+
+        </ul>
+
+      </li>
+
+    </ul>
+
+    <h2>Alternatives</h2>
+
+    <p>There are a few other applications and plug-ins available that 
+    can be used to create WiX installers instead of SharpDevelop. Here 
+    is a list of the ones I am aware of.</p>
+
+    <h2>Votive</h2>
+
+    <p><a href="http://wix.sourceforge.net/downloadv3.html">Votive</a> 
+    is a Visual Studio plug-in that you can use to create WiX setup 
+    packages from inside Visual Studio.</p>
+
+    <p>Just a few days ago, September 15th, 
+    <a href="http://blogs.msdn.com/jrock/default.aspx">Justin 
+    Rockwood</a> released 
+    <a href="http://blogs.msdn.com/jrock/archive/2006/09/15/757144.aspx"
+    >Votive version 3</a>, which supports Visual Studio 2005. It does 
+    not have a dialog designer, but that is on its list of features 
+    that will be added in the future.</p>
+
+    <h2>WiX Edit</h2>
+
+    <p><a href="http://wixedit.sourceforge.net">WiX Edit</a> is a 
+    standalone WiX Editor application, created by Jasper Keuper, that 
+    you can use to create WiX setup packages. It includes a dialog 
+    designer along with a whole host of other features, that 
+    SharpDevelop does not have. In fact you can create an installer and 
+    never look at any XML.</p>
+
+    <h2>WixTrim</h2>
+
+    <p><a href="http://zelenkov.com/twix/download/">WixTrim</a> is a 
+    WiX Visual Editor, created by Oleg Zelenkov, that supports a very 
+    advanced dialog designer amongst other features. The source code 
+    for the editor is also available from 
+    <a href="http://www.gotdotnet.com/Community/UserSamples/Details.aspx?SampleGuid=424F1B93-78BF-47EE-9EAB-B0F72A18A231"
+    >GotDotNet</a>. Unfortunately, WixTrim is not under active 
+    development like the previous two.</p>
+
+    <h2>WiX Tutorial</h2>
+
+    <p>If you want to learn more about WiX then a fantastic WiX 
+    tutorial, created by Gabor Deak Jahn, is available 
+    <a href="http://www.tramontana.co.hu/wix/">online</a>.</p>
+
+  </body>
+
+</html>
+

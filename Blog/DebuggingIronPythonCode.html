@@ -1,0 +1,111 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Debugging IronPython Code in SharpDevelop</title>
+
+    <link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p>With <a href="http://build.sharpdevelop.net/BuildArtefacts/">
+    SharpDevelop 3.1</a> you can now debug IronPython code with the 
+    IronPython Interpreter (ipy.exe).</p>
+
+    <p>Before you start make sure the debugger is set to use the 
+    <b>Just My Code</b> feature. From the Tools menu select Options and 
+    then click the Debugging category.</p>
+
+    <p><img alt="Debugger options for debugging IronPython code"
+     src="Images/DebuggingOptionsWhenDebuggingIronPythonCode.png"/></p>
+
+    <p>Ensure that the <b>Just My Code</b> feature is checked and that 
+    the <b>Step over code without symbols</b> is not checked. If the 
+    Step over code without symbols option is selected then stepping 
+    will not work properly and lines of code will be skipped over.</p>
+
+    <p>There are two ways to debug your code. You can use the Python 
+    menu or modify the project options. We will look at both of these 
+    alternatives. First open your IronPython project into SharpDevelop. 
+    Open your main file and make sure it is the active text editor 
+    window. Set a breakpoint somewhere in your code. Then from the 
+    Python menu select Run.</p>
+
+    <p><img alt="Python menu option to run with debugger"
+     src="Images/PythonRunWithDebuggerMenuItem.png"/></p>
+
+    <p>This will start ipy.exe which will run your code and the 
+    debugger should stop the execution at the breakpoint.</p>
+
+    <p><img alt="Debugging IronPython code"
+     src="Images/DebuggingIronPythonCode.png"/></p>
+
+    <p>From this point you can do the usual debugging activities such 
+    as stepping through your code, viewing the callstack, adding items 
+    to the watch window, etc.</p>
+
+    <p>If you want to use a different ipy.exe then this can be 
+    specified in the Python Options dialog (Tools menu | Options).</p>
+
+    <p><img alt="Python options dialog"
+     src="Images/PythonToolsOptionsDialog.png"/></p>
+
+    <p>To enable debugging when you press F5 or select the Debug Run 
+    menu option you can modify the project options. From the Projects 
+    menu select Project Options and then open the Debug tab. Here you 
+    should change the Start Action to <b>Start external program</b> and 
+    use the browse button to locate ipy.exe. In the Start Options add 
+    the following command line arguments, changing the name of your 
+    main file as required.</p>
+
+    <pre>-D ${ProjectDir}\Program.py</pre>
+    <p>Once these changes are saved you can then press F5 and ipy.exe 
+    will be run under the debugger instead of running the compiled 
+    executable.3</p>
+
+    <h2>Issues</h2>
+
+    <ul>
+
+      <li>No support for debugging the executable produced by the 
+      IronPython compiler since it does not produce debug symbols (i.e. 
+      .pdb files).</li>
+
+      <li>
+
+        When using ipy.exe you need to add references to .NET 
+        assemblies explicitly in your code except for System which is 
+        included by default. For example:
+        <pre>import clr 
+clr.AddReference(&quot;System.Windows.Forms&quot;) 
+</pre>
+      </li>
+
+    </ul>
+
+    <h2>Thanks</h2>
+
+    <p>Thanks to 
+    <a href="http://community.sharpdevelop.net/blogs/dsrbecky/">David 
+    Srbecky</a>, SharpDevelop&apos;s debugger expert and maintainer, 
+    for reviewing the code changes I wanted to make to the debugger and 
+    making sure nothing was broken. Adding support for debugging 
+    IronPython was straightforward and required 10-15 lines of new code 
+    thanks to the code already written by David.</p>
+
+    <p>Thanks also to <a href="http://devhawk.net/">Harry Pierson</a> 
+    (IronPython Program Manager at Microsoft) who has written a great 
+    set of blog posts on 
+    <a href="http://devhawk.net/CategoryView,category,Debugger.aspx">
+    creating an IronPython debugger in IronPython</a> which gave me the 
+    reason why SharpDevelop&apos;s debugger was not working when 
+    debugging IronPython code.</p>
+
+  </body>
+
+</html>
+

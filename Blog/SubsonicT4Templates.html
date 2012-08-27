@@ -1,0 +1,103 @@
+<?xml version='1.0'?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+  <head>
+
+    <title>Subsonic T4 Templates</title>
+
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+
+  </head>
+
+  <body>
+
+    <p><a href="http://build.sharpdevelop.net/BuildArtefacts/"
+    >SharpDevelop 4.2</a> now supports SubSonic T4 templates. 
+    <a href="http://subsonicproject.com/">Subsonic</a> is an open 
+    source 
+    <a href="http://en.wikipedia.org/wiki/Object-relational_mapping">
+    object-relational mapper</a> and makes use of T4 templates in all 
+    but one of its supported methods to provide access to your data. 
+    Before we take a look at what new T4 features were added to 
+    SharpDevelop to support SubSonic let us see what you need to do to 
+    get everything working.</p>
+
+    <h2>Using SubSonic T4 Templates with SharpDevelop</h2>
+
+    <p>In order to use the SubSonic T4 templates with SharpDevelop you 
+    need to make two modifications to the Settings.ttimport file.</p>
+
+    <p>Replace the EnvDTE assembly reference:</p>
+
+    <pre>&lt;#@ assembly name=&quot;EnvDTE&quot; #&gt;</pre>
+    <p>With the following:</p>
+
+    <pre>&lt;#@ assembly name=&quot;$(addinpath:ICSharpCode.PackageManagement)PackageManagement.dll&quot; #&gt;</pre>
+    <p>This references SharpDevelop&apos;s NuGet addin assembly which 
+    implements its own version of the Visual Studio object model.</p>
+
+    <p>Add a new import directive as shown below:</p>
+
+    <pre>&lt;#@ import namespace=&quot;EnvDTE = ICSharpCode.PackageManagement.EnvDTE&quot; #&gt;</pre>
+    <p>This creates a namespace alias for EnvDTE so the references to 
+    the Visual Studio object model in the SubSonic T4 template will 
+    work.</p>
+
+    <p>All that is left now is to save the changes made to the 
+    Settings.ttimport file and generate the database access code by 
+    executing the ActiveRecord.tt, Context.tt and Struct.tt T4 
+    templates. This can be done by right clicking them in the Projects 
+    window and selecting Execute Custom Tool.</p>
+
+    <p>Now we will take a look at the new features that made this 
+    possible.</p>
+
+    <h2>Referencing SharpDevelop Properties and Environment Variables 
+    in T4 Templates</h2>
+
+    <p>The T4 assembly and include directives now support the 
+    $(PropertyName) syntax to use SharpDevelop properties such as 
+    SolutionDir and ProjectDir.</p>
+
+    <pre>&lt;#@ assembly name=&quot;$(ProjectDir)lib\MyLibrary.dll&quot; #&gt; 
+&lt;#@ include file=&quot;$(SolutionDir)Templates\MyTextTemplate.tt&quot; #&gt; </pre>
+    <p>The assembly and include directives also support environment 
+    variables through the %EnvironmentVariableName% syntax.</p>
+
+    <pre>&lt;#@ assembly name=&quot;%ProgramFiles%\lib\MyLibrary.dll&quot; #&gt; 
+&lt;#@ include file=&quot;%HOMEPATH%\MyTextTemplate.tt&quot; #&gt;</pre>
+    <p>This new feature also supports the addinpath property and is 
+    used to allow a T4 template to reference SharpDevelop&apos;s NuGet 
+    addin using the $(addinpath:AddIn-ID) syntax which is expanded to 
+    the directory containing the addin.</p>
+
+    <h2>Accessing the SharpDevelop IDE from a T4 Template</h2>
+
+    <p>The SubSonic T4 templates use the Visual Studio object model to 
+    find the project&apos;s app.config file and read the database 
+    connection string stored here in order to access your database. To 
+    support this the T4 templating host in SharpDevelop now implements 
+    the IServiceProvider interface which allows you to access 
+    SharpDevelop&apos;s implementation of the Visual Studio object 
+    model.</p>
+
+    <p>To access the Visual Studio object model you set the T4 template 
+    so it is host specific:</p>
+
+    <pre>&lt;#@ template language=&quot;C#&quot; hostspecific=&quot;true&quot; #&gt;</pre>
+    <p>Then you can access the DTE object, which is the top-level 
+    object of the Visual Studio object model, as shown below.</p>
+
+    <pre>&lt;#
+    IServiceProvider provider = (IServiceProvider)Host; 
+    EnvDTE.DTE dte = (EnvDTE.DTE)provider.GetService(typeof(EnvDTE.DTE));
+#&gt;</pre>
+    <p>The Visual Studio object model is not fully implemented in 
+    SharpDevelop so you may run into problems if you make extensive use 
+    of this object model.</p>
+
+  </body>
+
+</html>
+
