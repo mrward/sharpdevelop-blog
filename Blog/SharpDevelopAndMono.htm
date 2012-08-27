@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><title>Matt Ward : SharpDevelop 2.0 and Mono</title></head>
+<body>
+		<p>As of revision 568, available from the <a href="http://wiki.sharpdevelop.net/default.aspx/SharpDevelop.UsingTheRepository">repository</a>, SharpDevelop 2.0 supports C# projects targeting <a href="http://www.mono-project.com/">Mono 1.1.9.2</a>.</p>
+<p><strong>Prerequisites</strong></p>
+<ul>
+<li>Mono 1.1.9.2 is installed. 
+</li><li>The Mono bin folder has been added to the "Path" environment
+variable (Control Panel | System | Advanced | Environment Variables).</li></ul>
+<p><strong>Targeting Mono</strong></p>
+<p>To target Mono, open the project's "Compiling" options (Project |
+Project Options | Compiling) and select either "Mono 1.1" or "Mono 2.0"
+from the "Target Framework" drop down list.</p>
+<p><img src="SharpDevelopAndMono_files/original_002.png"></p>
+<p>With "Mono 1.1" selected the Mcs compiler will be used.&nbsp; With "Mono 2.0" selected the Gmcs compiler will be used.</p>
+<p><strong>Running under Mono</strong></p>
+<p>To configure your application to run under Mono, open the project's
+"Debug" options (Project | Project Options | Debug), switch the "Start
+Action" to "Start external program" and enter the path to the Mono
+executable, and finally set the "Command line arguments" to
+"${TargetPath}".</p>
+<p><img src="SharpDevelopAndMono_files/original.png"></p>
+<p>To run your application under Mono, select the menu option Debug |
+Run without debugger.&nbsp; You cannot use the SharpDevelop debugger to
+debug or run your Mono application.</p>
+<b>Common Problems</b><br><br><b>Mcs/Gmcs exiting with code -1</b><br><br>If you are seeing errors such as:<br><br>"Mcs.exe" exited with code -1<br>Failed to execute compiler: -1: "C:\Program Files\Mono\bin\Mcs.bat"<br><br>This is usually because Mono cannot convert the command line into Unicode.&nbsp; To fix this create a environment variable called MONO_EXTERNAL_ENCODINGS and set it to be "default_locale" without the quotes.<br><br>From the Mono man page:<br><br><font color="#000080" face="Verdana" size="1">MONO_EXTERNAL_ENCODINGS<br><br>If set, contains a colon-separated list of text encodings to try when turning externally-generated text (e.g. command-line arguments or filenames) into Unicode. The encoding names come from the list provided by iconv, and the special case "default_locale" which refers to the current locale's default encoding.<br><br>When reading externally-generated text strings UTF-8 is tried first, and then this list is tried in order with the first successful conversion ending the&nbsp; search. When writing external text (e.g. new filenames or arguments to new processes) the first item in this list is used, or UTF-8 if the environment variable is not set.</font><br><br><b>[UPDATE 6th March, 2006]</b><br><br>Added MONO_EXTERNAL_ENCODINGS fix for the Mcs/Gmcs compiler failing with error code -1.&nbsp; Thanks to <a href="http://www.koios.co.nr/">Luis Segura</a> for finding this solution.<br><br><b>[UPDATE 10th April, 2006]<br><br></b>Added some information about running under Microsoft's .NET Framework versus running under Mono. Added a note about putting double quotes around ${TargetPath} if the path to the executable being run under Mono contains spaces.<br>
+
+	</body></html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><title>SharpDevelop2 and Mono's GAC</title></head>
+<body>
+In revision 983 SharpDevelop2 has support for Mono's GAC.&nbsp; It also
+includes new Gtk# and Glade# project templates, and a Gtk# Window file
+template.&nbsp; Mono can be downloaded from <a href="http://www.mono-project.com/Downloads">here</a> <br><br><b>Creating a new Glade# Project</b><br><ol><li>Select the menu option File | New | Solution to open the "New Project" dialog. </li><li>Select the C# category.</li><li>There are two new projects here, a Gtk# project and a Glade# project.&nbsp; Select the Glade# project.<br><br><img src="SharpDevelop2AndMonosGac_files/original_003.png"><br><br></li><li>Enter a name for the project and select the "Create" button to generate the project.<br><br><img src="SharpDevelop2AndMonosGac_files/original_004.png"><br><br></li></ol>The generated project will target Mono 1.1 by default, and will use Mono's Mcs compiler.<br><br><b>Running the Glade# Application</b><br><br>If
+you have the Mono bin directory (e.g. C:\Program Files\Mono\bin) added
+to your Path environment variable, the project can be started by
+selecting the menu option Debug | Run or Debug | Run without debugger.
+This will run the application under the Microsoft .NET framework and
+not Mono itself, to run under Mono see this <a href="http://community.sharpdevelop.net/blogs/mattward/archive/2005/10/12/SharpDevelopAndMono.aspx">post</a>. <br><br>Note that you cannot debug the application when it is built with either of the Mono compilers.<br><br><b>Adding a Mono GAC Reference</b><br><ol><li>Open the Project Browser via View | Project.</li><li>Select the "References" node, right click and select "Add Mono Reference".&nbsp; <br><br><img src="SharpDevelop2AndMonosGac_files/original_002.png"><br><br></li><li>Select the GAC entry that will be added to the project, click the
+Select button and then click the OK button to add the reference to the
+project. <br></li></ol><img src="SharpDevelop2AndMonosGac_files/original.png"><br><b><br>Code Completion</b><br><br>There
+is a small problem with code auto-completion.&nbsp; In order for
+auto-completion to work the reference must be added via the "Add Mono
+Reference" dialog.&nbsp; So the first time a Glade# or Gtk# project has
+been created you will have to remove the GAC references and then re-add
+them to get code auto-completion working.&nbsp; This only needs to be
+done once, not every time a Gtk# or Glade# project is created. <br><br><b>Debugging a Mono Application</b><br><br>You
+cannot debug a Mono app built using Mcs or Gmcs.&nbsp; The Mono
+compilers create their own open source debugging symbols binary (.mdb)
+which SharpDevelop and Microsoft's DbgCLR do not support.&nbsp; There
+is also no Mono debugger available for Windows.&nbsp; In order to debug
+a Mono app it needs to be built using the Microsoft Csc compiler.&nbsp;
+The general guidelines to be able to debug your Mono app using the
+SharpDevelop debugger are:<br><ol><li>Make sure all Mono specific GAC references have "Local Copy" set to
+true.&nbsp; Select the reference in the Project Browser and select
+Properties to set this.</li><li>The Mono bin directory (e.g. C:\Program Files\Mono\bin) must be added to the Path environment variable.</li><li>Change the "Target Framework" (Project | Project Options | Compiling) to one of the Microsoft .NET frameworks.</li><li>Remove and re-add your Mono GAC references using the "Add Mono
+Reference" dialog.&nbsp; You should only need to do this once and only if
+you are using a project created from the Glade# or Gtk# templates.&nbsp;
+Doing this will add a HintPath to the references in your MSBuild
+project so the Microsoft compilers can locate the assemblies in the
+Mono GAC.&nbsp; These HintPaths are not currently added to a newly created
+Glade/Gtk# project.</li><li>Rebuild your application.</li></ol>Once
+the HintPaths have been added to your MSBuild project you should be
+able to switch between the Microsoft and Mono frameworks as required,
+and build your code using the Microsoft or Mono compilers.<br><br>If
+you are going to debug a Gtk# or Glade# application you will need to
+add extra GAC references.&nbsp; Mcs and Gmcs do not need all Gtk#
+references to be added, but Microsoft's Csc compiler does.&nbsp; For a
+Gtk# app you will need at least:<br><ul><li>atk-sharp</li><li>gdk-sharp</li><li>glib-sharp</li><li>gtk-sharp</li><li>pango-sharp</li></ul>Also add glade-sharp if you are developing a Glade# app.<br><br><b>Links</b><br><br><a href="http://www.mono-project.com/Downloads">Mono Downloads</a><br><a href="http://community.sharpdevelop.net/blogs/mattward/archive/2005/10/12/SharpDevelopAndMono.aspx">Targeting Mono with SharpDevelop2</a><br><a href="http://build.sharpdevelop.net/BuildArtefacts/">SharpDevelop Daily Builds</a><br>
+
+</body></html>

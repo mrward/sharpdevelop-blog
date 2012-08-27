@@ -1,0 +1,58 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Code Coverage with NCover</title>
+    <link href="css/help.css" rel="stylesheet" type="text/css"/>
+			
+<body>
+		<a href="http://build.sharpdevelop.net/BuildArtefacts/">Revision 1057</a>
+of SharpDevelop2 sees support for code coverage.&nbsp; You can now run
+your unit tests and check how much of your code is covered.&nbsp; To
+use this feature <a href="http://ncover.org/">NCover</a> needs to be installed, the latest release, at the time of this post, was 1.5.2 (beta 3).<br><br><b>Issues</b><br><br>Currently
+NCover 1.5.2 can only be run under an account with administrator
+rights.&nbsp; There is a workaround for this problem which you can find
+at the end of this post.&nbsp; <br><br>NCover 1.5.3 no longer has this problem and can be run from a non-administrator account without requiring a workaround.<br><br><b>Running Tests with Code Coverage</b><br><br>To see how to use the code coverage feature in SharpDevelop we will use the Money test project that ships with <a href="http://nunit.org/">NUnit</a>.&nbsp;
+First thing to do is to open it up and build it.&nbsp; Then open up the
+Unit Tests pad (View | Tools | Unit Tests) and load the unit tests in
+to the tree view by clicking the Reload button.&nbsp; Then select the
+tree node, right click and select "Run tests with code coverage".<br><br><img src="CodeCoverageWithNCover_files/original_004.png"><br><br>You
+can also run the code coverage by right clicking a test fixture name or
+test method name and selecting "Run with code coverage", which is under
+the "Unit Testing" menu.<br><br><img src="CodeCoverageWithNCover_files/original_007.png"><br><br>After
+this menu option has been selected, the output window should be
+displayed and you should see the NCover output as it profiles your
+assemblies.<br><br>If any errors were found in your tests, after the profiling has finished, then the Errors window will be displayed. <br><br><b>Code Coverage Results</b><br><br>To see the code coverage results open the Code Coverage window (View | Tools | Code Coverage).<br><br><img src="CodeCoverageWithNCover_files/original_003.png"><br><br>The tree view shows the classes that have been profiled along with the
+percentage of the code covered. The list view, on the right hand side,
+shows more detailed output on the lines visited.<br><br><img src="CodeCoverageWithNCover_files/original_006.png"><br><br>Double
+clicking a class or method in the tree view will open up the
+corresponding source file.&nbsp; Double clicking a row in the list view
+will open up the corresponding source file and move the cursor to the
+appropriate line.<br><br>The toolbar button at the top left corner of
+the Code Coverage results allows you to enable/disable the highlighting
+of the covered source code.&nbsp; <br><br><img src="CodeCoverageWithNCover_files/original_008.png"><br><br>When
+this option is enabled, opening a source file will highlight the lines
+of code that have been covered in green, and uncovered lines in red.<br><br><img src="CodeCoverageWithNCover_files/original_005.png"><br><br><b>Code Coverage Options</b><br><br>The colours used to highlight the covered code can be changed in the options page (Tools | Options | Tools | Code Coverage).<br><br><img src="CodeCoverageWithNCover_files/original_002.png"><br><br>This
+options page also allows you to specify the location of the NCover
+console application.&nbsp; By default SharpDevelop assumes it is
+installed in "C:\Program Files\NCover".<br><br><b>Code Coverage Project Options</b><br><br>By
+default all assemblies that can be profiled will be, this means you
+will see code coverage for tests as well as your other classes.&nbsp;
+To specify which assemblies you want to be profiled, open up the
+project options (Project | Project Options), select the Code Coverage
+tab and enter the names of the assemblies you want to be profiled,
+without the file extension, each delimited by a semi-colon.<br><br><img src="CodeCoverageWithNCover_files/original.png"><br><br><b>Issues</b><br><ul><li>There is currently no way to stop a code coverage run.</li><li>Can only get code coverage for the entire assembly or assemblies, not individual test fixtures or test methods.</li><li>Running code coverage from the Unit Tests pad does not update the results in the tree.</li><li>The
+path to the test assembly cannot contain any spaces otherwise you will
+see the message "No MbUnit results file generated" in the Errors
+window.&nbsp; NCover seems to strip quotation marks from any arguments
+passed to the profiled application.<br></li></ul><br><b>Running NCover as non-admin</b><br><br>The only way I could get NCover 1.5.2 to work as non-admin was to re-register the CoverLib COM component.<br><br>Under
+an Administrator account, run "regsvr32 coverlib.dll" from the
+directory where NCover is installed (C:\Program Files\NCover).<br><br>NCover
+1.5.3 no longer has this issue and installs for all users, making it
+possible to run NCover from a non-admin account without needing this
+workaround.<br>&nbsp; <br><b>Links</b><br><br><a href="http://ncover.org/">NCover</a><br><a href="http://www.kiwidude.com/blog/2006/01/ncoverexplorer-debut.html">NCover Explorer</a><br><a href="http://weblogs.asp.net/nunitaddin/archive/2006/01/30/436896.aspx">Code Coverage in Visual Studio with TestDriven.Net</a><br><br><b>[Update 1st Feb]</b><br><br>Added <a href="http://ncover.org/SITE/forums/thread/128.aspx">issue</a>, found by <a href="http://wiki.sharpdevelop.net/default.aspx/SharpDevelop.DanielGrunwald">Daniel</a>, about the test assembly's path containing any spaces.<br><br><b>[Update 15th Feb]</b><br><br><a href="http://ncover.org/SITE/blogs/ncover_blog/archive/2006/02/14/176.aspx">Peter Waldschmidt</a>
+has released NCover 1.5.3 which now installs for all users, so it can
+be run as non-admin without any workaround.&nbsp; Added this
+information to the post.<br>
+
+ 
+</body></html>

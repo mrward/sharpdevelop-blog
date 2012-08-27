@@ -1,0 +1,263 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><title>MSBuild and Mono's GAC</title></head>
+<body>
+		SharpDevelop2 now supports Mono's GAC, so this post takes a low level look into how it uses MSBuild to do this.<br><br>Our starting point is a previous <a href="http://community.sharpdevelop.net/blogs/mattward/archive/2005/10/15/CustomMSBuildTasksForMono.aspx">Custom MSBuild Targets for Mono</a>
+post, which introduced an MSBuild task (Mcs), which was used to compile
+the code using Mono's Mcs compiler, and an MSBuild targets file
+(Mono.Mcs.targets).&nbsp; We will be using the ICSharpCode.Build.Tasks
+assembly that ships with SharpDevelop2 which contains the custom
+MSBuild tasks.&nbsp; We will not be using the SharpDevelop2's target
+files since these target more than just the Mono framework.<br><br><b>Mono GAC References</b><br><br>The
+original custom MSBuild task and targets file did not support Mono GAC
+references.&nbsp; In fact they were the bare minimum required to
+compile code using Mcs.&nbsp; The only MSBuild target that was
+overridden was the CoreCompile target, which was changed to use the Mcs
+task instead of Microsoft's Csc task.&nbsp; Without support for Mono's
+GAC any assembly references needed to have a HintPath<br><br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;Reference&nbsp;</font><font color="Red">Include</font><font color="Blue">="gtk-sharp"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;HintPath&gt;</font><font color="#000000">..\..\Program&nbsp;Files\Mono\lib\mono\gtk-sharp\gtk-sharp.dll</font><font color="DarkMagenta">&lt;/HintPath&gt;</font><br>
+<font color="DarkMagenta">&lt;/Reference&gt;</font><br>
+</font><br>In order to add support for Mono's GAC we will need to look at the following Microsoft targets and properties:<br><ul><li>AssemblySearchPaths</li><li>GetFrameworkPaths</li><li>ResolveAssemblyReferences</li></ul>First
+let us see if we can get a simple GAC reference to System.Xml to
+work.&nbsp; With the old tasks and targets a reference of the form<br><br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;Reference&nbsp;</font><font color="Red">Include</font><font color="Blue">="System.Xml"</font><font color="DarkMagenta">/&gt;</font></font><br>&nbsp; &nbsp;<br>is resolved to "C:\WINDOWS\Microsoft.NET\Framework\v2.0.50727\System.Xml.dll".<br><br>To
+fix this we need to override the GetFrameworkPaths target and set the
+TargetFrameworkDirectory property&nbsp; correctly.&nbsp; This can be
+done by adding the following to the Mono.Mcs.targets file<br><br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;Target </font><font color="Red">Name</font><font color="Blue">="GetFrameworkPaths"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">&lt;!--&nbsp;Get&nbsp;the&nbsp;path&nbsp;to&nbsp;the&nbsp;target&nbsp;Mono&nbsp;Framework&nbsp;directory.&nbsp;--&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;GetMonoFrameworkPath&nbsp;</font><font color="Red">TargetFrameworkVersion</font><font color="Blue">="Mono&nbsp;v1.1"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Output&nbsp;</font><font color="Red">TaskParameter</font><font color="Blue">="Path"&nbsp;</font><font color="Red">PropertyName</font><font color="Blue">="TargetFrameworkDirectory"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Output&nbsp;</font><font color="Red">TaskParameter</font><font color="Blue">="Path"&nbsp;</font><font color="Red">ItemName</font><font color="Blue">="_TargetFrameworkDirectoryItem"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/GetMonoFrameworkPath&gt;</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">&lt;!--&nbsp;Get&nbsp;the&nbsp;path&nbsp;to&nbsp;the&nbsp;target&nbsp;the&nbsp;Mono&nbsp;SDK&nbsp;directory.&nbsp;--&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;GetMonoFrameworkSDKPath&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Output&nbsp;</font><font color="Red">TaskParameter</font><font color="Blue">="Path"&nbsp;</font><font color="Red">PropertyName</font><font color="Blue">="TargetFrameworkSDKDirectory"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Output&nbsp;</font><font color="Red">TaskParameter</font><font color="Blue">="Path"&nbsp;</font><font color="Red">ItemName</font><font color="Blue">="_TargetFrameworkSDKDirectoryItem"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/GetMonoFrameworkSDKPath&gt;</font><br>
+<font color="DarkMagenta">&lt;/Target&gt;</font></font><br>&nbsp;&nbsp; &nbsp;<br>This override must come after the<br><br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;Import&nbsp;</font><font color="Red">Project</font><font color="Blue">="$(MSBuildBinPath)\Microsoft.Common.targets"&nbsp;</font><font color="DarkMagenta">/&gt;</font>
+</font> <br><br>statement, so this should be moved to the beginning of
+the Mono.Mcs.targets file.&nbsp; It also uses two custom&nbsp; tasks
+that need to be made known to MSBuild<br><br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;UsingTask&nbsp;</font><font color="Red">TaskName</font><font color="Blue">="ICSharpCode.Build.Tasks.GetMonoFrameworkPath"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AssemblyFile</font><font color="Blue">="ICSharpCode.Build.Tasks.dll"</font><font color="DarkMagenta">/&gt;</font><br>
+<font color="DarkMagenta">&lt;UsingTask&nbsp;</font><font color="Red">TaskName</font><font color="Blue">="ICSharpCode.Build.Tasks.GetMonoFrameworkSdkPath"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AssemblyFile</font><font color="Blue">="ICSharpCode.Build.Tasks.dll"</font><font color="DarkMagenta">/&gt;</font><br>&nbsp;
+</font>&nbsp;<br>The GetFrameworkPaths target sets a few more things
+than just the TargetFrameworkDirectory, this is done for completeness
+based on what the Microsoft.Common.targets file does, but only the
+TargetFrameworkDirectory property needs to be set.&nbsp; The
+TargetFrameworkDirectory is set by calling the GetMonoFrameworkPath
+task and passing in the target framework version, which in this case is
+"Mono v1.1".&nbsp; This task uses the registry to locate the Mono
+framework directory (e.g. "C:\Program Files\Mono\lib\mono\1.0").<br><br><b>AssemblySearchPaths and ResolveAssemblyReference</b><br><br>Now
+what about an assembly that only exists in Mono's GAC and cannot be
+found in Mono framework's directory?&nbsp; A reference to glib-sharp is
+a good place to start.<br><br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;Reference&nbsp;</font><font color="Red">Include</font><font color="Blue">="glib-sharp,&nbsp;Version=1.0.0.0,&nbsp;Culture=neutral,&nbsp;PublicKeyToken=35e10195dab3c99f"</font><font color="DarkMagenta">/&gt;</font><br>
+</font><br>We need to modify the AssemblySearchPaths which is being
+passed to the ResolveAssemblyReference task.&nbsp; In the Microsoft's
+target files this is defined as:<br><br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">&lt;!--</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">The&nbsp;SearchPaths&nbsp;property&nbsp;is&nbsp;set&nbsp;to&nbsp;find&nbsp;assemblies&nbsp;in&nbsp;the&nbsp;following&nbsp;order:</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">(1)&nbsp;Files&nbsp;from&nbsp;current&nbsp;project&nbsp;-&nbsp;indicated&nbsp;by&nbsp;{CandidateAssemblyFiles}</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">(2)&nbsp;$(ReferencePath)&nbsp;-&nbsp;the&nbsp;reference&nbsp;path&nbsp;property,&nbsp;which&nbsp;comes&nbsp;from&nbsp;the&nbsp;.USER&nbsp;file.</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">(3)&nbsp;The&nbsp;hintpath&nbsp;from&nbsp;the&nbsp;referenced&nbsp;item&nbsp;itself,&nbsp;indicated&nbsp;by&nbsp;{HintPathFromItem}.</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">(4)&nbsp;The&nbsp;directory&nbsp;of&nbsp;MSBuild's&nbsp;"target"&nbsp;runtime&nbsp;from&nbsp;GetFrameworkPath.</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">The&nbsp;"target"&nbsp;runtime&nbsp;folder&nbsp;is&nbsp;the&nbsp;folder&nbsp;of&nbsp;the&nbsp;runtime&nbsp;that&nbsp;MSBuild&nbsp;is&nbsp;a&nbsp;part&nbsp;of.</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">(5)&nbsp;Registered&nbsp;assembly&nbsp;folders,&nbsp;indicated&nbsp;by&nbsp;{Registry:*,*,*}</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">(6)&nbsp;Legacy&nbsp;registered&nbsp;assembly&nbsp;folders,&nbsp;indicated&nbsp;by&nbsp;{AssemblyFolders}</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">(7)&nbsp;Look&nbsp;in&nbsp;the&nbsp;application's&nbsp;output&nbsp;folder&nbsp;(like&nbsp;bin\debug)</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">(8)&nbsp;Resolve&nbsp;to&nbsp;the&nbsp;GAC.</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">(9)&nbsp;Treat&nbsp;the&nbsp;reference's&nbsp;Include&nbsp;as&nbsp;if&nbsp;it&nbsp;were&nbsp;a&nbsp;real&nbsp;file&nbsp;name.</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">--&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;AssemblySearchPaths&nbsp;</font><font color="Red">Condition</font><font color="Blue">="&nbsp;'$(AssemblySearchPaths)'&nbsp;==&nbsp;''&nbsp;"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{CandidateAssemblyFiles};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">$(ReferencePath);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{HintPathFromItem};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{TargetFrameworkDirectory};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{Registry:$(FrameworkRegistryBase),$(TargetFrameworkVersion),$(AssemblyFoldersSuffix)$(AssemblyFoldersExConditions)};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{AssemblyFolders};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{GAC};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{RawFileName};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">$(OutputPath)</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/AssemblySearchPaths&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><br>
+<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+</font><br>The {Registry} part is Microsoft specific and can be removed
+for Mono.&nbsp; The {GAC} part is also Microsoft specific.&nbsp; When
+the ResolveAssemblyReference task encounters this string it knows to
+look in Microsoft's GAC.&nbsp; We will replace this with {MonoGAC}
+which Microsoft's ResolveAssemblyReference task knows nothing about.<br><br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;AssemblySearchPaths&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{CandidateAssemblyFiles};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">$(ReferencePath);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{HintPathFromItem};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{TargetFrameworkDirectory};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{AssemblyFolders};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{MonoGAC};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{RawFileName};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">$(OutputPath)</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/AssemblySearchPaths&gt;&nbsp;</font><br>
+<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+</font><br>Now we need to somehow replace the {MonoGAC} with a set of
+directories.&nbsp; We could write our own ResolveAssemblyReference
+task, but this seems like a lot of work.&nbsp; Instead let us update
+the AssemblySearchPaths just before the ResolveAssemblyReference task
+is called.&nbsp; We do this by overriding the
+ResolveAssemblyReferenceDependsOn target and making it call our custom
+AddMonoAssemblySearchPaths target.<br><br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;ResolveAssemblyReferencesDependsOn&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">GetFrameworkPaths;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">GetRedistLists;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">PrepareForBuild;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">AddMonoAssemblySearchPaths</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/ResolveAssemblyReferencesDependsOn&gt;</font><br>
+<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+<font color="DarkMagenta">&lt;Target&nbsp;</font><font color="Red">Name</font><font color="Blue">="AddMonoAssemblySearchPaths"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;AddMonoAssemblySearchPaths&nbsp;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Assemblies</font><font color="Blue">="@(Reference)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Paths</font><font color="Blue">="$(AssemblySearchPaths)"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Output&nbsp;</font><font color="Red">TaskParameter</font><font color="Blue">="Paths"&nbsp;</font><font color="Red">PropertyName</font><font color="Blue">="AssemblySearchPaths"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/AddMonoAssemblySearchPaths&gt;</font><br>
+<font color="DarkMagenta">&lt;/Target&gt;</font><br>
+</font><br>Again this custom task needs to be included via<br><br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;UsingTask&nbsp;</font><font color="Red">TaskName</font><font color="Blue">="ICSharpCode.Build.Tasks.AddMonoAssemblySearchPaths"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AssemblyFile</font><font color="Blue">="ICSharpCode.Build.Tasks.dll"</font><font color="DarkMagenta">/&gt;</font><br>
+</font><br>The AddMonoAssemblySearchPath task looks for the {MonoGAC}
+item in the AssemblySearchPaths property and replaces it with any Mono
+GAC directories that need to be searched.&nbsp; The GAC directories are
+determined by looking at the assembly references passed in via the
+Assemblies property.&nbsp; If multiple GAC references are located then
+multiple directories are inserted into the AssemblySearchPaths property.<br><br>Now
+we can use MSBuild to build a project with references to assemblies in
+Mono's GAC using SharpDevelop2's ICSharpCode.Build.Tasks assembly and
+the Mono.Mcs.targets file.<br><br><b>Mono.Mcs.targets</b><br><br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;Project&nbsp;</font><font color="Red">xmlns</font><font color="Blue">="http://schemas.microsoft.com/developer/msbuild/2003"&nbsp;</font><font color="Red">DefaultTargets</font><font color="Blue">="Build"</font><font color="DarkMagenta">&gt;</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Import&nbsp;</font><font color="Red">Project</font><font color="Blue">="$(MSBuildBinPath)\Microsoft.Common.targets"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;UsingTask&nbsp;</font><font color="Red">TaskName</font><font color="Blue">="ICSharpCode.Build.Tasks.Mcs"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AssemblyFile</font><font color="Blue">="ICSharpCode.Build.Tasks.dll"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;UsingTask&nbsp;</font><font color="Red">TaskName</font><font color="Blue">="ICSharpCode.Build.Tasks.GetMonoFrameworkPath"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AssemblyFile</font><font color="Blue">="ICSharpCode.Build.Tasks.dll"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;UsingTask&nbsp;</font><font color="Red">TaskName</font><font color="Blue">="ICSharpCode.Build.Tasks.GetMonoFrameworkSdkPath"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AssemblyFile</font><font color="Blue">="ICSharpCode.Build.Tasks.dll"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;UsingTask&nbsp;</font><font color="Red">TaskName</font><font color="Blue">="ICSharpCode.Build.Tasks.AddMonoAssemblySearchPaths"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AssemblyFile</font><font color="Blue">="ICSharpCode.Build.Tasks.dll"</font><font color="DarkMagenta">/&gt;</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;MSBuildAllProjects&gt;</font><font color="#000000">$(MSBuildAllProjects);Mono.Mcs.targets</font><font color="DarkMagenta">&lt;/MSBuildAllProjects&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DefaultLanguageSourceExtension&gt;</font><font color="#000000">.cs</font><font color="DarkMagenta">&lt;/DefaultLanguageSourceExtension&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Language&gt;</font><font color="#000000">C#</font><font color="DarkMagenta">&lt;/Language&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Target&nbsp;</font><font color="Red">Name</font><font color="Blue">="CreateManifestResourceNames"</font><font color="DarkMagenta">/&gt;</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DebugSymbols&nbsp;</font><font color="Red">Condition</font><font color="Blue">="&nbsp;'$(DebugType)'&nbsp;==&nbsp;'none'&nbsp;"</font><font color="DarkMagenta">&gt;</font><font color="#000000">false</font><font color="DarkMagenta">&lt;/DebugSymbols&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DebugType&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="Red">Condition</font><font color="Blue">="&nbsp;'$(DebugType)'&nbsp;==&nbsp;'none'&nbsp;"</font><font color="DarkMagenta">&gt;&lt;/DebugType&gt;&nbsp;&nbsp;&nbsp;&nbsp;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;ItemGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DocFileItem&nbsp;</font><font color="Red">Include</font><font color="Blue">="$(DocumentationFile)"&nbsp;</font><font color="Red">Condition</font><font color="Blue">="'$(DocumentationFile)'!=''"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;InProject&gt;</font><font color="#000000">false</font><font color="DarkMagenta">&lt;/InProject&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/DocFileItem&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/ItemGroup&gt;</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;CoreCompileDependsOn&gt;</font><font color="#000000">_ComputeNonExistentFileProperty</font><font color="DarkMagenta">&lt;/CoreCompileDependsOn&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">&lt;!--&nbsp;Override&nbsp;AssemblySearchPaths&nbsp;property&nbsp;and&nbsp;remove&nbsp;Microsoft&nbsp;specific&nbsp;search&nbsp;paths&nbsp;--&gt;</font><br>
+&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;AssemblySearchPaths&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{CandidateAssemblyFiles};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">$(ReferencePath);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{HintPathFromItem};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{TargetFrameworkDirectory};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{AssemblyFolders};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{MonoGAC};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">{RawFileName};</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">$(OutputPath)</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/AssemblySearchPaths&gt;&nbsp;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">&lt;!--&nbsp;Modify&nbsp;what&nbsp;the&nbsp;ResolveAssemblyReferences&nbsp;tasks&nbsp;depends&nbsp;on&nbsp;so&nbsp;the</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">AssemblySearchPaths&nbsp;can&nbsp;be&nbsp;modified&nbsp;to&nbsp;use&nbsp;the&nbsp;Mono&nbsp;GAC&nbsp;--&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;ResolveAssemblyReferencesDependsOn&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">GetFrameworkPaths;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">GetRedistLists;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">PrepareForBuild;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">AddMonoAssemblySearchPaths</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/ResolveAssemblyReferencesDependsOn&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Target&nbsp;</font><font color="Red">Name</font><font color="Blue">="AddMonoAssemblySearchPaths"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;AddMonoAssemblySearchPaths&nbsp;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Assemblies</font><font color="Blue">="@(Reference)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Paths</font><font color="Blue">="$(AssemblySearchPaths)"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Output&nbsp;</font><font color="Red">TaskParameter</font><font color="Blue">="Paths"&nbsp;</font><font color="Red">PropertyName</font><font color="Blue">="AssemblySearchPaths"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/AddMonoAssemblySearchPaths&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/Target&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Target&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="Red">Name</font><font color="Blue">="GetFrameworkPaths"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">&lt;!--&nbsp;Get&nbsp;the&nbsp;path&nbsp;to&nbsp;the&nbsp;target&nbsp;Mono&nbsp;Framework&nbsp;directory.&nbsp;--&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;GetMonoFrameworkPath&nbsp;</font><font color="Red">TargetFrameworkVersion</font><font color="Blue">="Mono&nbsp;v1.1"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Output&nbsp;</font><font color="Red">TaskParameter</font><font color="Blue">="Path"&nbsp;</font><font color="Red">PropertyName</font><font color="Blue">="TargetFrameworkDirectory"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Output&nbsp;</font><font color="Red">TaskParameter</font><font color="Blue">="Path"&nbsp;</font><font color="Red">ItemName</font><font color="Blue">="_TargetFrameworkDirectoryItem"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/GetMonoFrameworkPath&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkSlateGray">&lt;!--&nbsp;Get&nbsp;the&nbsp;path&nbsp;to&nbsp;the&nbsp;target&nbsp;the&nbsp;Mono&nbsp;SDK&nbsp;directory.&nbsp;--&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;GetMonoFrameworkSDKPath&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Output&nbsp;</font><font color="Red">TaskParameter</font><font color="Blue">="Path"&nbsp;</font><font color="Red">PropertyName</font><font color="Blue">="TargetFrameworkSDKDirectory"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Output&nbsp;</font><font color="Red">TaskParameter</font><font color="Blue">="Path"&nbsp;</font><font color="Red">ItemName</font><font color="Blue">="_TargetFrameworkSDKDirectoryItem"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/GetMonoFrameworkSDKPath&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/Target&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Target</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Name</font><font color="Blue">="CoreCompile"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Inputs</font><font color="Blue">="$(MSBuildAllProjects);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">@(Compile);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">@(ManifestResourceWithNoCulture);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">$(ApplicationIcon);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">$(AssemblyOriginatorKeyFile);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">@(ManifestNonResxWithNoCultureOnDisk);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">@(ReferencePath);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">@(CompiledLicenseFile)</font><font color="Blue">"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Outputs</font><font color="Blue">="@(DocFileItem);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">@(IntermediateAssembly);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">$(NonExistentFile)</font><font color="Blue">"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">DependsOnTargets</font><font color="Blue">="$(CoreCompileDependsOn)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Mcs</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AdditionalLibPaths</font><font color="Blue">="$(AdditionalLibPaths)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AddModules</font><font color="Blue">="@(AddModules)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AllowUnsafeBlocks</font><font color="Blue">="$(AllowUnsafeBlocks)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">CheckForOverflowUnderflow</font><font color="Blue">="$(CheckForOverflowUnderflow)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">CodePage</font><font color="Blue">="$(CodePage)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">DebugType</font><font color="Blue">="$(DebugType)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">DefineConstants</font><font color="Blue">="$(DefineConstants)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">DelaySign</font><font color="Blue">="$(DelaySign)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">DisabledWarnings</font><font color="Blue">="$(NoWarn)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">DocumentationFile</font><font color="Blue">="@(DocFileItem)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">EmitDebugInformation</font><font color="Blue">="$(DebugSymbols)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">KeyContainer</font><font color="Blue">="$(KeyContainerName)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">KeyFile</font><font color="Blue">="$(KeyOriginatorFile)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">LangVersion</font><font color="Blue">="$(LangVersion)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">MainEntryPoint</font><font color="Blue">="$(StartupObject)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">NoConfig</font><font color="Blue">="true"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">NoLogo</font><font color="Blue">="$(NoLogo)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">NoStandardLib</font><font color="Blue">="$(NoStdLib)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Optimize</font><font color="Blue">="$(Optimize)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">OutputAssembly</font><font color="Blue">="@(IntermediateAssembly)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">References</font><font color="Blue">="@(ReferencePath)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Resources</font><font color="Blue">="@(ManifestResourceWithNoCulture);@(ManifestNonResxWithNoCultureOnDisk);@(CompiledLicenseFile)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">ResponseFiles</font><font color="Blue">="$(CompilerResponseFile)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Sources</font><font color="Blue">="@(Compile)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">TargetType</font><font color="Blue">="$(OutputType)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">ToolPath</font><font color="Blue">="$(McsToolPath)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">TreatWarningsAsErrors</font><font color="Blue">="$(TreatWarningsAsErrors)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">WarningLevel</font><font color="Blue">="$(WarningLevel)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Win32Icon</font><font color="Blue">="$(ApplicationIcon)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Win32Resource</font><font color="Blue">="$(Win32Resource)"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/Target&gt;</font><br>
+<font color="DarkMagenta">&lt;/Project&gt;</font></font><br>
+	
+</body></html>

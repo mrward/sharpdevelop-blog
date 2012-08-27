@@ -1,0 +1,24 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Targeting Different Frameworks with VB.NET</title>
+</head>
+<body>
+		SharpDevelop 2.1, revision 1157, allows VB.NET projects to target the older Microsoft Frameworks and Mono. This extends <a href="http://wiki.sharpdevelop.net/default.aspx/SharpDevelop.DanielGrunwald">Daniel</a>'s previous work to <a href="http://community.sharpdevelop.net/blogs/mattward/archive/2005/10/15/TargetingDifferentFrameworksWithSharpDevelop.aspx">target different frameworks with C#</a>. SharpDevelop 2.1 is only available from the <a href="http://wiki.sharpdevelop.net/default.aspx/SharpDevelop.UsingTheRepository">repository</a>.<br><br>To
+target a different framework, open the project's "Compiling" options
+(Project | Project Options | Compiling) and select the desired
+framework from the <a href="TargetingDifferentFrameworksWithVBNet_files/MonoProjectCompilingOptions.png">"Target Framework" drop down list</a>. <br><br><b>MonoBASIC</b><br><br>When Mono is targeted, the <a href="http://www.mono-project.com/VisualBasic.NET_support">MonoBASIC compiler</a>
+(mbas) will be used.&nbsp; This compiler is still under going a lot
+development, so there are a few things that are missing or have
+incomplete support.&nbsp; One omission, for example, is that it will
+not embed resources into an assembly.<br><br>SharpDevelop now contains
+Gtk# project and file templates for VB.NET.&nbsp; There is no Glade#
+project template for VB.NET since MonoBASIC does not currently support
+embedded resources.<br><br><b>Issues</b><br><br>There are a few things to be aware of when using SharpDevelop to target the older frameworks.<br><br>Code completion for certain core assemblies will only show .NET 2.0 information.&nbsp; These core assemblies are:<br><ul><li>mscorlib</li><li>System</li><li>System.Data</li><li>System.Design</li><li>System.DirectoryServices</li><li>System.Drawing</li><li>System.Web.Services</li><li>System.Windows.Forms</li><li>System.Xml</li><li>System.XML</li><li>Microsoft.Build.Engine</li><li>Microsoft.Build.Framework</li></ul>The Forms Designer will generate .NET 2.0 code only.<br><br>The Forms Designer will generate .NET 2.0 specific resources.<br><br><b>Alternative Solutions</b><br><br><a href="http://weblogs.asp.net/rmclaws/">Robert McLaws</a> produced an <a href="http://weblogs.asp.net/rmclaws/archive/2005/06/04/410360.aspx">MSBuild toolkit</a> for Visual Studio 2005 RC, but this does not look like it supports the latest version of Visual Studio.<br><br><a href="http://blogs.msdn.com/jomo_fisher/">Jomo Fisher</a> produced a <a href="http://blogs.msdn.com/jomo_fisher/archive/2005/04/22/410903.aspx">targets file</a>,
+for C# projects, that can be used to target the older Microsoft
+frameworks.&nbsp; This targets file is a sample that supports Visual
+Studio beta 2.<br><br>Microsoft recently released an <a href="http://go.microsoft.com/fwlink/?LinkId=59384">MSBuild toolkit for .NET 1.1 called MSBee.</a>&nbsp;
+This adds support for targeting .NET 1.1 with VB.NET as well as C#
+projects.&nbsp; It will also generate .NET 1.x resources from .NET 2.0
+resx files. <br>
+</body></html>

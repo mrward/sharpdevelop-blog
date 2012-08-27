@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><title>Custom MSBuild Tasks for Mono</title>
+
+<body>
+		SharpDevelop ships with two custom MSBuild tasks for Mono, one for Mcs
+and the other for Gmcs, both of which live in the
+ICSharpCode.Build.Tasks assembly.&nbsp; With the recent Mono release,
+1.1.9, the command line options and compiler error message formats are
+the same for Mcs and Gmcs, earlier versions differed.&nbsp; This means
+that the Mcs and Gmcs classes do not do much apart from determine the
+name of the compiler to use.&nbsp; The MonoCompilerTask class does the
+hard work of compiling the code and reporting error messages back.<br>
+<br>
+<b>Simple C# Console Project</b><br>
+<br>
+HelloMonoWorld.csproj:<br>
+<br>
+<font face="Courier New" size="2"><font color="DarkMagenta">&lt;Project&nbsp;</font><font color="Red">DefaultTargets</font><font color="Blue">="Build"&nbsp;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">xmlns</font><font color="Blue">="http://schemas.microsoft.com/developer/msbuild/2003"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;OutputType&gt;</font><font color="#000000">Exe</font><font color="DarkMagenta">&lt;/OutputType&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;AssemblyName&gt;</font><font color="#000000">HelloMonoWorld</font><font color="DarkMagenta">&lt;/AssemblyName&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;WarningLevel&gt;</font><font color="DarkBlue">4</font><font color="DarkMagenta">&lt;/WarningLevel&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;OutputPath&gt;</font><font color="#000000">bin</font><font color="DarkMagenta">&lt;/OutputPath&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;ItemGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Compile&nbsp;</font><font color="Red">Include</font><font color="Blue">="Main.cs"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Compile&nbsp;</font><font color="Red">Include</font><font color="Blue">="AssemblyInfo.cs"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/ItemGroup&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;Import&nbsp;</font><font color="Red">Project</font><font color="Blue">="$(MSBuildBinPath)\Microsoft.CSharp.targets"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+<font color="DarkMagenta">&lt;/Project&gt;<br>
+</font></font> <br>
+Main.cs:<br>
+<br>
+<font face="Courier New" size="2"><font color="Green">using&nbsp;</font><font color="#000000">System</font><font color="DarkGreen">;</font><br>
+<br>
+<font color="Green">namespace&nbsp;</font><font color="#000000">HelloMonoWorld</font><br>
+<font color="DarkGreen">{</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">class&nbsp;</font><font color="#000000">MainClass</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkGreen">{</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Blue">public&nbsp;</font><font color="Brown">static&nbsp;</font><font color="Red">void&nbsp;</font><font color="MidnightBlue">Main</font><font color="DarkGreen">(</font><font color="Red">string</font><font color="DarkGreen">[]&nbsp;</font><font color="#000000">args</font><font color="DarkGreen">)</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkGreen">{</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">Console</font><font color="DarkGreen">.</font><font color="MidnightBlue">WriteLine</font><font color="DarkGreen">(</font><font color="Blue">"Hello&nbsp;World!"</font><font color="DarkGreen">);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkGreen">}</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkGreen">}</font><br>
+<font color="DarkGreen">}</font><br>
+</font><br>
+Running MSBuild, passing the .csproj as a command line argument, will
+build the console app using Microsoft's Csc and targets the .NET
+Framework 2.0.<br>
+<br>
+<b>Using the Mcs Task Directly</b><br>
+<br>
+Let us modify the project file so it calls the Mcs task directly.&nbsp;
+I am assuming that the ICSharpCode.Build.Tasks.dll exists in the same
+folder as the project file.<br>
+<br>
+<font face="Courier New" size="2"><font color="DarkMagenta">&lt;Project&nbsp;</font><font color="Red">DefaultTargets</font><font color="Blue">="Build"&nbsp;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">xmlns</font><font color="Blue">="http://schemas.microsoft.com/developer/msbuild/2003"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;OutputType&gt;</font><font color="#000000">Exe</font><font color="DarkMagenta">&lt;/OutputType&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;AssemblyName&gt;</font><font color="#000000">HelloMonoWorld</font><font color="DarkMagenta">&lt;/AssemblyName&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;WarningLevel&gt;</font><font color="DarkBlue">4</font><font color="DarkMagenta">&lt;/WarningLevel&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;OutputPath&gt;</font><font color="#000000">bin</font><font color="DarkMagenta">&lt;/OutputPath&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;ItemGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Compile&nbsp;</font><font color="Red">Include</font><font color="Blue">="Main.cs"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Compile&nbsp;</font><font color="Red">Include</font><font color="Blue">="AssemblyInfo.cs"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/ItemGroup&gt;</font><br>
+&nbsp;&nbsp;<br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;UsingTask&nbsp;</font><font color="Red">TaskName</font><font color="Blue">="ICSharpCode.Build.Tasks.Mcs"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AssemblyFile</font><font color="Blue">="ICSharpCode.Build.Tasks.dll"</font><font color="DarkMagenta">/&gt;</font><br>
+<br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;Target&nbsp;</font><font color="Red">Name</font><font color="Blue">="Build"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Mcs</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">OutputAssembly</font><font color="Blue">="$(OutputPath)\$(AssemblyName).exe"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">References</font><font color="Blue">="@(ReferencePath)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Sources</font><font color="Blue">="@(Compile)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">TargetType</font><font color="Blue">="$(OutputType)"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/Target&gt;</font><br>
+<font color="DarkMagenta">&lt;/Project&gt;</font><br>
+</font><br>
+The project file above is a bit limited, it does not have standard
+targets such as "Rebuild" and "Clean".&nbsp; We could write everything
+ourselves, but instead why not use the standard .targets that Microsoft
+provides and just override the bare minimum?<br>
+<br>
+<b>Mono.Mcs.targets</b><br>
+<br>
+So what is the bare minimum .targets file we need in order to get MSBuild to use our custom Mono tasks?<br>
+<br>
+First let us look at the modified project file:<br>
+<br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;Project&nbsp;</font><font color="Red">DefaultTargets</font><font color="Blue">="Build"&nbsp;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">xmlns</font><font color="Blue">="http://schemas.microsoft.com/developer/msbuild/2003"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;OutputType&gt;</font><font color="#000000">Exe</font><font color="DarkMagenta">&lt;/OutputType&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;AssemblyName&gt;</font><font color="#000000">HelloMonoWorld</font><font color="DarkMagenta">&lt;/AssemblyName&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;WarningLevel&gt;</font><font color="DarkBlue">4</font><font color="DarkMagenta">&lt;/WarningLevel&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;OutputPath&gt;</font><font color="#000000">bin</font><font color="DarkMagenta">&lt;/OutputPath&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;ItemGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Compile&nbsp;</font><font color="Red">Include</font><font color="Blue">="Main.cs"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Compile&nbsp;</font><font color="Red">Include</font><font color="Blue">="AssemblyInfo.cs"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/ItemGroup&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;Import&nbsp;</font><font color="Red">Project</font><font color="Blue">="Mono.Mcs.targets"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+<font color="DarkMagenta">&lt;/Project&gt;</font><br>
+</font><br>
+The Mono.Mcs.targets file, which is based on the Microsoft.CSharp.targets file, overrides the CoreCompile target:<br>
+<br><font face="Courier New" size="2"><font color="DarkMagenta">&lt;Project&nbsp;</font><font color="Red">DefaultTargets</font><font color="Blue">="Build"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">xmlns</font><font color="Blue">="http://schemas.microsoft.com/developer/msbuild/2003"</font><font color="DarkMagenta">&gt;</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;UsingTask&nbsp;</font><font color="Red">TaskName</font><font color="Blue">="ICSharpCode.Build.Tasks.Mcs"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AssemblyFile</font><font color="Blue">="ICSharpCode.Build.Tasks.dll"</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;MSBuildAllProjects&gt;</font><font color="#000000">$(MSBuildAllProjects);Mono.Mcs.targets</font><font color="DarkMagenta">&lt;/MSBuildAllProjects&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DefaultLanguageSourceExtension&gt;</font><font color="#000000">.cs</font><font color="DarkMagenta">&lt;/DefaultLanguageSourceExtension&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Language&gt;</font><font color="#000000">C#</font><font color="DarkMagenta">&lt;/Language&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Target&nbsp;</font><font color="Red">Name</font><font color="Blue">="CreateManifestResourceNames"</font><font color="DarkMagenta">/&gt;</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DebugSymbols&nbsp;</font><font color="Red">Condition</font><font color="Blue">="&nbsp;'$(DebugType)'&nbsp;==&nbsp;'none'&nbsp;"</font><font color="DarkMagenta">&gt;</font><font color="#000000">false</font><font color="DarkMagenta">&lt;/DebugSymbols&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DebugType&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="Red">Condition</font><font color="Blue">="&nbsp;'$(DebugType)'&nbsp;==&nbsp;'none'&nbsp;"</font><font color="DarkMagenta">&gt;&lt;/DebugType&gt;&nbsp;&nbsp;&nbsp;&nbsp;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;ItemGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DocFileItem&nbsp;</font><font color="Red">Include</font><font color="Blue">="$(DocumentationFile)"&nbsp;</font><font color="Red">Condition</font><font color="Blue">="'$(DocumentationFile)'!=''"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;InProject&gt;</font><font color="#000000">false</font><font color="DarkMagenta">&lt;/InProject&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/DocFileItem&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/ItemGroup&gt;</font><br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;CoreCompileDependsOn&gt;</font><font color="#000000">_ComputeNonExistentFileProperty</font><font color="DarkMagenta">&lt;/CoreCompileDependsOn&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Target</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Name</font><font color="Blue">="CoreCompile"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Inputs</font><font color="Blue">="$(MSBuildAllProjects);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">@(Compile);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">@(ManifestResourceWithNoCulture);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">$(ApplicationIcon);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">$(AssemblyOriginatorKeyFile);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">@(ManifestNonResxWithNoCultureOnDisk);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">@(ReferencePath);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">@(CompiledLicenseFile)</font><font color="Blue">"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Outputs</font><font color="Blue">="@(DocFileItem);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">@(IntermediateAssembly);</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">$(NonExistentFile)</font><font color="Blue">"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">DependsOnTargets</font><font color="Blue">="$(CoreCompileDependsOn)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Mcs</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AdditionalLibPaths</font><font color="Blue">="$(AdditionalLibPaths)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AddModules</font><font color="Blue">="@(AddModules)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">AllowUnsafeBlocks</font><font color="Blue">="$(AllowUnsafeBlocks)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">CheckForOverflowUnderflow</font><font color="Blue">="$(CheckForOverflowUnderflow)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">CodePage</font><font color="Blue">="$(CodePage)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">DebugType</font><font color="Blue">="$(DebugType)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">DefineConstants</font><font color="Blue">="$(DefineConstants)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">DelaySign</font><font color="Blue">="$(DelaySign)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">DisabledWarnings</font><font color="Blue">="$(NoWarn)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">DocumentationFile</font><font color="Blue">="@(DocFileItem)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">EmitDebugInformation</font><font color="Blue">="$(DebugSymbols)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">KeyContainer</font><font color="Blue">="$(KeyContainerName)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">KeyFile</font><font color="Blue">="$(KeyOriginatorFile)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">LangVersion</font><font color="Blue">="$(LangVersion)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">MainEntryPoint</font><font color="Blue">="$(StartupObject)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">NoConfig</font><font color="Blue">="true"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">NoLogo</font><font color="Blue">="$(NoLogo)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">NoStandardLib</font><font color="Blue">="$(NoStdLib)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Optimize</font><font color="Blue">="$(Optimize)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">OutputAssembly</font><font color="Blue">="@(IntermediateAssembly)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">References</font><font color="Blue">="@(ReferencePath)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Resources</font><font color="Blue">="@(ManifestResourceWithNoCulture);@(ManifestNonResxWithNoCultureOnDisk);@(CompiledLicenseFile)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">ResponseFiles</font><font color="Blue">="$(CompilerResponseFile)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Sources</font><font color="Blue">="@(Compile)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">TargetType</font><font color="Blue">="$(OutputType)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">ToolPath</font><font color="Blue">="$(McsToolPath)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">TreatWarningsAsErrors</font><font color="Blue">="$(TreatWarningsAsErrors)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">WarningLevel</font><font color="Blue">="$(WarningLevel)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Win32Icon</font><font color="Blue">="$(ApplicationIcon)"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Win32Resource</font><font color="Blue">="$(Win32Resource)"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;/Target&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Import&nbsp;</font><font color="Red">Project</font><font color="Blue">="$(MSBuildBinPath)\Microsoft.Common.targets"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+<font color="DarkMagenta">&lt;/Project&gt;</font><br>
+</font><br>The differences between this is and the standard
+Microsoft.CSharp.targets file is that a few properties have been
+removed (NoWarn and UseHostCompilerIfAvailable) and the
+CreateManifestResourceNames target has essentially been removed, the
+target is defined, but it does nothing.&nbsp; This targets file is good
+enough to compile our console application, as long as we do not add any
+embedded resources to it.<br>
+<br>
+<b>SharpDevelop<br>
+<br>
+</b>How does this compare with the .targets files that ship with
+SharpDevelop?&nbsp; Since SharpDevelop can target more than just Mono,
+it supports the older .NET frameworks too, things are a little more
+complicated.&nbsp; This will be covered in another post.<br>
+
+
+
+</body></html>

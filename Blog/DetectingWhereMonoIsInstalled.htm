@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><title>Detecting Where Mono is Installed</title>
+
+	<body>
+		Whilst looking at the NAnt config file (Nant.exe.config), I noticed
+that NAnt does a much better job at detecting where the Mono compilers,
+Mcs and Gmcs, are located. NAnt reads the registry, whilst SharpDevelop
+assumes that they exist somewhere in a folder, typically "C:\Program
+Files\Mono\bin", that has been added to the Path environment variable.
+If you add the "C:\Program Files\Mono\bin" folder to the Path then
+everything should work. In this bin folder there are several .bat files
+that can be used to run the various Mono compilers, and these are what
+SharpDevelop uses. The Mono executables live in "C:\Program
+Files\Mono\lib\mono\1.0" and "C:\Program Files\Mono\lib\mono\2.0",
+depending on the framework being targeted, and the .bat files run these
+executables under Mono.
+<br>
+<br>
+<b>Mono's Registry Settings</b>
+
+<br>
+<br>
+When you install Mono under Windows the installer adds a registry key
+under HKEY_LOCAL_MACHINE\SOFTWARE\Novell\Mono, and the values entered
+here can be used to detect where Mono is.<br>
+<br>
+<font color="#000000">[HKEY_LOCAL_MACHINE\SOFTWARE\Novell\Mono]<br>
+DefaultCLR=1.1.9.2<br>
+<br>
+[HKEY_LOCAL_MACHINE\SOFTWARE\Novell\Mono\1.1.9.2]<br>
+FrameworkAssemblyDirectory=C:\Program Files\Mono\lib<br>
+MonoConfigDir=C:\Program Files\Mono\etc<br>
+SdkInstallRoot=C:\Program Files\Mono
+
+</font><br>
+<br>
+SharpDevelop will now use the registry to locate the Mono bin folder,
+and if this fails then it falls back on its original method of assuming
+that the compiler lives in a folder added to the Path.<br>
+<br>
+This small improvement has been added to SharpDevelop 2.0 in revision 593.
+	
+	</body></html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"><head><title>NAnt Integration</title>
+<link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+		Support for NAnt has been added to SharpDevelop 2.0. in revision 573.<br><br><b>Changes from SharpDevelop 1.1</b><br><br>There are a few things missing from the NAnt addin compared to the previous version that shipped with SharpDevelop 1.1.<br><br>The
+"Create Build File" menu option has been removed.&nbsp; SharpDevelop
+now uses MSBuild project files instead of SharpDevelop projects (.prjx)
+and there is currently no conversion code written.&nbsp; The original
+code took the project file and ran an XSL transform on it to produce
+the NAnt build file.&nbsp; This feature will be added at a later date.<br><br>NAnt
+no longer ships with SharpDevelop.&nbsp; This means that NAnt needs to
+be installed separately.&nbsp; By default SharpDevelop assumes that the
+NAnt executable is accessible by the Path environment variable.&nbsp;
+If this not the case the NAnt executable to use can be set via Tools |
+Options | Tools | NAnt | Command.&nbsp; If you install one of the <a href="http://nant.sourceforge.net/nightly/">NAnt nightly builds</a>&nbsp; you will be able to target .NET Framework 2.0 Beta 2.<br><br>By default SharpDevelop supports NAnt 0.85 RC3,&nbsp;previously&nbsp;the 0.84 schema was the default.<br><br><b>Issues</b><br><br>The first time SharpDevelop is run the NAnt pad may not display any contents.&nbsp; To fix this you <br>will need to restart SharpDevelop.&nbsp; There seems to be an issue with the default layout information.<br><br><b>Creating a new NAnt build file</b><br><br>To add a new build file to your project:<br>
+<ol>
+<li>Open the project browser, View | Projects. 
+</li><li>Right click the project and select Add | Add New Item... 
+</li><li>In the "New File" dialog, select the Misc category. 
+</li><li>Choose the "NAnt Build File" template, specify a file name and click the "Create" button. </li></ol><br><img src="NAntIntegration_files/original_002.png"><br><br>Xml auto-completion, based on the NAnt 0.85 RC3 schema, will occur whilst you are editing the NAnt build.<br><br><img src="NAntIntegration_files/original_006.png"><br><br><b>Project Menu</b><br><br><img src="NAntIntegration_files/original_008.png"><br><br>
+<table class="article" cellpadding="3" cellspacing="0">
+
+<tbody><tr>
+<td>Run Default Target</td>
+<td>Runs the default target of the build file for the project.&nbsp; The build file must be part <br>of the project (i.e. it exists in the project view).</td></tr>
+<tr>
+<td>Run Clean Target</td>
+<td>Runs the "clean" target of the build file for the project.<br>There is currently no clever add-in logic here, in order for this menu option to work there needs to be a target called "clean".</td></tr>
+<tr>
+<td>Stop NAnt</td>
+<td>Stops a currently running build.&nbsp; A warning message is displayed.&nbsp; This option kills the NAnt process.</td></tr></tbody></table><br><br><b>Project Browser</b><br><br>NAnt ".build" and ".include" files are displayed in the project browser with their own icon.<br><br><img src="NAntIntegration_files/original_004.png"><br><br><b>NAnt Pad</b><br><br>To open the NAnt pad, select View | Tools | NAnt.<br><br><img src="NAntIntegration_files/original_005.png"> <br><br>The
+NAnt Pad displays all the build files in the solution.&nbsp; It gives a
+high level overview of the build file, showing all the build targets.<br><br>Double clicking a target node will open up the build file and move the cursor to the corresponding &lt;target&gt; element.<br><br>The NAnt pad's toolbar buttons, from left to right:<br><br>
+<table cellpadding="3" cellspacing="0">
+
+<tbody><tr>
+<td>Run</td>
+<td>If the build file node is selected, runs the default target.<br>If a target node is selected, runs that target.</td></tr>
+<tr>
+<td>Refresh</td>
+<td>Refreshes the tree.&nbsp; Reads the build file again and updates the display.</td></tr>
+<tr>
+<td>Stop</td>
+<td>Stops the currently running build.</td></tr></tbody></table><br>The
+NAnt pad has a text box at the bottom where the user can specify extra
+command line options.&nbsp; In the screenshot below the user has
+entered "-targetframework:net-1.1", this will be added to the NAnt
+command line.<br><br><b>NAnt Pad Context Menu</b><br><br>Right clicking the build file node shows the context menu:<br><br><img src="NAntIntegration_files/original_009.png"><br><br>The Open menu option will open the build file into the SharpDevelop text editor.<br><br>The other menu options have been described in the "Project Menu" section.<br><br>Right clicking on a target node shows the context menu:<br><br><img src="NAntIntegration_files/original_010.png"><br><br>
+<table cellpadding="3" cellspacing="0">
+
+<tbody><tr>
+<td>Run Target</td>
+<td>Runs the target selected.&nbsp; This passes the target's name to NAnt on the command line.</td></tr>
+<tr>
+<td>Open</td>
+<td>Opens the build file into the SharpDevelop's text editor.</td></tr>
+<tr>
+<td>Goto Definition</td>
+<td>Opens up the build file and moves the mouse cursor to the corresponding &lt;target&gt; element.</td></tr></tbody></table><br><b>Output Window</b><br><br>All NAnt output is shown in a NAnt output window.<br><br><img src="NAntIntegration_files/original_007.png"><br><br>The first two lines are outputted by the NAnt add-in showing the NAnt command line used.&nbsp; The rest is the output from NAnt.<br><br><b>Errors Window</b><br><br>Errors and warnings from the NAnt build are displayed in the Errors window.<br><br><img src="NAntIntegration_files/original.png"><br><br>&nbsp; <b>NAnt Configuration</b><br><br>Open the NAnt options panel via Tools | Options | Tools | NAnt&nbsp; <br><br><img src="NAntIntegration_files/original_003.png"> <br><br>
+<table cellpadding="3" cellspacing="0">
+
+<tbody><tr>
+<th align="left">Panel Option</th>
+<th align="left">Description</th></tr>
+<tr>
+<td>Command</td>
+<td>The location of the NAnt executable to use.</td></tr>
+<tr>
+<td>Arguments</td>
+<td>Standard arguments that will be passed to NAnt (e.g. -targetframework:net-1.1).</td></tr>
+<tr>
+<td>Quiet</td>
+<td>Maps to NAnt's -quiet command line option.</td></tr>
+<tr>
+<td>Show Logo</td>
+<td>Shows/hides the NAnt logo in the output window.</td></tr>
+<tr>
+<td>Verbose</td>
+<td>Maps to NAnt's -verbose command line option.</td></tr>
+<tr>
+<td>Debug</td>
+<td>Maps to NAnt's -debug command line option.</td></tr></tbody></table>
+
+	</body></html>

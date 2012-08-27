@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>Targeting Different Frameworks with SharpDevelop</title>
+<link href="../Help/css/help.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+		<a href="http://wiki.sharpdevelop.net/default.aspx/SharpDevelop.DanielGrunwald">Daniel</a>&nbsp;recently added support for .NET 1.1 and .NET 1.0 to SharpDevelop
+2.0.&nbsp; Let us take a low level look at how SharpDevelop 2.0 targets
+other frameworks.&nbsp; Targeting another framework involves a custom
+.targets file and custom MSBuild tasks.&nbsp; <br>
+<br><b>
+SharpDevelop Custom MSBuild Tasks and Targets</b><br>
+<font size="2"><br>
+</font>
+<table class="article" cellpadding="3" cellspacing="0">
+<tbody><tr>
+    <th align="left"><font size="2">Component</font></th>
+    <th align="left"><font size="2">Description</font></th></tr>
+<tr>
+<td><font size="2">ICSharpCode.Build.Tasks.dll</font></td>
+<td><font size="2">Assembly containing custom MSBuild tasks.</font></td>
+</tr>
+<tr>
+<td><font size="2">SharpDevelop.Build.Common.targets</font></td>
+<td><font size="2">Specifies targets common to all SharpDevelop targets.</font></td>
+</tr>
+<tr>
+<td><font size="2">SharpDevelop.Build.CSharp.targets</font></td>
+<td><font size="2">Specifies targets for C# projects that target a framework other than the default.</font></td>
+</tr>
+<tr>
+<td><font size="2">SharpDevelop.Build.Mono.Mcs.targets</font></td>
+<td><font size="2">Defines the Mcs task.</font></td>
+</tr>
+<tr>
+<td><font size="2">SharpDevelop.Build.Mono.Gmcs.targets</font></td>
+<td><font size="2">Defines the Gmcs task.</font></td>
+</tr>
+<tr>
+<td><font size="2">SharpDevelop.Build.MSIL.targets</font></td>
+<td><font size="2">Specifies targets for ILAsm projects.</font></td>
+</tr></tbody></table>
+<br><b>
+What happens when another framework is targeted?</b><br>
+<br>
+When the project has been configured to target a framework other than
+the default, the project is modified to use a customised .targets file
+and has a property added that specifies the framework being
+targeted.&nbsp; Below is a project file for a console application that
+targets Mono 1.1.<br>
+<br>
+<font face="Courier New" size="2"><font color="DarkMagenta">&lt;Project&nbsp;</font><font color="Red">DefaultTargets</font><font color="Blue">="Build"&nbsp;</font><font color="Red">xmlns</font><font color="Blue">="http://schemas.microsoft.com/developer/msbuild/2003"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;OutputType&gt;</font><font color="#000000">Exe</font><font color="DarkMagenta">&lt;/OutputType&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;RootNamespace&gt;</font><font color="#000000">HelloMonoWorld</font><font color="DarkMagenta">&lt;/RootNamespace&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;AssemblyName&gt;</font><font color="#000000">HelloMonoWorld</font><font color="DarkMagenta">&lt;/AssemblyName&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Configuration&nbsp;</font><font color="Red">Condition</font><font color="Blue">="&nbsp;'$(Configuration)'&nbsp;==&nbsp;''&nbsp;"</font><font color="DarkMagenta">&gt;</font><font color="#000000">Debug</font><font color="DarkMagenta">&lt;/Configuration&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Platform&nbsp;</font><font color="Red">Condition</font><font color="Blue">="&nbsp;'$(Platform)'&nbsp;==&nbsp;''&nbsp;"</font><font color="DarkMagenta">&gt;</font><font color="#000000">AnyCPU</font><font color="DarkMagenta">&lt;/Platform&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;ProjectGuid&gt;</font><font color="#000000">{0534CD74-E5FA-4349-866E-4E0C6428E840}</font><font color="DarkMagenta">&lt;/ProjectGuid&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="DarkMagenta">&lt;TargetFrameworkVersion&gt;</font><font color="#000000">Mono&nbsp;v1.1</font><font color="DarkMagenta">&lt;/TargetFrameworkVersion&gt;</font></b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;NoStdLib&gt;</font><font color="#000000">False</font><font color="DarkMagenta">&lt;/NoStdLib&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;WarningLevel&gt;</font><font color="DarkBlue">4</font><font color="DarkMagenta">&lt;/WarningLevel&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&nbsp;</font><font color="Red">Condition</font><font color="Blue">="&nbsp;'$(Configuration)'&nbsp;==&nbsp;'Debug'&nbsp;"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;OutputPath&gt;</font><font color="#000000">bin\Debug\</font><font color="DarkMagenta">&lt;/OutputPath&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Optimize&gt;</font><font color="#000000">False</font><font color="DarkMagenta">&lt;/Optimize&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DefineConstants&gt;</font><font color="#000000">DEBUG;TRACE</font><font color="DarkMagenta">&lt;/DefineConstants&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DebugSymbols&gt;</font><font color="#000000">true</font><font color="DarkMagenta">&lt;/DebugSymbols&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DebugType&gt;</font><font color="#000000">Full</font><font color="DarkMagenta">&lt;/DebugType&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;PropertyGroup&nbsp;</font><font color="Red">Condition</font><font color="Blue">="&nbsp;'$(Configuration)'&nbsp;==&nbsp;'Release'&nbsp;"</font><font color="DarkMagenta">&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;OutputPath&gt;</font><font color="#000000">bin\Release\</font><font color="DarkMagenta">&lt;/OutputPath&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Optimize&gt;</font><font color="#000000">True</font><font color="DarkMagenta">&lt;/Optimize&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DefineConstants&gt;</font><font color="#000000">TRACE</font><font color="DarkMagenta">&lt;/DefineConstants&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DebugSymbols&gt;</font><font color="#000000">False</font><font color="DarkMagenta">&lt;/DebugSymbols&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;DebugType&gt;</font><font color="#000000">None</font><font color="DarkMagenta">&lt;/DebugType&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/PropertyGroup&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;ItemGroup&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Compile&nbsp;</font><font color="Red">Include</font><font color="Blue">="Main.cs"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="DarkMagenta">&lt;Compile&nbsp;</font><font color="Red">Include</font><font color="Blue">="AssemblyInfo.cs"&nbsp;</font><font color="DarkMagenta">/&gt;</font><br>
+&nbsp;&nbsp;<font color="DarkMagenta">&lt;/ItemGroup&gt;</font><br>
+&nbsp;&nbsp;<b><font color="DarkMagenta">&lt;Import&nbsp;</font><font color="Red">Project</font><font color="Blue">="$(SharpDevelopBinPath)\SharpDevelop.Build.CSharp.targets"&nbsp;</font><font color="DarkMagenta">/&gt;</font></b><br>
+<font color="DarkMagenta">&lt;/Project&gt;</font><br>
+</font><br>The .csproj file has a &lt;TargetFrameworkVersion&gt;
+element and includes a custom .targets file
+"SharpDevelop.Build.CSharp.targets" instead of the usual
+"Microsoft.CSharp.Targets".<br>
+<br>
+The "SharpDevelop.Build.CSharp.targets" file looks at the
+TargetFrameworkVersion information and targets the appropriate
+runtime.&nbsp; If we are targeting Mono, the file imports one of the
+Mono specific target files.<br>
+<font face="Courier New" size="2"><br>
+<font color="DarkMagenta">&lt;Import&nbsp;</font><font color="Red">Condition</font><font color="Blue">="&nbsp;'$(TargetFrameworkVersion)'&nbsp;==&nbsp;'Mono&nbsp;v1.1'&nbsp;"&nbsp;</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Project</font><font color="Blue">="$(SharpDevelopBinPath)\SharpDevelop.Build.Mono.Mcs.targets"</font><font color="DarkMagenta">/&gt;</font><br>
+<font color="DarkMagenta">&lt;Import&nbsp;</font><font color="Red">Condition</font><font color="Blue">="&nbsp;'$(TargetFrameworkVersion)'&nbsp;==&nbsp;'Mono&nbsp;v2.0'&nbsp;"</font><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="Red">Project</font><font color="Blue">="$(SharpDevelopBinPath)\SharpDevelop.Build.Mono.Gmcs.targets"</font><font color="DarkMagenta">/&gt;</font><br>
+<font color="DarkMagenta"><br>
+</font>
+</font>These Mono specific files reference the custom MSBuild tasks in the ICSharpCode.Build.Tasks assembly.<br>
+<br>
+If one of the Microsoft .NET frameworks is targeted, various
+properties, such as CscToolPath, are changed so the correct compiler is
+used, but no custom tasks are involved.<br>
+
+
+</body></html>
