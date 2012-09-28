@@ -138,7 +138,9 @@ The new BloggingSiteContext class is shown below.
         // code to the Application_Start method in your Global.asax file.
         // Note: this will destroy and re-create your database with every model change.
         // 
-        // System.Data.Entity.Database.SetInitializer(new System.Data.Entity.DropCreateDatabaseIfModelChanges<BloggingSite.Models.BloggingSiteContext>());
+        // System.Data.Entity.Database.SetInitializer(
+            new System.Data.Entity.DropCreateDatabaseIfModelChanges
+                <BloggingSite.Models.BloggingSiteContext>());
 
     	
         public DbSet<BloggingSite.Models.Post> Posts { get; set; }
