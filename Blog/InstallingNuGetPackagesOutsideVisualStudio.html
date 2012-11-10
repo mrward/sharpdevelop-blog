@@ -70,6 +70,9 @@
         &lt;supportedRuntime version=&quot;v2.0.50727&quot;/&gt;  
     &lt;/startup&gt;  
 &lt;/configuration&gt;   </pre>
+    <p>Note that if you are running Windows x64 then you should run the 32 bit version of PowerShell 
+    and create a powershell.exe.config file the
+    in C:\windows\syswow64\WindowsPowerShell\v1.0 folder</p>
     <p>The useLegacyV2RuntimeActivationPolicy attribute is required. 
     For a great explanation of what this attribute is take a look at 
     <a href="http://www.marklio.com/marklio/PermaLink,guid,ecc34c3c-be44-4422-86b7-900900e451f9.aspx"
@@ -166,6 +169,9 @@ install-package nunit</pre>
     SharpDevelop since this was an prototype. So there are no unit 
     tests for the new code and core parts of SharpDevelop have been 
     changed to support the new PowerShell cmdlets.</p>
+    
+    <p><b>[Update - Oct 16, 2012]</b> - Added information on using 32 bit version of
+    PowerShell if using Windows x64</p>
 
   </body>
 
