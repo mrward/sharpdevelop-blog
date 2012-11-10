@@ -26,7 +26,7 @@
     <h2>Using SubSonic T4 Templates with SharpDevelop</h2>
 
     <p>In order to use the SubSonic T4 templates with SharpDevelop you 
-    need to make two modifications to the Settings.ttimport file.</p>
+    need to make two modifications to the Settings.ttinclude file.</p>
 
     <p>Replace the EnvDTE assembly reference:</p>
 
@@ -36,6 +36,9 @@
     <pre>&lt;#@ assembly name=&quot;$(addinpath:ICSharpCode.PackageManagement)PackageManagement.dll&quot; #&gt;</pre>
     <p>This references SharpDevelop&apos;s NuGet addin assembly which 
     implements its own version of the Visual Studio object model.</p>
+    
+    <p>In SharpDevelop 4.3 an extra assembly directive is needed, as shown below:</p>
+    <pre>&lt;#@ assembly name=&quot;SharpDevelop.EnvDTE.dll&quot; #&gt;</pre>
 
     <p>Add a new import directive as shown below:</p>
 
@@ -43,9 +46,11 @@
     <p>This creates a namespace alias for EnvDTE so the references to 
     the Visual Studio object model in the SubSonic T4 template will 
     work.</p>
+    
+    <p>In SharpDevelop 4.3 the EnvDTE import directive does not need to be changed.</p>
 
     <p>All that is left now is to save the changes made to the 
-    Settings.ttimport file and generate the database access code by 
+    Settings.ttinclude file and generate the database access code by 
     executing the ActiveRecord.tt, Context.tt and Struct.tt T4 
     templates. This can be done by right clicking them in the Projects 
     window and selecting Execute Custom Tool.</p>
@@ -97,6 +102,7 @@
     SharpDevelop so you may run into problems if you make extensive use 
     of this object model.</p>
 
+    <p><b>[Update 2012-10-11]</b> Added changes required for SharpDevelop 4.3</p>
   </body>
 
 </html>
