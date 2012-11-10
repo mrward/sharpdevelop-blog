@@ -18,9 +18,11 @@ Steve Sanderson has a [great series of posts on MVC Scaffolding](http://blog.ste
 
 MVC Scaffolding for SharpDevelop is available as a [NuGet package](http://nuget.org/packages/MvcScaffolding.SharpDevelop). The NuGet package you should download is **MvcScaffolding.SharpDevelop**. Install the MvcScaffolding.SharpDevelop NuGet package either from the NuGet package management console or by using the Manage Packages dialog.
 
+Note that the NuGet package MvcScaffolding.SharpDevelop.1.0.9 requires SharpDevelop 4.3.0.9134 or above. If you have an older version installed then you should uninstall the MvcScaffolding.SharpDevelop package, before installing the latest version of SharpDevelop, and then reinstall the MvcScaffolding.SharpDevelop package. A breaking change made to SharpDevelop 4.3 to support the EntityFramework package will cause the older MvcScaffolding.SharpDevelop NuGet package to fail to uninstall cleanly in the newer version of SharpDevelop.
+
 ##Scaffolding a Controller and Views
 
-As an example we will create a simple blogging site. Create a Razor MVC application called Blogging.Site. Then create the following class in a Models folder.
+As an example we will create a simple blogging site. Create a Razor MVC application called BloggingSite. Then create the following class in a Models folder.
 
     using System;
 
@@ -123,7 +125,22 @@ In a Razor MVC application this will generate the file Views\Posts\MyEmptyView.c
 
 ##Scaffolding Database Context
 
-You can scaffold extra properties for your database context by using the **DbContext** scaffolder and specifying the model class and the name of the database context class. If you create a new Blog class and run the command below a new Blogs property will be added to your BloggingSiteContext class.
+You can scaffold extra properties for your database context by using the **DbContext** scaffolder and specifying the model class and the name of the database context class. Create a new Blog class, as shown below.
+
+using System;
+
+    using System;
+    
+    namespace BloggingSite.Models
+    {
+        public class Blog
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+    }
+
+ Now run the command below to update your database context and a new Blogs property will be added to your BloggingSiteContext class.
 
     Scaffold DbContext Blog BloggingSiteContext
 
@@ -185,9 +202,11 @@ That is the end of our introduction to using MVC Scaffolding with SharpDevelop.
 
 1. Mvc Scaffolding projects now compiled against SharpDevelop's Package Management assembly which implements the Visual Studio API.
 2. T4 template generation now uses [MonoDevelop's T4 Templating Engine](http://community.sharpdevelop.net/blogs/mattward/archive/2011/06/26/T4TemplatesInSharpDevelop.aspx).
+3. T4Scaffolding.SharpDevelop.1.0.8 NuGet package depends on EntityFramework.SharpDevelop NuGet package instead of the original EntityFramework NuGet package This allows an upgrade to the NuGet package EntityFramework.SharpDevelop.5.0.0 which supports migrations in SharpDevelop.
 
 Source code for the modified MVC Scaffolding can be found on [CodePlex](http://mvcscaffolding.codeplex.com/SourceControl/network/forks/MattWard/mvcscaffolding).
 
+**[Update 2012-11-10]** Added information on MvcScaffolding.SharpDevelop 1.0.9 NuGet package requiring newer version of SharpDevelop. Updated "Scaffolding Database Context" section with example Blog class. Updated "Modifications Made to Original MVC Scaffolding" section with change made to T4Scaffolding.SharpDevelop NuGet package.
 
 
 
