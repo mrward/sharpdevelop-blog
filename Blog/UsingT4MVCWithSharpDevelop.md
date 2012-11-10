@@ -8,6 +8,8 @@ So let us take a look at how to use T4MVC with SharpDevelop. First you should op
 
 T4MVC is available as a [NuGet package](http://nuget.org/packages/T4MVC.SharpDevelop). The NuGet package you should download is [T4MVC.SharpDevelop](http://nuget.org/packages/T4MVC.SharpDevelop). This contains a modified version of the original T4MVC template that can be used with SharpDevelop. Further details on all the modifications made to the T4MVC template can be found at the end of this post. Install the T4MVC.SharpDevelop NuGet package either from the [NuGet package management console](http://community.sharpdevelop.net/blogs/mattward/archive/2011/06/05/NuGetPowerShellConsole.aspx) or by using the [Manage Packages dialog](http://community.sharpdevelop.net/blogs/mattward/archive/2011/07/24/NuGet14.aspx).
 
+Note that T4MVC 2.13.0 requires SharpDevelop 4.3.0.9132 or above.
+
 After installation two new T4 template files will be added to your project.
 
 1. T4MVC.tt - main template that generates the strongly typed helpers.
@@ -79,8 +81,8 @@ That is a very quick introduction to T4MVC and covers only a few of the helpers 
 
 1. Visual Studio assembly references have been removed and replaced with a SharpDevelop assembly reference.
 2. Visual Studio namespace imports have been removed and replaced with namespace imports for SharpDevelop.
-3. EnvDTE.ProjectItem.get_FileNames() replaced with ProjectItem.FileNames() - SharpDevelop currently implements this as a method and not a parameterised property.
-4.  EnvDTE.CodeType.get_IsDerivedFrom() replaced with CodeType.IsDerivedFrom() - SharpDevelop currently implements this as a method and not a parameterised property.
-5. Removed use of BeginInvoke/EndInvoke which was causing SharpDevelop to hang.
+3. Removed use of BeginInvoke/EndInvoke which was causing SharpDevelop to hang.
 
 The SharpDevelop specific T4MVC template is maintained in a [repository on github](https://github.com/mrward/t4mvc-sharpdevelop).
+
+**[Update 2012-10-11]** Added information on T4MVC 2.13.0 requiring a newer version of SharpDevelop 4.3. Updated "Changes made to original T4MVC template" section after SharpDevelop EnvDTE API was modified to follow Visual Studio's API when using parameterised properties such as ProjectItem.FileNames() and CodeType.IsDerivedFrom()
