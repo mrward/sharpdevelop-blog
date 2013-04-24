@@ -1,4 +1,4 @@
-SharpDevelop 4.3.1 now has integrated support for [TypeScript](http://www.typescriptlang.org/) with an early beta release of a new [Addin](https://github.com/mrward/typescript-addin). 
+SharpDevelop 4.3.1 now has support for [TypeScript](http://www.typescriptlang.org/) with an early beta release of a new [Addin](https://github.com/mrward/typescript-addin). 
 
 The Addin glues together the TypeScript language services, which provide all the features needed for code completion and refactoring, and SharpDevelop using [Javascript.NET](http://javascriptdotnet.codeplex.com/) as the bridge between them. Javascript.NET allows SharpDevelop to host Google's V8 JavaScript engine and have JavaScript code interact with .NET objects.
 
@@ -20,7 +20,7 @@ The addin supports:
 
 Let us take a quick look at some of these features.
 
-# Code Completion
+## Code Completion
 
 Code completion works when you press the dot character.
 
@@ -32,15 +32,15 @@ Code completion also works when you type the first bracket of a function.
 
 ## Find References, Go to Definition and Rename
 
-These menu options can be found by right clicking on class or class member.
+These menu options can be found by right clicking on a class or a class member.
 
 ![TypeScript right click menu options](/Images/TypeScriptTextEditorContextMenu.png)
 
-Go To TypeScript Definition will open the file show the corresponding type definition. Find TypeScript References will show a list of locations where the selected type is referenced in the Output window. Rename will open a dialog box where you can type in the new name and click OK to have it updated everywhere it is referenced.
+Go To TypeScript Definition will show the corresponding type definition. Find TypeScript References will show the reference locations in the Output window. Rename will open a dialog box where you can type in the new name and click OK to have it updated everywhere it is referenced.
 
 ## Getting the Addin
 
-The addin's [source code](https://github.com/mrward/typescript-addin) is available on [GitHub](https://github.com/mrward/typescript-addin). A [zip file is available to download](http://community.sharpdevelop.net/blogs/mattward/TypeScript/TypeScriptAddin-0.1.zip) containing the pre-compiled addin. Simply unzip and install into SharpDevelop using the Addin Manager. The Addin Manager is available by selecting Addin Manager from the Tools menu. Install the addin by clicking the Install Addin button and then restart SharpDevelop.
+The addin's [source code](https://github.com/mrward/typescript-addin) is available on [GitHub](https://github.com/mrward/typescript-addin). A [zip file is available to download](http://community.sharpdevelop.net/blogs/mattward/TypeScript/TypeScriptAddin-0.1.zip) containing the pre-compiled addin. Simply unzip the files and install into SharpDevelop using the Addin Manager. The Addin Manager is available by selecting Addin Manager from the Tools menu. Install the addin by clicking the Install Addin button and then restart SharpDevelop.
 
 ## Configuring TypeScript Compiler Options
 
